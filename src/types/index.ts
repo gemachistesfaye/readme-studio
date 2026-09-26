@@ -19,8 +19,29 @@ export interface BasicInfoData {
   authorGithub: string;
 }
 
+export type TechCategory =
+  | 'Language'
+  | 'Frontend'
+  | 'Backend'
+  | 'Database'
+  | 'AI / ML'
+  | 'DevOps / Cloud'
+  | 'Tools'
+  | 'Other';
+
+export interface Technology {
+  id: string;
+  name: string;
+  category: TechCategory;
+}
+
+export interface TechStackData {
+  technologies: Technology[];
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
+  techStack: TechStackData;
 }
 
 export type ValidationErrors = Partial<Record<keyof BasicInfoData, string>>;

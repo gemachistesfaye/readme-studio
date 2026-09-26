@@ -4,7 +4,14 @@ import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
 export const GeneratorWorkspace: React.FC = () => {
-  const { data, updateBasicInfo, touchField, errors } = useReadmeData();
+  const {
+    data,
+    updateBasicInfo,
+    touchField,
+    addTechnology,
+    removeTechnology,
+    errors,
+  } = useReadmeData();
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -23,13 +30,19 @@ export const GeneratorWorkspace: React.FC = () => {
         {/* Left Panel: Editor & Configuration */}
         <EditorPanel
           basicInfo={data.basicInfo}
+          techStack={data.techStack}
           errors={errors}
           onBasicInfoChange={updateBasicInfo}
           onBasicInfoBlur={touchField}
+          onAddTechnology={addTechnology}
+          onRemoveTechnology={removeTechnology}
         />
 
         {/* Right Panel: Preview Area */}
-        <PreviewPanel basicInfo={data.basicInfo} />
+        <PreviewPanel
+          basicInfo={data.basicInfo}
+          techStack={data.techStack}
+        />
       </div>
     </div>
   );

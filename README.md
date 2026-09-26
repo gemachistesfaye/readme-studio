@@ -12,7 +12,7 @@
 
 ## 🌟 Overview
 
-**README Studio** helps developers compose, format, and export production-ready GitHub README documents effortlessly. Designed with modern UI patterns, dark-mode visual aesthetics, and strict TypeScript architecture.
+**README Studio** helps developers compose, format and export production-ready GitHub README documents effortlessly. Designed with modern UI patterns, dark-mode visual aesthetics and strict TypeScript architecture.
 
 ---
 

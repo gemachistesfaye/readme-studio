@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useReadmeData } from '@/hooks/useReadmeData';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
@@ -13,6 +13,10 @@ export const GeneratorWorkspace: React.FC = () => {
     addFeature,
     updateFeature,
     removeFeature,
+    updateInstallationField,
+    addInstallationStep,
+    updateInstallationStep,
+    removeInstallationStep,
     errors,
   } = useReadmeData();
 
@@ -35,6 +39,7 @@ export const GeneratorWorkspace: React.FC = () => {
           basicInfo={data.basicInfo}
           techStack={data.techStack}
           features={data.features}
+          installation={data.installation}
           errors={errors}
           onBasicInfoChange={updateBasicInfo}
           onBasicInfoBlur={touchField}
@@ -43,6 +48,10 @@ export const GeneratorWorkspace: React.FC = () => {
           onAddFeature={addFeature}
           onUpdateFeature={updateFeature}
           onRemoveFeature={removeFeature}
+          onUpdateInstallationField={updateInstallationField}
+          onAddInstallationStep={addInstallationStep}
+          onUpdateInstallationStep={updateInstallationStep}
+          onRemoveInstallationStep={removeInstallationStep}
         />
 
         {/* Right Panel: Preview Area */}
@@ -50,6 +59,7 @@ export const GeneratorWorkspace: React.FC = () => {
           basicInfo={data.basicInfo}
           techStack={data.techStack}
           features={data.features}
+          installation={data.installation}
         />
       </div>
     </div>

@@ -1,4 +1,3 @@
-# readme-studio
 # ⚡ README Studio
 
 > A modern, developer-focused web application for building clean, professional GitHub `README.md` files through an interactive interface.

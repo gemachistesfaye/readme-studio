@@ -1,12 +1,14 @@
-﻿import React from 'react';
+﻿import React, { useMemo } from 'react';
 import { Copy, Download, Eye, FileCode, Github, ExternalLink, User } from 'lucide-react';
-import { BasicInfoData } from '@/types';
+import { BasicInfoData, TechCategory, TechStackData } from '@/types';
+import { TECH_CATEGORIES } from '@/constants/techStack';
 
 interface PreviewPanelProps {
   basicInfo: BasicInfoData;
+  techStack: TechStackData;
 }
 
-export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo }) => {
+export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo, techStack }) => {
   const displayTitle = basicInfo.projectName.trim() || 'Project Name';
   const displayDescription =
     basicInfo.description.trim() || 'Your project description will appear here.';
@@ -15,6 +17,22 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo }) => {
   const hasDemoUrl = !!basicInfo.demoUrl.trim();
   const hasAuthor = !!basicInfo.authorName.trim();
   const hasAuthorGithub = !!basicInfo.authorGithub.trim();
+
+  // Group technologies by category in logical order
+  const groupedTech = useMemo(() => {
+    const groups: Partial<Record<TechCategory, string[]>> = {};
+    for (const cat of TECH_CATEGORIES) {
+      const items = techStack.technologies
+        .filter((t) => t.category === cat)
+        .map((t) => t.name);
+      if (items.length > 0) {
+        groups[cat] = items;
+      }
+    }
+    return groups;
+  }, [techStack.technologies]);
+
+  const hasTech = techStack.technologies.length > 0;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm sticky top-20">
@@ -103,6 +121,29 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo }) => {
             )}
           </div>
 
+          {/* Tech Stack Section */}
+          <div className="border-t border-zinc-800/60 pt-5">
+            <h2 className="text-lg font-semibold text-zinc-200">Tech Stack</h2>
+            {hasTech ? (
+              <div className="mt-3 space-y-3">
+                {Object.entries(groupedTech).map(([category, items]) => (
+                  <div key={category} className="text-sm">
+                    <p className="font-semibold text-zinc-200 text-xs tracking-wide">
+                      {category}
+                    </p>
+                    <p className="mt-0.5 text-sm text-zinc-400">
+                      {items.join(' • ')}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-zinc-500 italic">
+                Technologies added in the Tech Stack section will appear here grouped by category.
+              </p>
+            )}
+          </div>
+
           {/* Features Placeholder */}
           <div className="border-t border-zinc-800/60 pt-5">
             <h2 className="text-lg font-semibold text-zinc-200">Features</h2>
@@ -119,7 +160,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo }) => {
             </p>
           </div>
 
-          {/* Author Section (Rendered when Author Name is provided) */}
+          {/* Author Section */}
           {hasAuthor && (
             <div className="border-t border-zinc-800/60 pt-5">
               <h2 className="text-lg font-semibold text-zinc-200">Author</h2>

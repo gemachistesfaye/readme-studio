@@ -1,14 +1,19 @@
 ﻿import React, { useMemo } from 'react';
 import { Copy, Download, Eye, FileCode, Github, ExternalLink, User } from 'lucide-react';
-import { BasicInfoData, TechCategory, TechStackData } from '@/types';
+import { BasicInfoData, FeaturesData, TechCategory, TechStackData } from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
 
 interface PreviewPanelProps {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
+  features: FeaturesData;
 }
 
-export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo, techStack }) => {
+export const PreviewPanel: React.FC<PreviewPanelProps> = ({
+  basicInfo,
+  techStack,
+  features,
+}) => {
   const displayTitle = basicInfo.projectName.trim() || 'Project Name';
   const displayDescription =
     basicInfo.description.trim() || 'Your project description will appear here.';
@@ -33,6 +38,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo, techStack
   }, [techStack.technologies]);
 
   const hasTech = techStack.technologies.length > 0;
+  const hasFeatures = features.features.length > 0;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm sticky top-20">
@@ -144,12 +150,25 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({ basicInfo, techStack
             )}
           </div>
 
-          {/* Features Placeholder */}
+          {/* Features Section */}
           <div className="border-t border-zinc-800/60 pt-5">
             <h2 className="text-lg font-semibold text-zinc-200">Features</h2>
-            <p className="mt-2 text-sm text-zinc-400">
-              Your project features will appear here.
-            </p>
+            {hasFeatures ? (
+              <ul className="mt-3 space-y-2 text-sm text-zinc-300 list-disc list-inside">
+                {features.features.map((feature) => (
+                  <li key={feature.id} className="leading-relaxed">
+                    <strong className="font-semibold text-zinc-100">{feature.title}</strong>
+                    {feature.description ? (
+                      <span className="text-zinc-400"> — {feature.description}</span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-zinc-500 italic">
+                Your project features will appear here.
+              </p>
+            )}
           </div>
 
           {/* Installation Placeholder */}

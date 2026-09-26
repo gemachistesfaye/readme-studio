@@ -1,5 +1,13 @@
 ﻿import { useState, useMemo, useCallback } from 'react';
-import { BasicInfoData, Feature, ReadmeData, TechCategory, ValidationErrors } from '@/types';
+import {
+  BasicInfoData,
+  Feature,
+  InstallationData,
+  InstallationStep,
+  ReadmeData,
+  TechCategory,
+  ValidationErrors,
+} from '@/types';
 import { validateBasicInfo } from '@/utils/validation';
 
 const initialReadmeData: ReadmeData = {
@@ -16,6 +24,12 @@ const initialReadmeData: ReadmeData = {
   },
   features: {
     features: [],
+  },
+  installation: {
+    prerequisites: '',
+    cloneCommand: '',
+    installCommand: '',
+    setupInstructions: [],
   },
 };
 
@@ -165,6 +179,77 @@ export function useReadmeData() {
     }));
   }, []);
 
+  const updateInstallationField = useCallback(
+    (field: keyof Omit<InstallationData, 'setupInstructions'>, value: string) => {
+      setData((prev) => ({
+        ...prev,
+        installation: {
+          ...prev.installation,
+          [field]: value,
+        },
+      }));
+    },
+    []
+  );
+
+  const addInstallationStep = useCallback(
+    (instruction: string, command?: string): { success: boolean; error?: string } => {
+      const trimmedInstruction = instruction.trim();
+      if (!trimmedInstruction) {
+        return { success: false, error: 'Instruction cannot be empty.' };
+      }
+
+      const newStep: InstallationStep = {
+        id: `step-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        instruction: trimmedInstruction,
+        command: command?.trim() || '',
+      };
+
+      setData((prev) => ({
+        ...prev,
+        installation: {
+          ...prev.installation,
+          setupInstructions: [...prev.installation.setupInstructions, newStep],
+        },
+      }));
+
+      return { success: true };
+    },
+    []
+  );
+
+  const updateInstallationStep = useCallback(
+    (id: string, instruction: string, command: string): { success: boolean; error?: string } => {
+      const trimmedInstruction = instruction.trim();
+      if (!trimmedInstruction) {
+        return { success: false, error: 'Instruction cannot be empty.' };
+      }
+
+      setData((prev) => ({
+        ...prev,
+        installation: {
+          ...prev.installation,
+          setupInstructions: prev.installation.setupInstructions.map((s) =>
+            s.id === id ? { ...s, instruction: trimmedInstruction, command: command.trim() } : s
+          ),
+        },
+      }));
+
+      return { success: true };
+    },
+    []
+  );
+
+  const removeInstallationStep = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      installation: {
+        ...prev.installation,
+        setupInstructions: prev.installation.setupInstructions.filter((s) => s.id !== id),
+      },
+    }));
+  }, []);
+
   return {
     data,
     updateBasicInfo,
@@ -174,6 +259,10 @@ export function useReadmeData() {
     addFeature,
     updateFeature,
     removeFeature,
+    updateInstallationField,
+    addInstallationStep,
+    updateInstallationStep,
+    removeInstallationStep,
     errors: visibleErrors,
     isValid: Object.keys(allErrors).length === 0,
   };

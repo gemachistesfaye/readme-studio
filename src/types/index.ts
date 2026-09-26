@@ -49,10 +49,24 @@ export interface FeaturesData {
   features: Feature[];
 }
 
+export interface InstallationStep {
+  id: string;
+  instruction: string;
+  command: string;
+}
+
+export interface InstallationData {
+  prerequisites: string;
+  cloneCommand: string;
+  installCommand: string;
+  setupInstructions: InstallationStep[];
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
   features: FeaturesData;
+  installation: InstallationData;
 }
 
 export type ValidationErrors = Partial<Record<keyof BasicInfoData, string>>;

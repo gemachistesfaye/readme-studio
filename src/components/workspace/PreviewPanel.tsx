@@ -1,18 +1,20 @@
 ﻿import React, { useMemo } from 'react';
 import { Copy, Download, Eye, FileCode, Github, ExternalLink, User } from 'lucide-react';
-import { BasicInfoData, FeaturesData, TechCategory, TechStackData } from '@/types';
+import { BasicInfoData, FeaturesData, InstallationData, TechCategory, TechStackData } from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
 
 interface PreviewPanelProps {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
   features: FeaturesData;
+  installation: InstallationData;
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   basicInfo,
   techStack,
   features,
+  installation,
 }) => {
   const displayTitle = basicInfo.projectName.trim() || 'Project Name';
   const displayDescription =
@@ -39,6 +41,33 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
 
   const hasTech = techStack.technologies.length > 0;
   const hasFeatures = features.features.length > 0;
+
+  // Build ordered installation steps
+  const installationSteps = useMemo(() => {
+    const steps: { instruction: string; command?: string }[] = [];
+    if (installation.cloneCommand.trim()) {
+      steps.push({
+        instruction: 'Clone the repository',
+        command: installation.cloneCommand.trim(),
+      });
+    }
+    if (installation.installCommand.trim()) {
+      steps.push({
+        instruction: 'Install dependencies',
+        command: installation.installCommand.trim(),
+      });
+    }
+    for (const s of installation.setupInstructions) {
+      steps.push({
+        instruction: s.instruction,
+        command: s.command.trim() || undefined,
+      });
+    }
+    return steps;
+  }, [installation]);
+
+  const hasPrerequisites = !!installation.prerequisites.trim();
+  const hasInstallationContent = hasPrerequisites || installationSteps.length > 0;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm sticky top-20">
@@ -171,12 +200,45 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
             )}
           </div>
 
-          {/* Installation Placeholder */}
+          {/* Installation Section */}
           <div className="border-t border-zinc-800/60 pt-5">
             <h2 className="text-lg font-semibold text-zinc-200">Installation</h2>
-            <p className="mt-2 text-sm text-zinc-400">
-              Installation instructions will appear here.
-            </p>
+            {hasInstallationContent ? (
+              <div className="mt-3 space-y-4">
+                {/* Prerequisites */}
+                {hasPrerequisites && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-zinc-300">Prerequisites</h3>
+                    <p className="mt-1 text-sm text-zinc-400 whitespace-pre-wrap">
+                      {installation.prerequisites}
+                    </p>
+                  </div>
+                )}
+
+                {/* Setup Steps */}
+                {installationSteps.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-zinc-300 mb-2">Setup</h3>
+                    <ol className="space-y-3 list-decimal list-inside text-sm text-zinc-300">
+                      {installationSteps.map((s, idx) => (
+                        <li key={idx} className="leading-relaxed">
+                          <span className="font-medium text-zinc-200">{s.instruction}</span>
+                          {s.command && (
+                            <div className="mt-1.5 ml-5 rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 font-mono text-xs text-zinc-300 overflow-x-auto">
+                              <code>{s.command}</code>
+                            </div>
+                          )}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-zinc-500 italic">
+                Installation instructions will appear here.
+              </p>
+            )}
           </div>
 
           {/* Author Section */}

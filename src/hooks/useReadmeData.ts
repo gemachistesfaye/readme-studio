@@ -1,5 +1,5 @@
 ﻿import { useState, useMemo, useCallback } from 'react';
-import { BasicInfoData, ReadmeData, TechCategory, ValidationErrors } from '@/types';
+import { BasicInfoData, Feature, ReadmeData, TechCategory, ValidationErrors } from '@/types';
 import { validateBasicInfo } from '@/utils/validation';
 
 const initialReadmeData: ReadmeData = {
@@ -13,6 +13,9 @@ const initialReadmeData: ReadmeData = {
   },
   techStack: {
     technologies: [],
+  },
+  features: {
+    features: [],
   },
 };
 
@@ -91,12 +94,86 @@ export function useReadmeData() {
     }));
   }, []);
 
+  const addFeature = useCallback(
+    (title: string, description?: string): { success: boolean; error?: string } => {
+      const trimmedTitle = title.trim();
+      if (!trimmedTitle) {
+        return { success: false, error: 'Feature title cannot be empty.' };
+      }
+
+      const isDuplicate = data.features.features.some(
+        (f) => f.title.toLowerCase() === trimmedTitle.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return { success: false, error: `"${trimmedTitle}" is already added as a feature.` };
+      }
+
+      const newFeature: Feature = {
+        id: `feat-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        title: trimmedTitle,
+        description: description?.trim() || '',
+      };
+
+      setData((prev) => ({
+        ...prev,
+        features: {
+          features: [...prev.features.features, newFeature],
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.features.features]
+  );
+
+  const updateFeature = useCallback(
+    (id: string, title: string, description: string): { success: boolean; error?: string } => {
+      const trimmedTitle = title.trim();
+      if (!trimmedTitle) {
+        return { success: false, error: 'Feature title cannot be empty.' };
+      }
+
+      const isDuplicate = data.features.features.some(
+        (f) => f.id !== id && f.title.toLowerCase() === trimmedTitle.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return { success: false, error: `Another feature with the title "${trimmedTitle}" already exists.` };
+      }
+
+      setData((prev) => ({
+        ...prev,
+        features: {
+          features: prev.features.features.map((f) =>
+            f.id === id ? { ...f, title: trimmedTitle, description: description.trim() } : f
+          ),
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.features.features]
+  );
+
+  const removeFeature = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      features: {
+        features: prev.features.features.filter((f) => f.id !== id),
+      },
+    }));
+  }, []);
+
   return {
     data,
     updateBasicInfo,
     touchField,
     addTechnology,
     removeTechnology,
+    addFeature,
+    updateFeature,
+    removeFeature,
     errors: visibleErrors,
     isValid: Object.keys(allErrors).length === 0,
   };

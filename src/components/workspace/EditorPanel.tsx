@@ -11,16 +11,25 @@ import {
   Mail,
   SlidersHorizontal,
 } from 'lucide-react';
-import { BasicInfoData, FeaturesData, TechCategory, TechStackData, ValidationErrors } from '@/types';
+import {
+  BasicInfoData,
+  FeaturesData,
+  InstallationData,
+  TechCategory,
+  TechStackData,
+  ValidationErrors,
+} from '@/types';
 import { EditorSection } from './EditorSection';
 import { BasicInfoForm } from './BasicInfoForm';
 import { TechStackForm } from './TechStackForm';
 import { FeaturesForm } from './FeaturesForm';
+import { InstallationForm } from './InstallationForm';
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
   features: FeaturesData;
+  installation: InstallationData;
   errors: ValidationErrors;
   onBasicInfoChange: (field: keyof BasicInfoData, value: string) => void;
   onBasicInfoBlur: (field: keyof BasicInfoData) => void;
@@ -29,12 +38,17 @@ interface EditorPanelProps {
   onAddFeature: (title: string, description?: string) => { success: boolean; error?: string };
   onUpdateFeature: (id: string, title: string, description: string) => { success: boolean; error?: string };
   onRemoveFeature: (id: string) => void;
+  onUpdateInstallationField: (field: keyof Omit<InstallationData, 'setupInstructions'>, value: string) => void;
+  onAddInstallationStep: (instruction: string, command?: string) => { success: boolean; error?: string };
+  onUpdateInstallationStep: (id: string, instruction: string, command: string) => { success: boolean; error?: string };
+  onRemoveInstallationStep: (id: string) => void;
 }
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
   basicInfo,
   techStack,
   features,
+  installation,
   errors,
   onBasicInfoChange,
   onBasicInfoBlur,
@@ -43,6 +57,10 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   onAddFeature,
   onUpdateFeature,
   onRemoveFeature,
+  onUpdateInstallationField,
+  onAddInstallationStep,
+  onUpdateInstallationStep,
+  onRemoveInstallationStep,
 }) => {
   const futureSections = [
     {
@@ -50,11 +68,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
       description: 'Extended project background and comprehensive overview',
       icon: AlignLeft,
       badge: 'Upcoming',
-    },
-    {
-      title: 'Installation',
-      description: 'Prerequisites, dependency management, and setup steps',
-      icon: Terminal,
     },
     {
       title: 'Usage',
@@ -80,6 +93,11 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
 
   const techCount = techStack.technologies.length;
   const featureCount = features.features.length;
+  const hasInstallConfig =
+    !!installation.prerequisites ||
+    !!installation.cloneCommand ||
+    !!installation.installCommand ||
+    installation.setupInstructions.length > 0;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm">
@@ -145,6 +163,24 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onAddFeature={onAddFeature}
             onUpdateFeature={onUpdateFeature}
             onRemoveFeature={onRemoveFeature}
+          />
+        </EditorSection>
+
+        {/* Installation - Functional Form */}
+        <EditorSection
+          title="Installation"
+          description="Prerequisites, dependency management, and setup steps"
+          icon={Terminal}
+          badge={hasInstallConfig ? 'Configured' : 'Active'}
+          defaultOpen={false}
+        >
+          <InstallationForm
+            data={installation}
+            repositoryUrl={basicInfo.repositoryUrl}
+            onUpdateField={onUpdateInstallationField}
+            onAddStep={onAddInstallationStep}
+            onUpdateStep={onUpdateInstallationStep}
+            onRemoveStep={onRemoveInstallationStep}
           />
         </EditorSection>
 

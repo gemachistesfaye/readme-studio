@@ -39,9 +39,20 @@ export interface TechStackData {
   technologies: Technology[];
 }
 
+export interface Feature {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface FeaturesData {
+  features: Feature[];
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
+  features: FeaturesData;
 }
 
 export type ValidationErrors = Partial<Record<keyof BasicInfoData, string>>;

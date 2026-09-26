@@ -8,3 +8,5 @@ export { TechnologyChip } from './TechnologyChip';
 export { QuickAddTech } from './QuickAddTech';
 export { FeaturesForm } from './FeaturesForm';
 export { FeatureItem } from './FeatureItem';
+export { InstallationForm } from './InstallationForm';
+export { InstallationStepItem } from './InstallationStepItem';

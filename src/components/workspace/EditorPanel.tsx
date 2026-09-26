@@ -11,22 +11,29 @@ import {
   Mail,
   SlidersHorizontal,
 } from 'lucide-react';
-import { BasicInfoData, ValidationErrors } from '@/types';
+import { BasicInfoData, TechCategory, TechStackData, ValidationErrors } from '@/types';
 import { EditorSection } from './EditorSection';
 import { BasicInfoForm } from './BasicInfoForm';
+import { TechStackForm } from './TechStackForm';
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
+  techStack: TechStackData;
   errors: ValidationErrors;
   onBasicInfoChange: (field: keyof BasicInfoData, value: string) => void;
   onBasicInfoBlur: (field: keyof BasicInfoData) => void;
+  onAddTechnology: (name: string, category: TechCategory) => { success: boolean; error?: string };
+  onRemoveTechnology: (id: string) => void;
 }
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
   basicInfo,
+  techStack,
   errors,
   onBasicInfoChange,
   onBasicInfoBlur,
+  onAddTechnology,
+  onRemoveTechnology,
 }) => {
   const futureSections = [
     {
@@ -34,11 +41,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
       description: 'Extended project background and comprehensive overview',
       icon: AlignLeft,
       badge: 'Upcoming',
-    },
-    {
-      title: 'Tech Stack',
-      description: 'Languages, frameworks, runtimes, and core tools',
-      icon: Boxes,
     },
     {
       title: 'Installation',
@@ -72,6 +74,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
     },
   ];
 
+  const techCount = techStack.technologies.length;
+
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm">
       {/* Panel Header */}
@@ -92,7 +96,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
 
       {/* Section List */}
       <div className="mt-4 flex flex-col gap-3">
-        {/* Basic Information - Functional Form (Expanded by default) */}
+        {/* Basic Information - Functional Form */}
         <EditorSection
           title="Basic Information"
           description="Project title, summary, repository, and author metadata"
@@ -105,6 +109,21 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             errors={errors}
             onChange={onBasicInfoChange}
             onBlur={onBasicInfoBlur}
+          />
+        </EditorSection>
+
+        {/* Tech Stack - Functional Form */}
+        <EditorSection
+          title="Tech Stack"
+          description="Languages, frameworks, runtimes, and core tools"
+          icon={Boxes}
+          badge={techCount > 0 ? `${techCount} added` : 'Active'}
+          defaultOpen={false}
+        >
+          <TechStackForm
+            technologies={techStack.technologies}
+            onAddTechnology={onAddTechnology}
+            onRemoveTechnology={onRemoveTechnology}
           />
         </EditorSection>
 

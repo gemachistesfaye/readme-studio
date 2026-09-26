@@ -11,29 +11,38 @@ import {
   Mail,
   SlidersHorizontal,
 } from 'lucide-react';
-import { BasicInfoData, TechCategory, TechStackData, ValidationErrors } from '@/types';
+import { BasicInfoData, FeaturesData, TechCategory, TechStackData, ValidationErrors } from '@/types';
 import { EditorSection } from './EditorSection';
 import { BasicInfoForm } from './BasicInfoForm';
 import { TechStackForm } from './TechStackForm';
+import { FeaturesForm } from './FeaturesForm';
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
+  features: FeaturesData;
   errors: ValidationErrors;
   onBasicInfoChange: (field: keyof BasicInfoData, value: string) => void;
   onBasicInfoBlur: (field: keyof BasicInfoData) => void;
   onAddTechnology: (name: string, category: TechCategory) => { success: boolean; error?: string };
   onRemoveTechnology: (id: string) => void;
+  onAddFeature: (title: string, description?: string) => { success: boolean; error?: string };
+  onUpdateFeature: (id: string, title: string, description: string) => { success: boolean; error?: string };
+  onRemoveFeature: (id: string) => void;
 }
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
   basicInfo,
   techStack,
+  features,
   errors,
   onBasicInfoChange,
   onBasicInfoBlur,
   onAddTechnology,
   onRemoveTechnology,
+  onAddFeature,
+  onUpdateFeature,
+  onRemoveFeature,
 }) => {
   const futureSections = [
     {
@@ -53,11 +62,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
       icon: Play,
     },
     {
-      title: 'Features',
-      description: 'Bulleted list of key capabilities and highlights',
-      icon: Sparkles,
-    },
-    {
       title: 'Contributing',
       description: 'Contribution guidelines, issue reporting, and PR rules',
       icon: GitPullRequest,
@@ -75,6 +79,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   ];
 
   const techCount = techStack.technologies.length;
+  const featureCount = features.features.length;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm">
@@ -124,6 +129,22 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             technologies={techStack.technologies}
             onAddTechnology={onAddTechnology}
             onRemoveTechnology={onRemoveTechnology}
+          />
+        </EditorSection>
+
+        {/* Features - Functional Form */}
+        <EditorSection
+          title="Features"
+          description="Key capabilities, highlights, and functional value"
+          icon={Sparkles}
+          badge={featureCount > 0 ? `${featureCount} added` : 'Active'}
+          defaultOpen={false}
+        >
+          <FeaturesForm
+            features={features.features}
+            onAddFeature={onAddFeature}
+            onUpdateFeature={onUpdateFeature}
+            onRemoveFeature={onRemoveFeature}
           />
         </EditorSection>
 

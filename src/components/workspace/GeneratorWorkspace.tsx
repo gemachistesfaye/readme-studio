@@ -10,6 +10,9 @@ export const GeneratorWorkspace: React.FC = () => {
     touchField,
     addTechnology,
     removeTechnology,
+    addFeature,
+    updateFeature,
+    removeFeature,
     errors,
   } = useReadmeData();
 
@@ -31,17 +34,22 @@ export const GeneratorWorkspace: React.FC = () => {
         <EditorPanel
           basicInfo={data.basicInfo}
           techStack={data.techStack}
+          features={data.features}
           errors={errors}
           onBasicInfoChange={updateBasicInfo}
           onBasicInfoBlur={touchField}
           onAddTechnology={addTechnology}
           onRemoveTechnology={removeTechnology}
+          onAddFeature={addFeature}
+          onUpdateFeature={updateFeature}
+          onRemoveFeature={removeFeature}
         />
 
         {/* Right Panel: Preview Area */}
         <PreviewPanel
           basicInfo={data.basicInfo}
           techStack={data.techStack}
+          features={data.features}
         />
       </div>
     </div>

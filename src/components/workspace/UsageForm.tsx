@@ -21,6 +21,8 @@ interface UsageFormProps {
     language: string
   ) => { success: boolean; error?: string };
   onRemoveExample: (id: string) => void;
+  onMoveExampleUp: (id: string) => void;
+  onMoveExampleDown: (id: string) => void;
 }
 
 export const UsageForm: React.FC<UsageFormProps> = ({
@@ -29,6 +31,8 @@ export const UsageForm: React.FC<UsageFormProps> = ({
   onAddExample,
   onUpdateExample,
   onRemoveExample,
+  onMoveExampleUp,
+  onMoveExampleDown,
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -199,8 +203,11 @@ export const UsageForm: React.FC<UsageFormProps> = ({
                 key={example.id}
                 example={example}
                 index={idx}
+                totalCount={data.examples.length}
                 onUpdate={onUpdateExample}
                 onRemove={onRemoveExample}
+                onMoveUp={onMoveExampleUp}
+                onMoveDown={onMoveExampleDown}
               />
             ))}
           </div>

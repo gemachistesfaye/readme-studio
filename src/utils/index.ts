@@ -18,3 +18,5 @@ export {
   validateBasicInfo,
   validateContact,
 } from './validation';
+export { copyToClipboard } from './clipboard';
+export { downloadMarkdown } from './downloadMarkdown';

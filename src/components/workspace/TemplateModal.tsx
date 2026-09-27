@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LayoutTemplate, Sparkles, Check, AlertTriangle, X, ShieldAlert } from 'lucide-react';
+import { LayoutTemplate, Sparkles, Check, X, ShieldAlert } from 'lucide-react';
 import { ReadmeTemplate, TemplateId } from '@/types';
 import { README_TEMPLATES } from '@/constants/templates';
 import { cn } from '@/utils';

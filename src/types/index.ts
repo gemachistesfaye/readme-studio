@@ -62,11 +62,25 @@ export interface InstallationData {
   setupInstructions: InstallationStep[];
 }
 
+export interface UsageExample {
+  id: string;
+  title: string;
+  description: string;
+  code: string;
+  language: string;
+}
+
+export interface UsageData {
+  introduction: string;
+  examples: UsageExample[];
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
   features: FeaturesData;
   installation: InstallationData;
+  usage: UsageData;
 }
 
 export type ValidationErrors = Partial<Record<keyof BasicInfoData, string>>;

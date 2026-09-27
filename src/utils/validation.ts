@@ -1,4 +1,4 @@
-﻿import { BasicInfoData, ValidationErrors } from '@/types';
+import { BasicInfoData, ContactData, ContactErrors, ValidationErrors } from '@/types';
 
 export const MAX_DESCRIPTION_LENGTH = 250;
 
@@ -10,6 +10,11 @@ export function isValidUrl(url: string): boolean {
   } catch {
     return false;
   }
+}
+
+export function isValidEmail(email: string): boolean {
+  if (!email || !email.trim()) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
 export function validateBasicInfo(data: BasicInfoData): ValidationErrors {
@@ -35,6 +40,32 @@ export function validateBasicInfo(data: BasicInfoData): ValidationErrors {
 
   if (data.authorGithub && !isValidUrl(data.authorGithub)) {
     errors.authorGithub = 'Please enter a valid URL (e.g., https://github.com/username)';
+  }
+
+  return errors;
+}
+
+export function validateContact(data: ContactData): ContactErrors {
+  const errors: ContactErrors = {};
+
+  if (data.email && !isValidEmail(data.email)) {
+    errors.email = 'Please enter a valid email address (e.g., name@example.com)';
+  }
+
+  if (data.website && !isValidUrl(data.website)) {
+    errors.website = 'Please enter a valid URL (e.g., https://example.com)';
+  }
+
+  if (data.linkedin && !isValidUrl(data.linkedin)) {
+    errors.linkedin = 'Please enter a valid URL (e.g., https://linkedin.com/in/username)';
+  }
+
+  if (data.twitter && data.twitter.trim().startsWith('http') && !isValidUrl(data.twitter)) {
+    errors.twitter = 'Please enter a valid URL or handle';
+  }
+
+  if (data.additionalLinkUrl && !isValidUrl(data.additionalLinkUrl)) {
+    errors.additionalLinkUrl = 'Please enter a valid URL (e.g., https://example.com)';
   }
 
   return errors;

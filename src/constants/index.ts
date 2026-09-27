@@ -13,4 +13,5 @@ export { README_TEMPLATES } from './templates';
 export { LICENSE_OPTIONS } from './licenses';
 export { TECH_CATEGORIES, QUICK_ADD_OPTIONS } from './techStack';
 export { USAGE_CODE_LANGUAGES } from './usage';
+export { DEFAULT_SECTION_ORDER, README_SECTIONS, getSectionMeta } from './sections';
 export * from './githubLanguageMap';

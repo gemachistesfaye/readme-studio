@@ -109,8 +109,27 @@ export interface ContactData {
   additionalLinkUrl: string;
 }
 
+export type BadgeType = 'technology' | 'license' | 'custom';
+export type BadgeStyle = 'flat' | 'flat-square' | 'plastic' | 'for-the-badge';
+
+export interface ReadmeBadge {
+  id: string;
+  type: BadgeType;
+  label: string;
+  message?: string;
+  color?: string;
+  logo?: string;
+  link?: string;
+  style?: BadgeStyle;
+}
+
+export interface BadgesData {
+  badges: ReadmeBadge[];
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
+  badges: BadgesData;
   techStack: TechStackData;
   features: FeaturesData;
   installation: InstallationData;
@@ -120,5 +139,21 @@ export interface ReadmeData {
   contact: ContactData;
 }
 
+export type TemplateId = 'standard' | 'web-app' | 'api-backend' | 'ai-ml' | 'minimal' | 'blank';
+
+export interface ReadmeTemplate {
+  id: TemplateId;
+  name: string;
+  description: string;
+  sections: string[];
+  badgePrompt?: string;
+  apply: (currentData: ReadmeData) => ReadmeData;
+}
+
 export type ValidationErrors = Partial<Record<keyof BasicInfoData, string>>;
 export type ContactErrors = Partial<Record<keyof ContactData, string>>;
+export type CustomBadgeErrors = {
+  label?: string;
+  message?: string;
+  link?: string;
+};

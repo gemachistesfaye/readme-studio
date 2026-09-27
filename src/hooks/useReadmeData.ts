@@ -12,6 +12,7 @@ import {
   LicenseData,
   ReadmeBadge,
   ReadmeData,
+  ReadmeSectionId,
   TechCategory,
   TemplateId,
   UsageData,
@@ -22,6 +23,13 @@ import {
 } from '@/types';
 import { validateBasicInfo, validateContact } from '@/utils/validation';
 import { mapGitHubImportToReadmeData } from '@/utils/githubImport';
+import { moveItem, moveItemById } from '@/utils/listOrder';
+import {
+  isDefaultSectionOrder,
+  moveSectionInOrder,
+  normalizeSectionOrder,
+} from '@/utils/sectionOrder';
+import { DEFAULT_SECTION_ORDER } from '@/constants/sections';
 import { README_TEMPLATES } from '@/constants/templates';
 
 const initialReadmeData: ReadmeData = {
@@ -71,6 +79,9 @@ const initialReadmeData: ReadmeData = {
     additionalLinkLabel: '',
     additionalLinkUrl: '',
   },
+  layout: {
+    sectionOrder: [...DEFAULT_SECTION_ORDER],
+  },
 };
 
 export function useReadmeData() {
@@ -114,7 +125,56 @@ export function useReadmeData() {
     return false;
   }, [data]);
 
-  // 1. Template Operations
+  // Normalized section order — always a complete, duplicate-free list
+  const sectionOrder = useMemo(
+    () => normalizeSectionOrder(data.layout?.sectionOrder),
+    [data.layout]
+  );
+
+  // True when the current order already matches DEFAULT_SECTION_ORDER
+  const isSectionOrderDefault = useMemo(
+    () => isDefaultSectionOrder(data.layout?.sectionOrder),
+    [data.layout]
+  );
+
+  // 1. Section Order Operations
+  const moveSectionUp = useCallback((sectionId: ReadmeSectionId) => {
+    setData((prev) => ({
+      ...prev,
+      layout: {
+        sectionOrder: moveSectionInOrder(
+          normalizeSectionOrder(prev.layout?.sectionOrder),
+          sectionId,
+          -1
+        ),
+      },
+    }));
+  }, []);
+
+  const moveSectionDown = useCallback((sectionId: ReadmeSectionId) => {
+    setData((prev) => ({
+      ...prev,
+      layout: {
+        sectionOrder: moveSectionInOrder(
+          normalizeSectionOrder(prev.layout?.sectionOrder),
+          sectionId,
+          1
+        ),
+      },
+    }));
+  }, []);
+
+  // Resets ordering only. Section content is never touched.
+  const resetSectionOrder = useCallback(() => {
+    setData((prev) => ({
+      ...prev,
+      layout: {
+        sectionOrder: [...DEFAULT_SECTION_ORDER],
+      },
+    }));
+  }, []);
+
+  // 2. Template Operations
   const applyTemplate = useCallback((templateId: TemplateId) => {
     const template = README_TEMPLATES.find((t) => t.id === templateId);
     if (!template) return;
@@ -126,7 +186,7 @@ export function useReadmeData() {
     setCurrentTemplateId(templateId);
   }, []);
 
-  // 2. GitHub Import Operations
+  // 3. GitHub Import Operations
   const importGitHubData = useCallback(
     (analysis: GitHubImportAnalysis, selection: GitHubImportSelection) => {
       setData((prev) => mapGitHubImportToReadmeData(prev, analysis, selection));
@@ -134,7 +194,7 @@ export function useReadmeData() {
     []
   );
 
-  // 3. Badge Operations
+  // 4. Badge Operations
   const addBadge = useCallback(
     (
       type: BadgeType,
@@ -206,28 +266,22 @@ export function useReadmeData() {
 
   const moveBadgeUp = useCallback((index: number) => {
     if (index <= 0) return;
-    setData((prev) => {
-      const list = [...prev.badges.badges];
-      const temp = list[index - 1];
-      list[index - 1] = list[index];
-      list[index] = temp;
-      return {
-        ...prev,
-        badges: { badges: list },
-      };
-    });
+    setData((prev) => ({
+      ...prev,
+      badges: {
+        badges: moveItem(prev.badges.badges, index, index - 1),
+      },
+    }));
   }, []);
 
   const moveBadgeDown = useCallback((index: number) => {
     setData((prev) => {
-      const list = [...prev.badges.badges];
-      if (index >= list.length - 1) return prev;
-      const temp = list[index + 1];
-      list[index + 1] = list[index];
-      list[index] = temp;
+      if (index >= prev.badges.badges.length - 1) return prev;
       return {
         ...prev,
-        badges: { badges: list },
+        badges: {
+          badges: moveItem(prev.badges.badges, index, index + 1),
+        },
       };
     });
   }, []);
@@ -367,6 +421,25 @@ export function useReadmeData() {
     }));
   }, []);
 
+  // 6. Feature Ordering (ids and content are preserved, only the position changes)
+  const moveFeatureUp = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      features: {
+        features: moveItemById(prev.features.features, id, -1),
+      },
+    }));
+  }, []);
+
+  const moveFeatureDown = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      features: {
+        features: moveItemById(prev.features.features, id, 1),
+      },
+    }));
+  }, []);
+
   // Installation Handlers
   const updateInstallationField = useCallback(
     (field: keyof Omit<InstallationData, 'setupInstructions'>, value: string) => {
@@ -435,6 +508,29 @@ export function useReadmeData() {
       installation: {
         ...prev.installation,
         setupInstructions: prev.installation.setupInstructions.filter((s) => s.id !== id),
+      },
+    }));
+  }, []);
+
+  // 7. Custom Installation Step Ordering
+  // Only the flexible step collection is reorderable — fixed fields
+  // (prerequisites, clone command, install command) keep their positions.
+  const moveInstallationStepUp = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      installation: {
+        ...prev.installation,
+        setupInstructions: moveItemById(prev.installation.setupInstructions, id, -1),
+      },
+    }));
+  }, []);
+
+  const moveInstallationStepDown = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      installation: {
+        ...prev.installation,
+        setupInstructions: moveItemById(prev.installation.setupInstructions, id, 1),
       },
     }));
   }, []);
@@ -560,6 +656,28 @@ export function useReadmeData() {
       usage: {
         ...prev.usage,
         examples: prev.usage.examples.filter((e) => e.id !== id),
+      },
+    }));
+  }, []);
+
+  // 8. Usage Example Ordering
+  // Title, description, code, and language are preserved as-is.
+  const moveUsageExampleUp = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      usage: {
+        ...prev.usage,
+        examples: moveItemById(prev.usage.examples, id, -1),
+      },
+    }));
+  }, []);
+
+  const moveUsageExampleDown = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      usage: {
+        ...prev.usage,
+        examples: moveItemById(prev.usage.examples, id, 1),
       },
     }));
   }, []);
@@ -712,6 +830,11 @@ export function useReadmeData() {
     data,
     currentTemplateId,
     hasUserContent,
+    sectionOrder,
+    isSectionOrderDefault,
+    moveSectionUp,
+    moveSectionDown,
+    resetSectionOrder,
     applyTemplate,
     importGitHubData,
     addBadge,
@@ -726,15 +849,21 @@ export function useReadmeData() {
     addFeature,
     updateFeature,
     removeFeature,
+    moveFeatureUp,
+    moveFeatureDown,
     updateInstallationField,
     addInstallationStep,
     updateInstallationStep,
     removeInstallationStep,
+    moveInstallationStepUp,
+    moveInstallationStepDown,
     updateUsageIntroduction,
     updateUsageField,
     addUsageExample,
     updateUsageExample,
     removeUsageExample,
+    moveUsageExampleUp,
+    moveUsageExampleDown,
     toggleContributingEnabled,
     updateContributingField,
     addGuideline,

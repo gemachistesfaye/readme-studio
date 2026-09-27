@@ -1,19 +1,26 @@
 ﻿import React, { useState } from 'react';
-import { Pencil, Trash2, Check, X, AlertCircle, Terminal } from 'lucide-react';
+import { Pencil, Trash2, Check, X, AlertCircle, Terminal, ArrowUp, ArrowDown } from 'lucide-react';
 import { InstallationStep } from '@/types';
+import { canMoveDown, canMoveUp } from '@/utils';
 
 interface InstallationStepItemProps {
   step: InstallationStep;
   index: number;
+  totalCount: number;
   onUpdate: (id: string, instruction: string, command: string) => { success: boolean; error?: string };
   onRemove: (id: string) => void;
+  onMoveUp: (id: string) => void;
+  onMoveDown: (id: string) => void;
 }
 
 export const InstallationStepItem: React.FC<InstallationStepItemProps> = ({
   step,
   index,
+  totalCount,
   onUpdate,
   onRemove,
+  onMoveUp,
+  onMoveDown,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editInstruction, setEditInstruction] = useState(step.instruction);
@@ -135,6 +142,26 @@ export const InstallationStepItem: React.FC<InstallationStepItemProps> = ({
       </div>
 
       <div className="flex items-center gap-1 shrink-0">
+        <button
+          type="button"
+          onClick={() => onMoveUp(step.id)}
+          disabled={!canMoveUp(index, totalCount)}
+          aria-label={`Move ${step.instruction} step up`}
+          title="Move step up"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200 transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        >
+          <ArrowUp className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onMoveDown(step.id)}
+          disabled={!canMoveDown(index, totalCount)}
+          aria-label={`Move ${step.instruction} step down`}
+          title="Move step down"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200 transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        >
+          <ArrowDown className="h-3.5 w-3.5" />
+        </button>
         <button
           type="button"
           onClick={() => setIsEditing(true)}

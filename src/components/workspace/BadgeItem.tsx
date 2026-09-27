@@ -73,9 +73,9 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
 
   if (isEditing) {
     return (
-      <div className="rounded-xl border border-indigo-500/40 bg-zinc-900/90 p-4 shadow-sm space-y-3">
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-          <span className="text-xs font-semibold text-indigo-400">Edit Badge</span>
+      <div className="rounded-xl border border-indigo-200 dark:border-indigo-500/40 bg-white dark:bg-zinc-900/90 p-4 shadow-sm space-y-3">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2">
+          <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">Edit Badge</span>
           <div className="flex items-center gap-1.5">
             <button
               type="button"
@@ -88,7 +88,7 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
             <button
               type="button"
               onClick={handleCancel}
-              className="flex items-center gap-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-[11px] font-medium text-zinc-300 hover:bg-zinc-700 transition-colors"
+              className="flex items-center gap-1 rounded border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-[11px] font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
             >
               <X className="h-3 w-3" />
               <span>Cancel</span>
@@ -97,50 +97,50 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
         </div>
 
         {validationError && (
-          <p className="text-xs text-rose-400 bg-rose-500/10 p-2 rounded border border-rose-500/20">
+          <p className="text-xs text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 p-2 rounded border border-rose-200 dark:border-rose-500/20">
             {validationError}
           </p>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
           <div>
-            <label className="block text-zinc-400 mb-1">Label</label>
+            <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Label</label>
             <input
               type="text"
               value={editLabel}
               onChange={(e) => setEditLabel(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-zinc-400 mb-1">Message</label>
+            <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Message</label>
             <input
               type="text"
               value={editMessage}
               onChange={(e) => setEditMessage(e.target.value)}
               placeholder="e.g. v1.0.0, passing"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-zinc-400 mb-1">Color / Hex</label>
+            <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Color / Hex</label>
             <input
               type="text"
               value={editColor}
               onChange={(e) => setEditColor(e.target.value)}
               placeholder="e.g. blue, 4F46E5"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
 
           <div>
-            <label className="block text-zinc-400 mb-1">Style</label>
+            <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Style</label>
             <select
               value={editStyle}
               onChange={(e) => setEditStyle(e.target.value as BadgeStyle)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               {BADGE_STYLES.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -151,13 +151,13 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-zinc-400 mb-1">Link URL (Optional)</label>
+            <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Link URL (Optional)</label>
             <input
               type="url"
               value={editLink}
               onChange={(e) => setEditLink(e.target.value)}
               placeholder="https://example.com"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
           </div>
         </div>
@@ -166,14 +166,14 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-zinc-800 bg-zinc-900/60 p-3 hover:border-zinc-700/80 transition-colors">
+    <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3 hover:border-zinc-300 dark:hover:border-zinc-700/80 transition-colors">
       <div className="flex items-center gap-3 min-w-0">
-        <span className="text-[11px] font-mono text-zinc-500 w-4 text-center">
+        <span className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 w-4 text-center">
           {index + 1}
         </span>
 
         {/* Rendered Badge Image Preview */}
-        <div className="bg-zinc-950/60 p-1 rounded-md border border-zinc-800/80 flex items-center justify-center">
+        <div className="bg-zinc-50 dark:bg-zinc-950/60 p-1 rounded-md border border-zinc-200 dark:border-zinc-800/80 flex items-center justify-center">
           <img
             src={imageUrl}
             alt={badge.label}
@@ -186,10 +186,10 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
 
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-semibold text-zinc-200 truncate">
+            <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-200 truncate">
               {badge.label}
             </span>
-            <span className="rounded bg-zinc-800 px-1.5 py-0.2 text-[9px] font-medium text-zinc-400 capitalize">
+            <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.2 text-[9px] font-medium text-zinc-500 dark:text-zinc-400 capitalize">
               {badge.type}
             </span>
           </div>
@@ -199,7 +199,7 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
               href={badge.link}
               target="_blank"
               rel="noreferrer"
-              className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 mt-0.5 truncate"
+              className="text-[10px] text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1 mt-0.5 truncate"
             >
               <span className="truncate">{badge.link}</span>
               <ExternalLink className="h-2.5 w-2.5 shrink-0" />
@@ -216,7 +216,7 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
           disabled={index === 0}
           aria-label="Move badge up"
           title="Move up"
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/60 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ArrowUp className="h-3.5 w-3.5" />
         </button>
@@ -227,7 +227,7 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
           disabled={index >= totalCount - 1}
           aria-label="Move badge down"
           title="Move down"
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/60 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <ArrowDown className="h-3.5 w-3.5" />
         </button>
@@ -237,7 +237,7 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
           onClick={() => setIsEditing(true)}
           aria-label="Edit badge"
           title="Edit badge"
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:bg-zinc-800 hover:text-indigo-300 transition-colors"
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/60 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
         >
           <Edit2 className="h-3.5 w-3.5" />
         </button>
@@ -247,7 +247,7 @@ export const BadgeItem: React.FC<BadgeItemProps> = ({
           onClick={() => onRemove(badge.id)}
           aria-label="Remove badge"
           title="Remove badge"
-          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-950/60 text-zinc-400 hover:border-rose-500/30 hover:bg-rose-500/10 hover:text-rose-400 transition-colors"
+          className="flex h-7 w-7 items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/60 text-zinc-500 dark:text-zinc-400 hover:border-rose-200 dark:hover:border-rose-500/30 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>

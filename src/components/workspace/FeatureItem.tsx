@@ -1,17 +1,26 @@
 ﻿import React, { useState } from 'react';
-import { Pencil, Trash2, Check, X, AlertCircle } from 'lucide-react';
+import { Pencil, Trash2, Check, X, AlertCircle, ArrowUp, ArrowDown } from 'lucide-react';
 import { Feature } from '@/types';
+import { canMoveDown, canMoveUp } from '@/utils';
 
 interface FeatureItemProps {
   feature: Feature;
+  index: number;
+  totalCount: number;
   onUpdate: (id: string, title: string, description: string) => { success: boolean; error?: string };
   onRemove: (id: string) => void;
+  onMoveUp: (id: string) => void;
+  onMoveDown: (id: string) => void;
 }
 
 export const FeatureItem: React.FC<FeatureItemProps> = ({
   feature,
+  index,
+  totalCount,
   onUpdate,
   onRemove,
+  onMoveUp,
+  onMoveDown,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(feature.title);
@@ -121,6 +130,26 @@ export const FeatureItem: React.FC<FeatureItemProps> = ({
       </div>
 
       <div className="flex items-center gap-1 shrink-0">
+        <button
+          type="button"
+          onClick={() => onMoveUp(feature.id)}
+          disabled={!canMoveUp(index, totalCount)}
+          aria-label={`Move ${feature.title} feature up`}
+          title="Move feature up"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200 transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        >
+          <ArrowUp className="h-3.5 w-3.5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onMoveDown(feature.id)}
+          disabled={!canMoveDown(index, totalCount)}
+          aria-label={`Move ${feature.title} feature down`}
+          title="Move feature down"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200 transition-colors disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        >
+          <ArrowDown className="h-3.5 w-3.5" />
+        </button>
         <button
           type="button"
           onClick={() => setIsEditing(true)}

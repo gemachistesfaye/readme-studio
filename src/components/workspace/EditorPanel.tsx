@@ -71,10 +71,14 @@ interface EditorPanelProps {
   onAddFeature: (title: string, description?: string) => { success: boolean; error?: string };
   onUpdateFeature: (id: string, title: string, description: string) => { success: boolean; error?: string };
   onRemoveFeature: (id: string) => void;
+  onMoveFeatureUp: (id: string) => void;
+  onMoveFeatureDown: (id: string) => void;
   onUpdateInstallationField: (field: keyof Omit<InstallationData, 'setupInstructions'>, value: string) => void;
   onAddInstallationStep: (instruction: string, command?: string) => { success: boolean; error?: string };
   onUpdateInstallationStep: (id: string, instruction: string, command: string) => { success: boolean; error?: string };
   onRemoveInstallationStep: (id: string) => void;
+  onMoveInstallationStepUp: (id: string) => void;
+  onMoveInstallationStepDown: (id: string) => void;
   onUpdateUsageIntroduction: (introduction: string) => void;
   onAddUsageExample: (
     title: string,
@@ -90,6 +94,8 @@ interface EditorPanelProps {
     language: string
   ) => { success: boolean; error?: string };
   onRemoveUsageExample: (id: string) => void;
+  onMoveUsageExampleUp: (id: string) => void;
+  onMoveUsageExampleDown: (id: string) => void;
   onToggleContributingEnabled: (enabled: boolean) => void;
   onUpdateContributingField: (field: keyof Omit<ContributingData, 'enabled' | 'guidelines'>, value: string) => void;
   onAddGuideline: (text: string) => { success: boolean; error?: string };
@@ -124,14 +130,20 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   onAddFeature,
   onUpdateFeature,
   onRemoveFeature,
+  onMoveFeatureUp,
+  onMoveFeatureDown,
   onUpdateInstallationField,
   onAddInstallationStep,
   onUpdateInstallationStep,
   onRemoveInstallationStep,
+  onMoveInstallationStepUp,
+  onMoveInstallationStepDown,
   onUpdateUsageIntroduction,
   onAddUsageExample,
   onUpdateUsageExample,
   onRemoveUsageExample,
+  onMoveUsageExampleUp,
+  onMoveUsageExampleDown,
   onToggleContributingEnabled,
   onUpdateContributingField,
   onAddGuideline,
@@ -247,6 +259,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onAddFeature={onAddFeature}
             onUpdateFeature={onUpdateFeature}
             onRemoveFeature={onRemoveFeature}
+            onMoveFeatureUp={onMoveFeatureUp}
+            onMoveFeatureDown={onMoveFeatureDown}
           />
         </EditorSection>
 
@@ -265,6 +279,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onAddStep={onAddInstallationStep}
             onUpdateStep={onUpdateInstallationStep}
             onRemoveStep={onRemoveInstallationStep}
+            onMoveStepUp={onMoveInstallationStepUp}
+            onMoveStepDown={onMoveInstallationStepDown}
           />
         </EditorSection>
 
@@ -282,6 +298,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onAddExample={onAddUsageExample}
             onUpdateExample={onUpdateUsageExample}
             onRemoveExample={onRemoveUsageExample}
+            onMoveExampleUp={onMoveUsageExampleUp}
+            onMoveExampleDown={onMoveUsageExampleDown}
           />
         </EditorSection>
 

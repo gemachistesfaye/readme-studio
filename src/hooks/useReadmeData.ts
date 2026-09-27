@@ -275,10 +275,8 @@ export function useReadmeData() {
 
   const removeTechnology = useCallback((id: string) => {
     setData((prev) => {
-      const techToRemove = prev.techStack.technologies.find((t) => t.id === id);
       const newTechList = prev.techStack.technologies.filter((t) => t.id !== id);
 
-      // Optionally keep or filter technology badges if needed
       return {
         ...prev,
         techStack: { technologies: newTechList },
@@ -408,6 +406,7 @@ export function useReadmeData() {
       setData((prev) => ({
         ...prev,
         installation: {
+          ...prev.installation,
           setupInstructions: prev.installation.setupInstructions.map((s) =>
             s.id === id ? { ...s, instruction: trimmedInstruction, command: command.trim() } : s
           ),
@@ -423,6 +422,7 @@ export function useReadmeData() {
     setData((prev) => ({
       ...prev,
       installation: {
+        ...prev.installation,
         setupInstructions: prev.installation.setupInstructions.filter((s) => s.id !== id),
       },
     }));

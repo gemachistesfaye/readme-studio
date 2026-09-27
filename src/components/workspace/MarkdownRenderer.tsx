@@ -15,14 +15,14 @@ type Block =
 
 function renderInline(text: string): React.ReactNode[] {
   // Regex to match markdown images: ![alt](url) or linked images: [![alt](url)](linkUrl), standard links: [label](url), **bold**, or `code`
-  const regex = /(!?[(?:[[^]]+]([^)]+)|[^]]+)]([^)]+)|**[^*]+**|`[^`]+`)/g;
+  const regex = /(\[!\[[^\]]*\]\([^)]+\)\]\([^)]+\)|!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`)/g;
   const parts = text.split(regex);
 
   return parts.map((part, index) => {
     if (!part) return null;
 
     // 1. Linked image: [![alt](imgUrl)](linkUrl)
-    const linkedImgMatch = part.match(/^[![([^]]*)](([^)]+))](([^)]+))$/);
+    const linkedImgMatch = part.match(/^\[!\[([^\]]*)\]\(([^)]+)\)\]\(([^)]+)\)$/);
     if (linkedImgMatch) {
       const [, alt, imgUrl, linkUrl] = linkedImgMatch;
       return (
@@ -46,7 +46,7 @@ function renderInline(text: string): React.ReactNode[] {
     }
 
     // 2. Direct image (badge): ![alt](imgUrl)
-    const imgMatch = part.match(/^![([^]]*)](([^)]+))$/);
+    const imgMatch = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
     if (imgMatch) {
       const [, alt, imgUrl] = imgMatch;
       return (
@@ -63,7 +63,7 @@ function renderInline(text: string): React.ReactNode[] {
     }
 
     // 3. Regular Link: [label](url)
-    const linkMatch = part.match(/^[([^]]+)](([^)]+))$/);
+    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (linkMatch) {
       const [, label, url] = linkMatch;
       const isExternal = url.startsWith('http') || url.startsWith('mailto:');
@@ -81,7 +81,7 @@ function renderInline(text: string): React.ReactNode[] {
     }
 
     // 4. Bold: **text**
-    const boldMatch = part.match(/^**([^*]+)**$/);
+    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
     if (boldMatch) {
       return (
         <strong key={index} className="font-semibold text-zinc-100">

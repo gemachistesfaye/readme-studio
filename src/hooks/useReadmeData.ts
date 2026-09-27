@@ -17,8 +17,11 @@ import {
   UsageData,
   UsageExample,
   ValidationErrors,
+  GitHubImportAnalysis,
+  GitHubImportSelection,
 } from '@/types';
 import { validateBasicInfo, validateContact } from '@/utils/validation';
+import { mapGitHubImportToReadmeData } from '@/utils/githubImport';
 import { README_TEMPLATES } from '@/constants/templates';
 
 const initialReadmeData: ReadmeData = {
@@ -123,7 +126,15 @@ export function useReadmeData() {
     setCurrentTemplateId(templateId);
   }, []);
 
-  // 2. Badge Operations
+  // 2. GitHub Import Operations
+  const importGitHubData = useCallback(
+    (analysis: GitHubImportAnalysis, selection: GitHubImportSelection) => {
+      setData((prev) => mapGitHubImportToReadmeData(prev, analysis, selection));
+    },
+    []
+  );
+
+  // 3. Badge Operations
   const addBadge = useCallback(
     (
       type: BadgeType,
@@ -702,6 +713,7 @@ export function useReadmeData() {
     currentTemplateId,
     hasUserContent,
     applyTemplate,
+    importGitHubData,
     addBadge,
     updateBadge,
     removeBadge,

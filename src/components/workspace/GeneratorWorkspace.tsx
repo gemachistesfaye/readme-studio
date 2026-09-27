@@ -21,7 +21,16 @@ export const GeneratorWorkspace: React.FC = () => {
     addUsageExample,
     updateUsageExample,
     removeUsageExample,
+    toggleContributingEnabled,
+    updateContributingField,
+    addGuideline,
+    updateGuideline,
+    removeGuideline,
+    updateLicense,
+    updateContactField,
+    touchContactField,
     errors,
+    contactErrors,
   } = useReadmeData();
 
   return (
@@ -45,7 +54,11 @@ export const GeneratorWorkspace: React.FC = () => {
           features={data.features}
           installation={data.installation}
           usage={data.usage}
+          contributing={data.contributing}
+          license={data.license}
+          contact={data.contact}
           errors={errors}
+          contactErrors={contactErrors}
           onBasicInfoChange={updateBasicInfo}
           onBasicInfoBlur={touchField}
           onAddTechnology={addTechnology}
@@ -61,6 +74,14 @@ export const GeneratorWorkspace: React.FC = () => {
           onAddUsageExample={addUsageExample}
           onUpdateUsageExample={updateUsageExample}
           onRemoveUsageExample={removeUsageExample}
+          onToggleContributingEnabled={toggleContributingEnabled}
+          onUpdateContributingField={updateContributingField}
+          onAddGuideline={addGuideline}
+          onUpdateGuideline={updateGuideline}
+          onRemoveGuideline={removeGuideline}
+          onUpdateLicense={updateLicense}
+          onUpdateContactField={updateContactField}
+          onContactBlur={touchContactField}
         />
 
         {/* Right Panel: Preview Area */}
@@ -70,6 +91,9 @@ export const GeneratorWorkspace: React.FC = () => {
           features={data.features}
           installation={data.installation}
           usage={data.usage}
+          contributing={data.contributing}
+          license={data.license}
+          contact={data.contact}
         />
       </div>
     </div>

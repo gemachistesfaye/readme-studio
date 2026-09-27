@@ -12,6 +12,12 @@ export {
   formatFencedCode,
 } from './generateMarkdown';
 export {
+  encodeBadgeComponent,
+  buildBadgeImageUrl,
+  generateBadgeMarkdown,
+  generateBadgesRow,
+} from './generateBadge';
+export {
   MAX_DESCRIPTION_LENGTH,
   isValidUrl,
   isValidEmail,

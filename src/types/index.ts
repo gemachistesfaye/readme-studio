@@ -157,3 +157,5 @@ export type CustomBadgeErrors = {
   message?: string;
   link?: string;
 };
+
+export * from './github';

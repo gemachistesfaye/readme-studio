@@ -140,15 +140,15 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
   return (
     <div className="space-y-5">
       {/* Category Tabs */}
-      <div className="flex rounded-xl border border-zinc-800 bg-zinc-950 p-1">
+      <div className="flex rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-1">
         <button
           type="button"
           onClick={() => setActiveTab('tech')}
           className={cn(
             'flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-colors',
             activeTab === 'tech'
-              ? 'bg-zinc-800 text-zinc-100 shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
           )}
         >
           <Cpu className="h-3.5 w-3.5" />
@@ -161,8 +161,8 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-colors',
             activeTab === 'license'
-              ? 'bg-zinc-800 text-zinc-100 shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
           )}
         >
           <Shield className="h-3.5 w-3.5" />
@@ -175,8 +175,8 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
           className={cn(
             'flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium transition-colors',
             activeTab === 'custom'
-              ? 'bg-zinc-800 text-zinc-100 shadow-sm'
-              : 'text-zinc-400 hover:text-zinc-200'
+              ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm'
+              : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'
           )}
         >
           <Tag className="h-3.5 w-3.5" />
@@ -186,22 +186,22 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
 
       {/* Tab Panels */}
       {activeTab === 'tech' && (
-        <div className="space-y-3 rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-4">
+        <div className="space-y-3 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/30 p-4">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-semibold text-zinc-200">
+            <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">
               Technologies in your project
             </h4>
-            <span className="text-[11px] text-zinc-500">
+            <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
               {techStack.technologies.length} added in Tech Stack
             </span>
           </div>
 
           {techStack.technologies.length === 0 ? (
-            <p className="text-xs text-zinc-500 italic py-2">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 italic py-2">
               No technologies added yet. Add technologies in the Tech Stack section on the left to create one-click badges here.
             </p>
           ) : availableTechs.length === 0 ? (
-            <p className="text-xs text-emerald-400/90 py-2">
+            <p className="text-xs text-emerald-600 dark:text-emerald-400/90 py-2">
               All technologies from your Tech Stack have been added as badges!
             </p>
           ) : (
@@ -211,9 +211,9 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
                   key={tech.id}
                   type="button"
                   onClick={() => handleAddTechBadge(tech.name)}
-                  className="flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:border-indigo-500/50 hover:bg-indigo-500/10 hover:text-indigo-300 transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:border-indigo-200 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors"
                 >
-                  <Plus className="h-3.5 w-3.5 text-indigo-400" />
+                  <Plus className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
                   <span>{tech.name}</span>
                 </button>
               ))}
@@ -223,27 +223,27 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
       )}
 
       {activeTab === 'license' && (
-        <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-4 space-y-3">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/30 p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-semibold text-zinc-200">
+            <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">
               Project License Badge
             </h4>
-            <span className="rounded bg-zinc-800 px-2 py-0.5 text-[11px] text-zinc-300 font-mono">
+            <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 text-[11px] text-zinc-700 dark:text-zinc-300 font-mono">
               {license.type}
             </span>
           </div>
 
           {license.type === 'None' ? (
-            <p className="text-xs text-zinc-500 italic">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 italic">
               Your license is currently set to &quot;None&quot;. Choose a license in the License section to enable this badge.
             </p>
           ) : hasLicenseBadge ? (
-            <p className="text-xs text-emerald-400/90">
+            <p className="text-xs text-emerald-600 dark:text-emerald-400/90">
               A license badge for &quot;{license.type}&quot; is active.
             </p>
           ) : (
             <div>
-              <p className="text-xs text-zinc-400 mb-3 leading-relaxed">
+              <p className="text-xs text-zinc-400 dark:text-zinc-500 mb-3 leading-relaxed">
                 Add an official license badge displaying &quot;{license.type}&quot; to your README top banner.
               </p>
               <button
@@ -260,13 +260,13 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
       )}
 
       {activeTab === 'custom' && (
-        <form onSubmit={handleAddCustomBadge} className="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-4 space-y-3">
-          <h4 className="text-xs font-semibold text-zinc-200">
+        <form onSubmit={handleAddCustomBadge} className="rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/30 p-4 space-y-3">
+          <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">
             Create Custom Badge
           </h4>
 
           {customError && (
-            <div className="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-500/10 p-2 text-xs text-rose-400">
+            <div className="flex items-center gap-1.5 rounded-lg border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 p-2 text-xs text-rose-600 dark:text-rose-400">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" />
               <span>{customError}</span>
             </div>
@@ -274,46 +274,46 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
             <div>
-              <label className="block text-zinc-400 mb-1">
-                Label <span className="text-indigo-400">*</span>
+              <label className="block text-zinc-400 dark:text-zinc-500 mb-1">
+                Label <span className="text-indigo-600 dark:text-indigo-400">*</span>
               </label>
               <input
                 type="text"
                 value={customLabel}
                 onChange={(e) => setCustomLabel(e.target.value)}
                 placeholder="e.g. Build, Version, PRs"
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1">Message</label>
+              <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Message</label>
               <input
                 type="text"
                 value={customMessage}
                 onChange={(e) => setCustomMessage(e.target.value)}
                 placeholder="e.g. passing, v1.0.0"
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1">Color / Hex</label>
+              <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Color / Hex</label>
               <input
                 type="text"
                 value={customColor}
                 onChange={(e) => setCustomColor(e.target.value)}
                 placeholder="e.g. blue, green, 4F46E5"
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1">Style</label>
+              <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Style</label>
               <select
                 value={customStyle}
                 onChange={(e) => setCustomStyle(e.target.value as BadgeStyle)}
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               >
                 {BADGE_STYLES.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -324,24 +324,24 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1">SimpleIcon Logo (Optional)</label>
+              <label className="block text-zinc-400 dark:text-zinc-500 mb-1">SimpleIcon Logo (Optional)</label>
               <input
                 type="text"
                 value={customLogo}
                 onChange={(e) => setCustomLogo(e.target.value)}
                 placeholder="e.g. github, npm, docker"
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-zinc-400 mb-1">Link URL (Optional)</label>
+              <label className="block text-zinc-400 dark:text-zinc-500 mb-1">Link URL (Optional)</label>
               <input
                 type="url"
                 value={customLink}
                 onChange={(e) => setCustomLink(e.target.value)}
                 placeholder="https://example.com"
-                className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
               />
             </div>
           </div>
@@ -360,17 +360,17 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
 
       {/* Configured Badges List with Ordering */}
       <div className="space-y-2.5 pt-2">
-        <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-          <h4 className="text-xs font-semibold text-zinc-200">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-2">
+          <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">
             Active README Badges ({badges.badges.length})
           </h4>
-          <span className="text-[11px] text-zinc-500">
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
             Rendered beneath project title
           </span>
         </div>
 
         {badges.badges.length === 0 ? (
-          <p className="text-xs text-zinc-500 italic py-2 text-center">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 italic py-2 text-center">
             No badges configured. Add badges from your Tech Stack, License, or Custom tabs above.
           </p>
         ) : (

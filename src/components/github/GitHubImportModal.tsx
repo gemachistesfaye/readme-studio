@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Github,
   Search,
@@ -59,19 +59,8 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
     }
   }, [isOpen, step]);
 
-  // Handle escape key to close
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        handleClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
-
   // Cancel any ongoing fetch on unmount or close
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
@@ -82,7 +71,18 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
     setSelection(null);
     setShowOverwriteConfirm(false);
     onClose();
-  };
+  }, [onClose]);
+
+  // Handle escape key to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, handleClose]);
 
   const handleAnalyze = async (urlToAnalyze = repoUrl) => {
     const trimmed = urlToAnalyze.trim();

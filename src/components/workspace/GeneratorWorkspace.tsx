@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Github } from 'lucide-react';
+import { Github, ListOrdered } from 'lucide-react';
 import { useReadmeData } from '@/hooks/useReadmeData';
 import { generateMarkdown } from '@/utils';
 import { README_TEMPLATES } from '@/constants';
@@ -7,6 +7,7 @@ import { GitHubImportModal } from '@/components/github';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 import { TemplateModal } from './TemplateModal';
+import { SectionOrderModal } from './SectionOrderModal';
 
 interface GeneratorWorkspaceProps {
   isGitHubImportOpen?: boolean;
@@ -20,6 +21,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
   onOpenGitHubImport,
 }) => {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [isSectionOrderOpen, setIsSectionOrderOpen] = useState(false);
   const [internalGitHubImportOpen, setInternalGitHubImportOpen] = useState(false);
 
   const isImportModalOpen = isGitHubImportOpen || internalGitHubImportOpen;
@@ -42,14 +44,20 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
     addFeature,
     updateFeature,
     removeFeature,
+    moveFeatureUp,
+    moveFeatureDown,
     updateInstallationField,
     addInstallationStep,
     updateInstallationStep,
     removeInstallationStep,
+    moveInstallationStepUp,
+    moveInstallationStepDown,
     updateUsageIntroduction,
     addUsageExample,
     updateUsageExample,
     removeUsageExample,
+    moveUsageExampleUp,
+    moveUsageExampleDown,
     toggleContributingEnabled,
     updateContributingField,
     addGuideline,
@@ -64,6 +72,11 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
     hasUserContent,
     errors,
     contactErrors,
+    sectionOrder,
+    isSectionOrderDefault,
+    moveSectionUp,
+    moveSectionDown,
+    resetSectionOrder,
   } = useReadmeData();
 
   // Canonical Markdown is the single source of truth for preview, copy, and export
@@ -96,6 +109,16 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setIsSectionOrderOpen(true)}
+            aria-haspopup="dialog"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/80 px-3.5 py-2 text-sm font-medium text-zinc-200 shadow-sm transition-colors hover:border-zinc-600 hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+          >
+            <ListOrdered className="h-4 w-4 text-zinc-400" />
+            Customize Sections
+          </button>
+
           <button
             type="button"
             onClick={() => {
@@ -158,14 +181,20 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           onAddFeature={addFeature}
           onUpdateFeature={updateFeature}
           onRemoveFeature={removeFeature}
+          onMoveFeatureUp={moveFeatureUp}
+          onMoveFeatureDown={moveFeatureDown}
           onUpdateInstallationField={updateInstallationField}
           onAddInstallationStep={addInstallationStep}
           onUpdateInstallationStep={updateInstallationStep}
           onRemoveInstallationStep={removeInstallationStep}
+          onMoveInstallationStepUp={moveInstallationStepUp}
+          onMoveInstallationStepDown={moveInstallationStepDown}
           onUpdateUsageIntroduction={updateUsageIntroduction}
           onAddUsageExample={addUsageExample}
           onUpdateUsageExample={updateUsageExample}
           onRemoveUsageExample={removeUsageExample}
+          onMoveUsageExampleUp={moveUsageExampleUp}
+          onMoveUsageExampleDown={moveUsageExampleDown}
           onToggleContributingEnabled={toggleContributingEnabled}
           onUpdateContributingField={updateContributingField}
           onAddGuideline={addGuideline}
@@ -195,6 +224,17 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
         onClose={handleCloseImportModal}
         currentData={data}
         onImport={importGitHubData}
+      />
+
+      {/* Section Order Customization Modal */}
+      <SectionOrderModal
+        isOpen={isSectionOrderOpen}
+        sectionOrder={sectionOrder}
+        isDefaultOrder={isSectionOrderDefault}
+        onClose={() => setIsSectionOrderOpen(false)}
+        onMoveSectionUp={moveSectionUp}
+        onMoveSectionDown={moveSectionDown}
+        onResetOrder={resetSectionOrder}
       />
     </div>
   );

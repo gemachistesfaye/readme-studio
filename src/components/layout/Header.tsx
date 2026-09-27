@@ -27,8 +27,8 @@ export const Header: React.FC = () => {
 
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-2 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-mono text-zinc-400 border border-zinc-800 md:flex">
-            <Terminal className="h-3.5 w-3.5 text-zinc-500" />
-            <span>phase-1 // foundation</span>
+            <Terminal className="h-3.5 w-3.5 text-indigo-400" />
+            <span>&gt;_ README.md</span>
           </div>
 
           <a

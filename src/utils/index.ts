@@ -28,6 +28,20 @@ export { copyToClipboard } from './clipboard';
 export { downloadMarkdown } from './downloadMarkdown';
 export { parseGitHubRepositoryUrl } from './parseGitHubUrl';
 export {
+  canMoveDown,
+  canMoveUp,
+  moveItem,
+  moveItemById,
+  type MoveDirection,
+} from './listOrder';
+export {
+  getSectionPosition,
+  isDefaultSectionOrder,
+  isReadmeSectionId,
+  moveSectionInOrder,
+  normalizeSectionOrder,
+} from './sectionOrder';
+export {
   createDefaultGitHubSelection,
   getOverwritingFields,
   mapGitHubImportToReadmeData,

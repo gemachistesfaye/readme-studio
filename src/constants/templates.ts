@@ -1,4 +1,5 @@
 import { ReadmeData, ReadmeTemplate } from '@/types';
+import { DEFAULT_SECTION_ORDER } from './sections';
 
 export const README_TEMPLATES: ReadmeTemplate[] = [
   {
@@ -58,6 +59,9 @@ export const README_TEMPLATES: ReadmeTemplate[] = [
         twitter: '',
         additionalLinkLabel: '',
         additionalLinkUrl: '',
+      },
+      layout: {
+        sectionOrder: [...DEFAULT_SECTION_ORDER],
       },
     }),
   },

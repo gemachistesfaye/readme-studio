@@ -1,13 +1,32 @@
 import React, { useMemo, useState } from 'react';
+import { Github } from 'lucide-react';
 import { useReadmeData } from '@/hooks/useReadmeData';
 import { generateMarkdown } from '@/utils';
 import { README_TEMPLATES } from '@/constants';
+import { GitHubImportModal } from '@/components/github';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 import { TemplateModal } from './TemplateModal';
 
-export const GeneratorWorkspace: React.FC = () => {
+interface GeneratorWorkspaceProps {
+  isGitHubImportOpen?: boolean;
+  onCloseGitHubImport?: () => void;
+  onOpenGitHubImport?: () => void;
+}
+
+export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
+  isGitHubImportOpen = false,
+  onCloseGitHubImport,
+  onOpenGitHubImport,
+}) => {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [internalGitHubImportOpen, setInternalGitHubImportOpen] = useState(false);
+
+  const isImportModalOpen = isGitHubImportOpen || internalGitHubImportOpen;
+  const handleCloseImportModal = () => {
+    setInternalGitHubImportOpen(false);
+    onCloseGitHubImport?.();
+  };
 
   const {
     data,
@@ -40,6 +59,7 @@ export const GeneratorWorkspace: React.FC = () => {
     updateContactField,
     touchContactField,
     applyTemplate,
+    importGitHubData,
     currentTemplateId,
     hasUserContent,
     errors,
@@ -74,8 +94,20 @@ export const GeneratorWorkspace: React.FC = () => {
           </p>
         </div>
 
-        {/* Templates Modal Trigger */}
-        <div>
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => {
+              if (onOpenGitHubImport) onOpenGitHubImport();
+              else setInternalGitHubImportOpen(true);
+            }}
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/80 px-3.5 py-2 text-sm font-medium text-zinc-200 shadow-sm transition-colors hover:border-zinc-600 hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+          >
+            <Github className="h-4 w-4 text-zinc-400" />
+            Import from GitHub
+          </button>
+
           <button
             type="button"
             onClick={() => setIsTemplateModalOpen(true)}
@@ -155,6 +187,14 @@ export const GeneratorWorkspace: React.FC = () => {
         onApplyTemplate={applyTemplate}
         currentTemplateId={currentTemplateId}
         hasUserContent={hasUserContent}
+      />
+
+      {/* Public GitHub Repository Import Modal */}
+      <GitHubImportModal
+        isOpen={isImportModalOpen}
+        onClose={handleCloseImportModal}
+        currentData={data}
+        onImport={importGitHubData}
       />
     </div>
   );

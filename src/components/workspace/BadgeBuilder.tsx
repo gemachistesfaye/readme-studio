@@ -384,7 +384,7 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
                 onUpdate={onUpdateBadge}
                 onRemove={onRemoveBadge}
                 onMoveUp={onMoveBadgeUp}
-                onMoveDown={onMoveDown}
+                onMoveDown={onMoveBadgeDown}
               />
             ))}
           </div>

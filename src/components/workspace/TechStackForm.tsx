@@ -59,7 +59,7 @@ export const TechStackForm: React.FC<TechStackFormProps> = ({
     <div className="flex flex-col gap-4">
       {/* Input & Category Selection Form */}
       <div className="flex flex-col gap-2">
-        <label htmlFor="tech-name-input" className="text-xs font-medium text-zinc-300">
+        <label htmlFor="tech-name-input" className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
           Add Technology
         </label>
         <div className="flex flex-col sm:flex-row gap-2">
@@ -73,10 +73,10 @@ export const TechStackForm: React.FC<TechStackFormProps> = ({
               if (error) setError(null);
             }}
             onKeyDown={handleKeyDown}
-            className={`flex-1 rounded-lg border bg-zinc-900/80 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none ${
+            className={`flex-1 rounded-lg border bg-zinc-50 dark:bg-zinc-900/80 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none ${
               error
-                ? 'border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/50'
-                : 'border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50'
+                ? 'border-red-300 dark:border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/50'
+                : 'border-zinc-200 dark:border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50'
             }`}
           />
 
@@ -85,10 +85,10 @@ export const TechStackForm: React.FC<TechStackFormProps> = ({
               aria-label="Technology Category"
               value={category}
               onChange={(e) => setCategory(e.target.value as TechCategory)}
-              className="rounded-lg border border-zinc-800 bg-zinc-900/90 px-3 py-2 text-xs text-zinc-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+              className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/90 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
             >
               {TECH_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat} className="bg-zinc-900 text-zinc-200">
+                <option key={cat} value={cat} className="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-200">
                   {cat}
                 </option>
               ))}
@@ -106,7 +106,7 @@ export const TechStackForm: React.FC<TechStackFormProps> = ({
         </div>
 
         {error && (
-          <div className="flex items-center gap-1.5 text-xs text-red-400 pt-0.5" role="alert">
+          <div className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400 pt-0.5" role="alert">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             <span>{error}</span>
           </div>
@@ -114,10 +114,10 @@ export const TechStackForm: React.FC<TechStackFormProps> = ({
       </div>
 
       {/* Selected Technologies List */}
-      <div className="flex flex-col gap-2 pt-1 border-t border-zinc-800/60">
-        <div className="flex items-center justify-between text-xs text-zinc-400">
+      <div className="flex flex-col gap-2 pt-1 border-t border-zinc-200 dark:border-zinc-800/60">
+        <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
           <span className="font-medium">Selected Technologies</span>
-          <span className="font-mono text-[11px] text-zinc-500">
+          <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
             {technologies.length} added
           </span>
         </div>
@@ -133,8 +133,8 @@ export const TechStackForm: React.FC<TechStackFormProps> = ({
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg border border-dashed border-zinc-800/80 bg-zinc-950/40 px-3 py-3 text-xs text-zinc-500">
-            <Layers className="h-4 w-4 text-zinc-600" />
+          <div className="flex items-center gap-2 rounded-lg border border-dashed border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-950/40 px-3 py-3 text-xs text-zinc-400 dark:text-zinc-500">
+            <Layers className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
             <span>No technologies added yet. Use the input above or quick-add below.</span>
           </div>
         )}

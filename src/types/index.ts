@@ -179,3 +179,4 @@ export type CustomBadgeErrors = {
 };
 
 export * from './github';
+export * from './theme';

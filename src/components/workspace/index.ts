@@ -12,3 +12,7 @@ export { InstallationForm } from './InstallationForm';
 export { InstallationStepItem } from './InstallationStepItem';
 export { UsageForm } from './UsageForm';
 export { UsageExampleItem } from './UsageExampleItem';
+export { ContributingForm } from './ContributingForm';
+export { GuidelineItem } from './GuidelineItem';
+export { LicenseForm } from './LicenseForm';
+export { ContactForm } from './ContactForm';

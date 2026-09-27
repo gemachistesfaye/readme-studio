@@ -77,8 +77,8 @@ export const UsageForm: React.FC<UsageFormProps> = ({
     <div className="flex flex-col gap-5">
       {/* Usage Instructions / Introduction */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="usage-instructions-input" className="text-xs font-medium text-zinc-300">
-          Usage Instructions <span className="text-zinc-500 text-[11px] font-normal">(optional)</span>
+        <label htmlFor="usage-instructions-input" className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+          Usage Instructions <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-normal">(optional)</span>
         </label>
         <textarea
           id="usage-instructions-input"
@@ -86,29 +86,29 @@ export const UsageForm: React.FC<UsageFormProps> = ({
           placeholder="After installation, start the development server and open the application in your browser."
           value={data.introduction}
           onChange={(e) => onUpdateIntroduction(e.target.value)}
-          className="w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+          className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
         />
-        <p className="text-[11px] text-zinc-500">
+        <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
           Provide high-level guidance or workflow explanation before specific code examples.
         </p>
       </div>
 
       {/* Usage Examples Builder */}
-      <div className="flex flex-col gap-3 pt-2 border-t border-zinc-800/60">
+      <div className="flex flex-col gap-3 pt-2 border-t border-zinc-200 dark:border-zinc-800/60">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-zinc-300">
+          <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
             Usage Examples & Code Snippets
           </span>
-          <span className="font-mono text-[11px] text-zinc-500">
+          <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
             {data.examples.length} added
           </span>
         </div>
 
         {/* New Example Form */}
-        <div className="flex flex-col gap-3 rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5">
+        <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/40 p-3.5">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="new-usage-title" className="text-[11px] font-medium text-zinc-300">
-              Title <span className="text-indigo-400">*</span>
+            <label htmlFor="new-usage-title" className="text-[11px] font-medium text-zinc-700 dark:text-zinc-300">
+              Title <span className="text-indigo-600 dark:text-indigo-400">*</span>
             </label>
             <input
               id="new-usage-title"
@@ -120,17 +120,17 @@ export const UsageForm: React.FC<UsageFormProps> = ({
                 if (exampleError) setExampleError(null);
               }}
               onKeyDown={handleKeyDown}
-              className={`w-full rounded-lg border bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none ${
+              className={`w-full rounded-lg border bg-zinc-50 dark:bg-zinc-950 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none ${
                 exampleError
-                  ? 'border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/50'
-                  : 'border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50'
+                  ? 'border-red-300 dark:border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/50'
+                  : 'border-zinc-200 dark:border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50'
               }`}
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="new-usage-desc" className="text-[11px] font-medium text-zinc-400">
-              Description <span className="text-zinc-500 text-[10px] font-normal">(optional)</span>
+            <label htmlFor="new-usage-desc" className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+              Description <span className="text-zinc-400 dark:text-zinc-500 text-[10px] font-normal">(optional)</span>
             </label>
             <input
               id="new-usage-desc"
@@ -138,20 +138,20 @@ export const UsageForm: React.FC<UsageFormProps> = ({
               placeholder="e.g. Run the application locally in development mode."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="flex flex-col gap-1.5 sm:col-span-1">
-              <label htmlFor="new-usage-lang" className="text-[11px] font-medium text-zinc-400">
+              <label htmlFor="new-usage-lang" className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
                 Language
               </label>
               <select
                 id="new-usage-lang"
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-2.5 py-2 font-mono text-xs text-zinc-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+                className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-2 font-mono text-xs text-zinc-900 dark:text-zinc-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
               >
                 {USAGE_CODE_LANGUAGES.map((lang) => (
                   <option key={lang.value} value={lang.value}>
@@ -162,8 +162,8 @@ export const UsageForm: React.FC<UsageFormProps> = ({
             </div>
 
             <div className="flex flex-col gap-1.5 sm:col-span-2">
-              <label htmlFor="new-usage-code" className="text-[11px] font-medium text-zinc-400">
-                Code / Command <span className="text-zinc-500 text-[10px] font-normal">(optional)</span>
+              <label htmlFor="new-usage-code" className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                Code / Command <span className="text-zinc-400 dark:text-zinc-500 text-[10px] font-normal">(optional)</span>
               </label>
               <textarea
                 id="new-usage-code"
@@ -171,13 +171,13 @@ export const UsageForm: React.FC<UsageFormProps> = ({
                 placeholder="e.g. npm run dev"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 font-mono text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+                className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
               />
             </div>
           </div>
 
           {exampleError && (
-            <div className="flex items-center gap-1.5 text-xs text-red-400 pt-0.5" role="alert">
+            <div className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400 pt-0.5" role="alert">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" />
               <span>{exampleError}</span>
             </div>
@@ -212,8 +212,8 @@ export const UsageForm: React.FC<UsageFormProps> = ({
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg border border-dashed border-zinc-800/80 bg-zinc-950/40 px-3 py-3 text-xs text-zinc-500">
-            <Code2 className="h-4 w-4 text-zinc-600 shrink-0" />
+          <div className="flex items-center gap-2 rounded-lg border border-dashed border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-950/40 px-3 py-3 text-xs text-zinc-400 dark:text-zinc-500">
+            <Code2 className="h-4 w-4 text-zinc-400 dark:text-zinc-600 shrink-0" />
             <span>No usage examples added yet. Add common workflows, command examples, or code snippets above.</span>
           </div>
         )}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { WorkspacePlaceholder } from '@/components/workspace/WorkspacePlaceholder';
+import { GeneratorWorkspace } from '@/components/workspace';
 
 export const Home: React.FC = () => {
   return (
     <Layout>
-      <WorkspacePlaceholder />
+      <GeneratorWorkspace />
     </Layout>
   );
 };

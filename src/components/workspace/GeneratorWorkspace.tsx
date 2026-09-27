@@ -134,7 +134,7 @@ export const GeneratorWorkspace: React.FC = () => {
           onAddUsageExample={addUsageExample}
           onUpdateUsageExample={updateUsageExample}
           onRemoveUsageExample={removeUsageExample}
-          toggleContributingEnabled={toggleContributingEnabled}
+          onToggleContributingEnabled={toggleContributingEnabled}
           onUpdateContributingField={updateContributingField}
           onAddGuideline={addGuideline}
           onUpdateGuideline={updateGuideline}
@@ -152,9 +152,9 @@ export const GeneratorWorkspace: React.FC = () => {
       <TemplateModal
         isOpen={isTemplateModalOpen}
         onClose={() => setIsTemplateModalOpen(false)}
-        onSelectTemplate={(templateId, mode) => applyTemplate(templateId, mode)}
+        onApplyTemplate={applyTemplate}
         currentTemplateId={currentTemplateId}
-        hasUserContent={hasUserContent()}
+        hasUserContent={hasUserContent}
       />
     </div>
   );

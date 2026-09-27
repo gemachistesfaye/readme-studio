@@ -1,4 +1,4 @@
-﻿import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   BasicInfoData,
   Feature,
@@ -6,6 +6,8 @@ import {
   InstallationStep,
   ReadmeData,
   TechCategory,
+  UsageData,
+  UsageExample,
   ValidationErrors,
 } from '@/types';
 import { validateBasicInfo } from '@/utils/validation';
@@ -30,6 +32,10 @@ const initialReadmeData: ReadmeData = {
     cloneCommand: '',
     installCommand: '',
     setupInstructions: [],
+  },
+  usage: {
+    introduction: '',
+    examples: [],
   },
 };
 
@@ -250,6 +256,130 @@ export function useReadmeData() {
     }));
   }, []);
 
+  const updateUsageIntroduction = useCallback((introduction: string) => {
+    setData((prev) => ({
+      ...prev,
+      usage: {
+        ...prev.usage,
+        introduction,
+      },
+    }));
+  }, []);
+
+  const updateUsageField = useCallback(
+    (field: keyof Omit<UsageData, 'examples'>, value: string) => {
+      setData((prev) => ({
+        ...prev,
+        usage: {
+          ...prev.usage,
+          [field]: value,
+        },
+      }));
+    },
+    []
+  );
+
+  const addUsageExample = useCallback(
+    (
+      title: string,
+      description?: string,
+      code?: string,
+      language: string = 'bash'
+    ): { success: boolean; error?: string } => {
+      const trimmedTitle = title.trim();
+      if (!trimmedTitle) {
+        return { success: false, error: 'Example title cannot be empty.' };
+      }
+
+      const isDuplicate = data.usage.examples.some(
+        (e) => e.title.toLowerCase() === trimmedTitle.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return {
+          success: false,
+          error: `An example with the title "${trimmedTitle}" already exists.`,
+        };
+      }
+
+      const newExample: UsageExample = {
+        id: `usage-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        title: trimmedTitle,
+        description: description?.trim() || '',
+        code: code?.trim() || '',
+        language: language.trim() || 'bash',
+      };
+
+      setData((prev) => ({
+        ...prev,
+        usage: {
+          ...prev.usage,
+          examples: [...prev.usage.examples, newExample],
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.usage.examples]
+  );
+
+  const updateUsageExample = useCallback(
+    (
+      id: string,
+      title: string,
+      description: string,
+      code: string,
+      language: string
+    ): { success: boolean; error?: string } => {
+      const trimmedTitle = title.trim();
+      if (!trimmedTitle) {
+        return { success: false, error: 'Example title cannot be empty.' };
+      }
+
+      const isDuplicate = data.usage.examples.some(
+        (e) => e.id !== id && e.title.toLowerCase() === trimmedTitle.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return {
+          success: false,
+          error: `Another example with the title "${trimmedTitle}" already exists.`,
+        };
+      }
+
+      setData((prev) => ({
+        ...prev,
+        usage: {
+          ...prev.usage,
+          examples: prev.usage.examples.map((e) =>
+            e.id === id
+              ? {
+                  ...e,
+                  title: trimmedTitle,
+                  description: description.trim(),
+                  code: code.trim(),
+                  language: language.trim() || 'bash',
+                }
+              : e
+          ),
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.usage.examples]
+  );
+
+  const removeUsageExample = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      usage: {
+        ...prev.usage,
+        examples: prev.usage.examples.filter((e) => e.id !== id),
+      },
+    }));
+  }, []);
+
   return {
     data,
     updateBasicInfo,
@@ -263,6 +393,11 @@ export function useReadmeData() {
     addInstallationStep,
     updateInstallationStep,
     removeInstallationStep,
+    updateUsageIntroduction,
+    updateUsageField,
+    addUsageExample,
+    updateUsageExample,
+    removeUsageExample,
     errors: visibleErrors,
     isValid: Object.keys(allErrors).length === 0,
   };

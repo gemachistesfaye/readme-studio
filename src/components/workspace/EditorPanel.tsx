@@ -13,8 +13,12 @@ import {
 } from 'lucide-react';
 import {
   BasicInfoData,
+  ContactData,
+  ContactErrors,
+  ContributingData,
   FeaturesData,
   InstallationData,
+  LicenseData,
   TechCategory,
   TechStackData,
   UsageData,
@@ -26,6 +30,9 @@ import { TechStackForm } from './TechStackForm';
 import { FeaturesForm } from './FeaturesForm';
 import { InstallationForm } from './InstallationForm';
 import { UsageForm } from './UsageForm';
+import { ContributingForm } from './ContributingForm';
+import { LicenseForm } from './LicenseForm';
+import { ContactForm } from './ContactForm';
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
@@ -33,7 +40,11 @@ interface EditorPanelProps {
   features: FeaturesData;
   installation: InstallationData;
   usage: UsageData;
+  contributing: ContributingData;
+  license: LicenseData;
+  contact: ContactData;
   errors: ValidationErrors;
+  contactErrors: ContactErrors;
   onBasicInfoChange: (field: keyof BasicInfoData, value: string) => void;
   onBasicInfoBlur: (field: keyof BasicInfoData) => void;
   onAddTechnology: (name: string, category: TechCategory) => { success: boolean; error?: string };
@@ -60,6 +71,14 @@ interface EditorPanelProps {
     language: string
   ) => { success: boolean; error?: string };
   onRemoveUsageExample: (id: string) => void;
+  onToggleContributingEnabled: (enabled: boolean) => void;
+  onUpdateContributingField: (field: keyof Omit<ContributingData, 'enabled' | 'guidelines'>, value: string) => void;
+  onAddGuideline: (text: string) => { success: boolean; error?: string };
+  onUpdateGuideline: (index: number, text: string) => { success: boolean; error?: string };
+  onRemoveGuideline: (index: number) => void;
+  onUpdateLicense: (field: keyof LicenseData, value: string) => void;
+  onUpdateContactField: (field: keyof ContactData, value: string) => void;
+  onContactBlur: (field: keyof ContactData) => void;
 }
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
@@ -68,7 +87,11 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   features,
   installation,
   usage,
+  contributing,
+  license,
+  contact,
   errors,
+  contactErrors,
   onBasicInfoChange,
   onBasicInfoBlur,
   onAddTechnology,
@@ -84,6 +107,14 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   onAddUsageExample,
   onUpdateUsageExample,
   onRemoveUsageExample,
+  onToggleContributingEnabled,
+  onUpdateContributingField,
+  onAddGuideline,
+  onUpdateGuideline,
+  onRemoveGuideline,
+  onUpdateLicense,
+  onUpdateContactField,
+  onContactBlur,
 }) => {
   const futureSections = [
     {
@@ -91,21 +122,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
       description: 'Extended project background and comprehensive overview',
       icon: AlignLeft,
       badge: 'Upcoming',
-    },
-    {
-      title: 'Contributing',
-      description: 'Contribution guidelines, issue reporting, and PR rules',
-      icon: GitPullRequest,
-    },
-    {
-      title: 'License',
-      description: 'Open source or proprietary license selection (MIT, Apache, etc.)',
-      icon: Scale,
-    },
-    {
-      title: 'Contact',
-      description: 'Author details, social handles, and support links',
-      icon: Mail,
     },
   ];
 
@@ -118,6 +134,17 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
     installation.setupInstructions.length > 0;
   const usageCount = usage.examples.length;
   const hasUsageConfig = !!usage.introduction.trim() || usageCount > 0;
+  const contributingBadge = !contributing.enabled
+    ? 'Disabled'
+    : contributing.guidelines.length > 0
+    ? `${contributing.guidelines.length} steps`
+    : 'Active';
+  const hasContactConfig =
+    !!contact.email ||
+    !!contact.website ||
+    !!contact.linkedin ||
+    !!contact.twitter ||
+    !!contact.additionalLinkUrl;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm">
@@ -218,6 +245,54 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onAddExample={onAddUsageExample}
             onUpdateExample={onUpdateUsageExample}
             onRemoveExample={onRemoveUsageExample}
+          />
+        </EditorSection>
+
+        {/* Contributing - Functional Form */}
+        <EditorSection
+          title="Contributing"
+          description="Contribution guidelines, issue reporting, and PR rules"
+          icon={GitPullRequest}
+          badge={contributingBadge}
+          defaultOpen={false}
+        >
+          <ContributingForm
+            data={contributing}
+            onToggleEnabled={onToggleContributingEnabled}
+            onUpdateField={onUpdateContributingField}
+            onAddGuideline={onAddGuideline}
+            onUpdateGuideline={onUpdateGuideline}
+            onRemoveGuideline={onRemoveGuideline}
+          />
+        </EditorSection>
+
+        {/* License - Functional Form */}
+        <EditorSection
+          title="License"
+          description="Open source or proprietary license selection (MIT, Apache, etc.)"
+          icon={Scale}
+          badge={license.type}
+          defaultOpen={false}
+        >
+          <LicenseForm
+            data={license}
+            onUpdateLicense={onUpdateLicense}
+          />
+        </EditorSection>
+
+        {/* Contact - Functional Form */}
+        <EditorSection
+          title="Contact"
+          description="Author details, social handles, and support links"
+          icon={Mail}
+          badge={hasContactConfig ? 'Configured' : 'Active'}
+          defaultOpen={false}
+        >
+          <ContactForm
+            data={contact}
+            errors={contactErrors}
+            onUpdateField={onUpdateContactField}
+            onBlur={onContactBlur}
           />
         </EditorSection>
 

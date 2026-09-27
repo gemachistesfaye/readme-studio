@@ -64,8 +64,8 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
     <div className="flex flex-col gap-5">
       {/* Prerequisites */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="prerequisites-input" className="text-xs font-medium text-zinc-300">
-          Prerequisites <span className="text-zinc-500 text-[11px] font-normal">(optional)</span>
+        <label htmlFor="prerequisites-input" className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+          Prerequisites <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-normal">(optional)</span>
         </label>
         <textarea
           id="prerequisites-input"
@@ -73,9 +73,9 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
           placeholder="Node.js 18+ and npm"
           value={data.prerequisites}
           onChange={(e) => onUpdateField('prerequisites', e.target.value)}
-          className="w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+          className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
         />
-        <p className="text-[11px] text-zinc-500">
+        <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
           Required system software, minimum runtimes, or environment tools.
         </p>
       </div>
@@ -83,14 +83,14 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
       {/* Clone Command */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <label htmlFor="clone-command-input" className="text-xs font-medium text-zinc-300">
-            Clone Command <span className="text-zinc-500 text-[11px] font-normal">(optional)</span>
+          <label htmlFor="clone-command-input" className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+            Clone Command <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-normal">(optional)</span>
           </label>
           {repositoryUrl && repositoryUrl.trim() && (
             <button
               type="button"
               onClick={handleUseRepoUrl}
-              className="inline-flex items-center gap-1 text-[11px] text-indigo-400 hover:text-indigo-300 transition-colors"
+              className="inline-flex items-center gap-1 text-[11px] text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
             >
               <Link2 className="h-3 w-3" />
               <span>Use repository URL</span>
@@ -104,15 +104,15 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
             placeholder="git clone https://github.com/username/project.git"
             value={data.cloneCommand}
             onChange={(e) => onUpdateField('cloneCommand', e.target.value)}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 font-mono text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+            className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
           />
         </div>
       </div>
 
       {/* Install Dependencies Command */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="install-command-input" className="text-xs font-medium text-zinc-300">
-          Install Command <span className="text-zinc-500 text-[11px] font-normal">(optional)</span>
+        <label htmlFor="install-command-input" className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+          Install Command <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-normal">(optional)</span>
         </label>
         <input
           id="install-command-input"
@@ -120,29 +120,29 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
           placeholder="npm install"
           value={data.installCommand}
           onChange={(e) => onUpdateField('installCommand', e.target.value)}
-          className="w-full rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-2 font-mono text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+          className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/80 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
         />
-        <p className="text-[11px] text-zinc-500">
+        <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
           e.g. npm install, pnpm install, yarn, pip install -r requirements.txt, or composer install.
         </p>
       </div>
 
       {/* Additional Installation Steps */}
-      <div className="flex flex-col gap-3 pt-2 border-t border-zinc-800/60">
+      <div className="flex flex-col gap-3 pt-2 border-t border-zinc-200 dark:border-zinc-800/60">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-zinc-300">
+          <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
             Additional Setup Steps
           </span>
-          <span className="font-mono text-[11px] text-zinc-500">
+          <span className="font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
             {data.setupInstructions.length} added
           </span>
         </div>
 
         {/* Step Inputs */}
-        <div className="flex flex-col gap-3 rounded-xl border border-zinc-800/80 bg-zinc-900/40 p-3.5">
+        <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/40 p-3.5">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="step-instruction-input" className="text-[11px] font-medium text-zinc-300">
-              Instruction <span className="text-indigo-400">*</span>
+            <label htmlFor="step-instruction-input" className="text-[11px] font-medium text-zinc-700 dark:text-zinc-300">
+              Instruction <span className="text-indigo-600 dark:text-indigo-400">*</span>
             </label>
             <input
               id="step-instruction-input"
@@ -154,17 +154,17 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
                 if (stepError) setStepError(null);
               }}
               onKeyDown={handleKeyDown}
-              className={`w-full rounded-lg border bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none ${
+              className={`w-full rounded-lg border bg-zinc-50 dark:bg-zinc-950 px-3 py-2 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none ${
                 stepError
-                  ? 'border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/50'
-                  : 'border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50'
+                  ? 'border-red-300 dark:border-red-500/80 focus:border-red-500 focus:ring-1 focus:ring-red-500/50'
+                  : 'border-zinc-200 dark:border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50'
               }`}
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="step-command-input" className="text-[11px] font-medium text-zinc-400">
-              Command <span className="text-zinc-500 text-[10px] font-normal">(optional)</span>
+            <label htmlFor="step-command-input" className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+              Command <span className="text-zinc-400 dark:text-zinc-500 text-[10px] font-normal">(optional)</span>
             </label>
             <input
               id="step-command-input"
@@ -172,12 +172,12 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
               placeholder="e.g. cp .env.example .env"
               value={command}
               onChange={(e) => setCommand(e.target.value)}
-              className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 font-mono text-xs text-zinc-100 placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+              className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-3 py-2 font-mono text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 shadow-sm transition-colors outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
             />
           </div>
 
           {stepError && (
-            <div className="flex items-center gap-1.5 text-xs text-red-400 pt-0.5" role="alert">
+            <div className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400 pt-0.5" role="alert">
               <AlertCircle className="h-3.5 w-3.5 shrink-0" />
               <span>{stepError}</span>
             </div>
@@ -212,8 +212,8 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-2 rounded-lg border border-dashed border-zinc-800/80 bg-zinc-950/40 px-3 py-3 text-xs text-zinc-500">
-            <Terminal className="h-4 w-4 text-zinc-600" />
+          <div className="flex items-center gap-2 rounded-lg border border-dashed border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-950/40 px-3 py-3 text-xs text-zinc-400 dark:text-zinc-500">
+            <Terminal className="h-4 w-4 text-zinc-400 dark:text-zinc-600" />
             <span>No custom setup steps added yet. Add extra steps like env setup or database migration above.</span>
           </div>
         )}

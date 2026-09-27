@@ -17,6 +17,10 @@ export const GeneratorWorkspace: React.FC = () => {
     addInstallationStep,
     updateInstallationStep,
     removeInstallationStep,
+    updateUsageIntroduction,
+    addUsageExample,
+    updateUsageExample,
+    removeUsageExample,
     errors,
   } = useReadmeData();
 
@@ -40,6 +44,7 @@ export const GeneratorWorkspace: React.FC = () => {
           techStack={data.techStack}
           features={data.features}
           installation={data.installation}
+          usage={data.usage}
           errors={errors}
           onBasicInfoChange={updateBasicInfo}
           onBasicInfoBlur={touchField}
@@ -52,6 +57,10 @@ export const GeneratorWorkspace: React.FC = () => {
           onAddInstallationStep={addInstallationStep}
           onUpdateInstallationStep={updateInstallationStep}
           onRemoveInstallationStep={removeInstallationStep}
+          onUpdateUsageIntroduction={updateUsageIntroduction}
+          onAddUsageExample={addUsageExample}
+          onUpdateUsageExample={updateUsageExample}
+          onRemoveUsageExample={removeUsageExample}
         />
 
         {/* Right Panel: Preview Area */}
@@ -60,6 +69,7 @@ export const GeneratorWorkspace: React.FC = () => {
           techStack={data.techStack}
           features={data.features}
           installation={data.installation}
+          usage={data.usage}
         />
       </div>
     </div>

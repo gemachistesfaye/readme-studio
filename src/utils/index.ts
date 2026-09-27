@@ -12,10 +12,9 @@ export {
   formatFencedCode,
 } from './generateMarkdown';
 export {
-  validateProjectName,
-  validateRepositoryUrl,
-  validateDemoUrl,
-  validateEmail,
-  validateUrl,
-  validateContactForm,
+  MAX_DESCRIPTION_LENGTH,
+  isValidUrl,
+  isValidEmail,
+  validateBasicInfo,
+  validateContact,
 } from './validation';

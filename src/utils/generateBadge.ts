@@ -1,4 +1,4 @@
-import { ReadmeBadge, BadgeStyle } from '@/types';
+import { ReadmeBadge } from '@/types';
 
 /**
  * Cleanly encodes text for Shields.io URL path parameters.

@@ -1,16 +1,20 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
   BasicInfoData,
+  ContactData,
+  ContactErrors,
+  ContributingData,
   Feature,
   InstallationData,
   InstallationStep,
+  LicenseData,
   ReadmeData,
   TechCategory,
   UsageData,
   UsageExample,
   ValidationErrors,
 } from '@/types';
-import { validateBasicInfo } from '@/utils/validation';
+import { validateBasicInfo, validateContact } from '@/utils/validation';
 
 const initialReadmeData: ReadmeData = {
   basicInfo: {
@@ -37,13 +41,34 @@ const initialReadmeData: ReadmeData = {
     introduction: '',
     examples: [],
   },
+  contributing: {
+    enabled: true,
+    introduction: '',
+    guidelines: [],
+    customInstructions: '',
+  },
+  license: {
+    type: 'MIT',
+    customName: '',
+    customText: '',
+  },
+  contact: {
+    email: '',
+    website: '',
+    linkedin: '',
+    twitter: '',
+    additionalLinkLabel: '',
+    additionalLinkUrl: '',
+  },
 };
 
 export function useReadmeData() {
   const [data, setData] = useState<ReadmeData>(initialReadmeData);
   const [touched, setTouched] = useState<Partial<Record<keyof BasicInfoData, boolean>>>({});
+  const [touchedContact, setTouchedContact] = useState<Partial<Record<keyof ContactData, boolean>>>({});
 
   const allErrors = useMemo(() => validateBasicInfo(data.basicInfo), [data.basicInfo]);
+  const allContactErrors = useMemo(() => validateContact(data.contact), [data.contact]);
 
   const visibleErrors = useMemo(() => {
     const visible: ValidationErrors = {};
@@ -54,6 +79,16 @@ export function useReadmeData() {
     }
     return visible;
   }, [allErrors, touched]);
+
+  const visibleContactErrors = useMemo(() => {
+    const visible: ContactErrors = {};
+    for (const key of Object.keys(touchedContact) as (keyof ContactData)[]) {
+      if (touchedContact[key] && allContactErrors[key]) {
+        visible[key] = allContactErrors[key];
+      }
+    }
+    return visible;
+  }, [allContactErrors, touchedContact]);
 
   const updateBasicInfo = useCallback((field: keyof BasicInfoData, value: string) => {
     setData((prev) => ({
@@ -380,6 +415,125 @@ export function useReadmeData() {
     }));
   }, []);
 
+  // Contributing Handlers
+  const toggleContributingEnabled = useCallback((enabled: boolean) => {
+    setData((prev) => ({
+      ...prev,
+      contributing: {
+        ...prev.contributing,
+        enabled,
+      },
+    }));
+  }, []);
+
+  const updateContributingField = useCallback(
+    (field: keyof Omit<ContributingData, 'enabled' | 'guidelines'>, value: string) => {
+      setData((prev) => ({
+        ...prev,
+        contributing: {
+          ...prev.contributing,
+          [field]: value,
+        },
+      }));
+    },
+    []
+  );
+
+  const addGuideline = useCallback(
+    (text: string): { success: boolean; error?: string } => {
+      const trimmed = text.trim();
+      if (!trimmed) {
+        return { success: false, error: 'Guideline cannot be empty.' };
+      }
+
+      const isDuplicate = data.contributing.guidelines.some(
+        (g) => g.toLowerCase() === trimmed.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return { success: false, error: `"${trimmed}" is already in your guidelines.` };
+      }
+
+      setData((prev) => ({
+        ...prev,
+        contributing: {
+          ...prev.contributing,
+          guidelines: [...prev.contributing.guidelines, trimmed],
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.contributing.guidelines]
+  );
+
+  const updateGuideline = useCallback(
+    (index: number, text: string): { success: boolean; error?: string } => {
+      const trimmed = text.trim();
+      if (!trimmed) {
+        return { success: false, error: 'Guideline cannot be empty.' };
+      }
+
+      const isDuplicate = data.contributing.guidelines.some(
+        (g, idx) => idx !== index && g.toLowerCase() === trimmed.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return { success: false, error: `Another guideline step with "${trimmed}" already exists.` };
+      }
+
+      setData((prev) => ({
+        ...prev,
+        contributing: {
+          ...prev.contributing,
+          guidelines: prev.contributing.guidelines.map((g, idx) => (idx === index ? trimmed : g)),
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.contributing.guidelines]
+  );
+
+  const removeGuideline = useCallback((index: number) => {
+    setData((prev) => ({
+      ...prev,
+      contributing: {
+        ...prev.contributing,
+        guidelines: prev.contributing.guidelines.filter((_, idx) => idx !== index),
+      },
+    }));
+  }, []);
+
+  // License Handlers
+  const updateLicense = useCallback((field: keyof LicenseData, value: string) => {
+    setData((prev) => ({
+      ...prev,
+      license: {
+        ...prev.license,
+        [field]: value,
+      },
+    }));
+  }, []);
+
+  // Contact Handlers
+  const updateContactField = useCallback((field: keyof ContactData, value: string) => {
+    setData((prev) => ({
+      ...prev,
+      contact: {
+        ...prev.contact,
+        [field]: value,
+      },
+    }));
+  }, []);
+
+  const touchContactField = useCallback((field: keyof ContactData) => {
+    setTouchedContact((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+  }, []);
+
   return {
     data,
     updateBasicInfo,
@@ -398,7 +552,16 @@ export function useReadmeData() {
     addUsageExample,
     updateUsageExample,
     removeUsageExample,
+    toggleContributingEnabled,
+    updateContributingField,
+    addGuideline,
+    updateGuideline,
+    removeGuideline,
+    updateLicense,
+    updateContactField,
+    touchContactField,
     errors: visibleErrors,
-    isValid: Object.keys(allErrors).length === 0,
+    contactErrors: visibleContactErrors,
+    isValid: Object.keys(allErrors).length === 0 && Object.keys(allContactErrors).length === 0,
   };
 }

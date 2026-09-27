@@ -1,5 +1,6 @@
 import {
   BasicInfoData,
+  BadgesData,
   ContactData,
   ContributingData,
   FeaturesData,
@@ -11,6 +12,7 @@ import {
 } from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
 import { LICENSE_OPTIONS } from '@/constants/licenses';
+import { generateBadgesRow } from './generateBadge';
 
 /**
  * Formats a code block with backtick-safe fences.
@@ -29,14 +31,22 @@ export function formatFencedCode(code: string, language = ''): string {
 }
 
 /**
- * 1. Basic Information Section
+ * 1. Basic Information Section (with Badges placed directly beneath title)
  */
-export function generateBasicInfoSection(basicInfo: BasicInfoData): string {
+export function generateBasicInfoSection(basicInfo: BasicInfoData, badges?: BadgesData): string {
   const parts: string[] = [];
 
   const name = basicInfo.projectName.trim();
   if (name) {
     parts.push(`# ${name}`);
+  }
+
+  // Badges appear directly beneath project title
+  if (badges && badges.badges.length > 0) {
+    const badgeRow = generateBadgesRow(badges.badges);
+    if (badgeRow) {
+      parts.push(badgeRow);
+    }
   }
 
   const desc = basicInfo.description.trim();
@@ -333,7 +343,7 @@ export function generateContactSection(contact: ContactData, basicInfo?: BasicIn
 export function generateMarkdown(data: ReadmeData): string {
   const sections: string[] = [];
 
-  const basic = generateBasicInfoSection(data.basicInfo);
+  const basic = generateBasicInfoSection(data.basicInfo, data.badges);
   if (basic) sections.push(basic);
 
   const tech = generateTechStackSection(data.techStack);

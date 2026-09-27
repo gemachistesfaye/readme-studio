@@ -1,4 +1,4 @@
-﻿export interface AppConfig {
+export interface AppConfig {
   name: string;
   version: string;
   description: string;
@@ -75,12 +75,50 @@ export interface UsageData {
   examples: UsageExample[];
 }
 
+export interface ContributingData {
+  enabled: boolean;
+  introduction: string;
+  guidelines: string[];
+  customInstructions: string;
+}
+
+export type LicenseType =
+  | 'MIT'
+  | 'Apache-2.0'
+  | 'GPL-3.0'
+  | 'BSD-3-Clause'
+  | 'ISC'
+  | 'MPL-2.0'
+  | 'Unlicense'
+  | 'Proprietary'
+  | 'Custom'
+  | 'None';
+
+export interface LicenseData {
+  type: LicenseType;
+  customName: string;
+  customText: string;
+}
+
+export interface ContactData {
+  email: string;
+  website: string;
+  linkedin: string;
+  twitter: string;
+  additionalLinkLabel: string;
+  additionalLinkUrl: string;
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
   features: FeaturesData;
   installation: InstallationData;
   usage: UsageData;
+  contributing: ContributingData;
+  license: LicenseData;
+  contact: ContactData;
 }
 
 export type ValidationErrors = Partial<Record<keyof BasicInfoData, string>>;
+export type ContactErrors = Partial<Record<keyof ContactData, string>>;

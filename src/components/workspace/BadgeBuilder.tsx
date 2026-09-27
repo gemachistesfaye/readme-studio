@@ -40,7 +40,7 @@ export const BadgeBuilder: React.FC<BadgeBuilderProps> = ({
   onUpdateBadge,
   onRemoveBadge,
   onMoveBadgeUp,
-  onMoveDown = onMoveBadgeUp,
+  onMoveBadgeDown,
 }) => {
   const [activeTab, setActiveTab] = useState<'tech' | 'license' | 'custom'>('tech');
 

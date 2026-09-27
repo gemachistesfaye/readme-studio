@@ -18,5 +18,6 @@ export { GuidelineItem } from './GuidelineItem';
 export { LicenseForm } from './LicenseForm';
 export { ContactForm } from './ContactForm';
 export { TemplateModal } from './TemplateModal';
+export { SectionOrderModal } from './SectionOrderModal';
 export { BadgeBuilder } from './BadgeBuilder';
 export { BadgeItem } from './BadgeItem';

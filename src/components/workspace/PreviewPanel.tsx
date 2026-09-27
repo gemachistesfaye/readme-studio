@@ -1,7 +1,18 @@
 import React, { useMemo } from 'react';
-import { Copy, Download, Eye, FileCode, Github, ExternalLink, User } from 'lucide-react';
-import { BasicInfoData, FeaturesData, InstallationData, TechCategory, TechStackData, UsageData } from '@/types';
+import { Copy, Download, Eye, FileCode, Github, ExternalLink, Mail, Globe, Linkedin, Twitter, Link2, User } from 'lucide-react';
+import {
+  BasicInfoData,
+  ContactData,
+  ContributingData,
+  FeaturesData,
+  InstallationData,
+  LicenseData,
+  TechCategory,
+  TechStackData,
+  UsageData,
+} from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
+import { LICENSE_OPTIONS } from '@/constants/licenses';
 
 interface PreviewPanelProps {
   basicInfo: BasicInfoData;
@@ -9,6 +20,9 @@ interface PreviewPanelProps {
   features: FeaturesData;
   installation: InstallationData;
   usage: UsageData;
+  contributing: ContributingData;
+  license: LicenseData;
+  contact: ContactData;
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({
@@ -17,6 +31,9 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   features,
   installation,
   usage,
+  contributing,
+  license,
+  contact,
 }) => {
   const displayTitle = basicInfo.projectName.trim() || 'Project Name';
   const displayDescription =
@@ -74,6 +91,27 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   const hasUsageIntro = !!usage.introduction.trim();
   const hasUsageExamples = usage.examples.length > 0;
   const hasUsageContent = hasUsageIntro || hasUsageExamples;
+
+  // Contributing flags
+  const hasContributingIntro = !!contributing.introduction.trim();
+  const hasContributingGuidelines = contributing.guidelines.length > 0;
+  const hasContributingCustom = !!contributing.customInstructions.trim();
+  const hasContributingContent =
+    contributing.enabled &&
+    (hasContributingIntro || hasContributingGuidelines || hasContributingCustom);
+
+  // License flags & content
+  const selectedLicense = LICENSE_OPTIONS.find((l) => l.type === license.type) || LICENSE_OPTIONS[0];
+  const hasLicenseContent = license.type !== 'None';
+
+  // Contact flags & content
+  const hasEmail = !!contact.email.trim();
+  const hasWebsite = !!contact.website.trim();
+  const hasLinkedin = !!contact.linkedin.trim();
+  const hasTwitter = !!contact.twitter.trim();
+  const hasAdditionalLink = !!contact.additionalLinkUrl.trim();
+  const hasContactContent =
+    hasAuthor || hasEmail || hasWebsite || hasLinkedin || hasTwitter || hasAdditionalLink;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm sticky top-20">
@@ -296,26 +334,174 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
             )}
           </div>
 
-          {/* Author Section */}
-          {hasAuthor && (
+          {/* Contributing Section */}
+          {contributing.enabled && (
             <div className="border-t border-zinc-800/60 pt-5">
-              <h2 className="text-lg font-semibold text-zinc-200">Author</h2>
-              <div className="mt-2 flex items-center gap-2 text-sm text-zinc-400">
-                <User className="h-4 w-4 text-zinc-500" />
-                <span>Created by</span>
-                {hasAuthorGithub ? (
-                  <a
-                    href={basicInfo.authorGithub}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-medium text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
-                  >
-                    {basicInfo.authorName}
-                  </a>
-                ) : (
-                  <span className="font-medium text-zinc-200">
-                    {basicInfo.authorName}
-                  </span>
+              <h2 className="text-lg font-semibold text-zinc-200">Contributing</h2>
+              {hasContributingContent ? (
+                <div className="mt-3 space-y-3.5">
+                  {hasContributingIntro && (
+                    <p className="text-sm leading-relaxed text-zinc-400 whitespace-pre-wrap">
+                      {contributing.introduction}
+                    </p>
+                  )}
+
+                  {hasContributingGuidelines && (
+                    <ol className="space-y-2 list-decimal list-inside text-sm text-zinc-300">
+                      {contributing.guidelines.map((guideline, idx) => (
+                        <li key={idx} className="leading-relaxed">
+                          <span>{guideline}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+
+                  {hasContributingCustom && (
+                    <p className="text-sm leading-relaxed text-zinc-400 whitespace-pre-wrap pt-1">
+                      {contributing.customInstructions}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="mt-2 text-sm text-zinc-500 italic">
+                  Contribution guidelines will appear here.
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* License Section */}
+          {hasLicenseContent && (
+            <div className="border-t border-zinc-800/60 pt-5">
+              <h2 className="text-lg font-semibold text-zinc-200">License</h2>
+              <div className="mt-3 text-sm text-zinc-400 leading-relaxed">
+                {license.type === 'Proprietary' && (
+                  <p>This project is proprietary software. All rights reserved.</p>
+                )}
+                {license.type === 'Custom' && (
+                  <div>
+                    <p>
+                      This project is licensed under{' '}
+                      <strong className="text-zinc-200">
+                        {license.customName.trim() || 'a custom license'}
+                      </strong>
+                      .
+                    </p>
+                    {license.customText.trim() && (
+                      <p className="mt-2 whitespace-pre-wrap text-zinc-400">
+                        {license.customText}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {license.type !== 'Proprietary' && license.type !== 'Custom' && (
+                  <p>{selectedLicense.notice}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Contact Section */}
+          {hasContactContent && (
+            <div className="border-t border-zinc-800/60 pt-5">
+              <h2 className="text-lg font-semibold text-zinc-200">Contact</h2>
+              <div className="mt-3 space-y-2 text-sm text-zinc-300">
+                {hasAuthor && (
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-zinc-500 shrink-0" />
+                    <span>Created by</span>
+                    {hasAuthorGithub ? (
+                      <a
+                        href={basicInfo.authorGithub}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-medium text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+                      >
+                        {basicInfo.authorName}
+                      </a>
+                    ) : (
+                      <span className="font-medium text-zinc-200">{basicInfo.authorName}</span>
+                    )}
+                  </div>
+                )}
+
+                {hasEmail && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-zinc-500 shrink-0" />
+                    <span className="text-zinc-400">Email:</span>
+                    <a
+                      href={`mailto:${contact.email.trim()}`}
+                      className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+                    >
+                      {contact.email.trim()}
+                    </a>
+                  </div>
+                )}
+
+                {hasWebsite && (
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-4 w-4 text-zinc-500 shrink-0" />
+                    <span className="text-zinc-400">Website:</span>
+                    <a
+                      href={contact.website.trim()}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+                    >
+                      {contact.website.trim()}
+                    </a>
+                  </div>
+                )}
+
+                {hasLinkedin && (
+                  <div className="flex items-center gap-2">
+                    <Linkedin className="h-4 w-4 text-zinc-500 shrink-0" />
+                    <span className="text-zinc-400">LinkedIn:</span>
+                    <a
+                      href={contact.linkedin.trim()}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+                    >
+                      {contact.linkedin.trim()}
+                    </a>
+                  </div>
+                )}
+
+                {hasTwitter && (
+                  <div className="flex items-center gap-2">
+                    <Twitter className="h-4 w-4 text-zinc-500 shrink-0" />
+                    <span className="text-zinc-400">X / Twitter:</span>
+                    {contact.twitter.trim().startsWith('http') ? (
+                      <a
+                        href={contact.twitter.trim()}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+                      >
+                        {contact.twitter.trim()}
+                      </a>
+                    ) : (
+                      <span className="text-zinc-200">{contact.twitter.trim()}</span>
+                    )}
+                  </div>
+                )}
+
+                {hasAdditionalLink && (
+                  <div className="flex items-center gap-2">
+                    <Link2 className="h-4 w-4 text-zinc-500 shrink-0" />
+                    <span className="text-zinc-400">
+                      {contact.additionalLinkLabel.trim() || 'Link'}:
+                    </span>
+                    <a
+                      href={contact.additionalLinkUrl.trim()}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
+                    >
+                      {contact.additionalLinkUrl.trim()}
+                    </a>
+                  </div>
                 )}
               </div>
             </div>

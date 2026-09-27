@@ -52,12 +52,12 @@ export const GuidelineItem: React.FC<GuidelineItemProps> = ({
 
   if (isEditing) {
     return (
-      <div className="flex flex-col gap-2 rounded-lg border border-indigo-500/40 bg-zinc-900/90 p-2.5 shadow-sm">
+      <div className="flex flex-col gap-2 rounded-lg border border-indigo-200 dark:border-indigo-500/40 bg-white dark:bg-zinc-900/90 p-2.5 shadow-sm">
         <div className="flex items-center gap-2">
-          <span className="rounded bg-indigo-500/20 px-1.5 py-0.5 text-[11px] font-mono font-medium text-indigo-400">
+          <span className="rounded bg-indigo-50 dark:bg-indigo-500/20 px-1.5 py-0.5 text-[11px] font-mono font-medium text-indigo-600 dark:text-indigo-400">
             Step {index + 1}
           </span>
-          <span className="text-xs text-zinc-400 font-medium">Edit Guideline</span>
+          <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Edit Guideline</span>
         </div>
 
         <input
@@ -69,22 +69,22 @@ export const GuidelineItem: React.FC<GuidelineItemProps> = ({
           }}
           onKeyDown={handleKeyDown}
           autoFocus
-          className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
+          className="w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50"
           placeholder="e.g. Fork the repository"
         />
 
         {error && (
-          <div className="flex items-center gap-1.5 text-xs text-red-400" role="alert">
+          <div className="flex items-center gap-1.5 text-xs text-red-600 dark:text-red-400" role="alert">
             <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-2 pt-1 border-t border-zinc-800">
+        <div className="flex items-center justify-end gap-2 pt-1 border-t border-zinc-200 dark:border-zinc-800">
           <button
             type="button"
             onClick={handleCancel}
-            className="inline-flex items-center gap-1 rounded-md border border-zinc-800 bg-zinc-900 px-2.5 py-1 text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 transition-colors"
+            className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 py-1 text-xs text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
           >
             <X className="h-3 w-3" />
             <span>Cancel</span>
@@ -103,12 +103,12 @@ export const GuidelineItem: React.FC<GuidelineItemProps> = ({
   }
 
   return (
-    <div className="group flex items-center justify-between gap-3 rounded-lg border border-zinc-800/80 bg-zinc-900/60 px-3 py-2 transition-colors hover:border-zinc-700/80 hover:bg-zinc-900/90">
+    <div className="group flex items-center justify-between gap-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/60 px-3 py-2 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700/80 hover:bg-zinc-100 dark:hover:bg-zinc-900/90">
       <div className="flex items-center gap-2.5 flex-1 min-w-0">
-        <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-[10px] font-mono text-zinc-400 shrink-0">
+        <span className="rounded bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] font-mono text-zinc-500 dark:text-zinc-400 shrink-0">
           {index + 1}
         </span>
-        <span className="text-xs text-zinc-200 tracking-tight truncate">
+        <span className="text-xs text-zinc-900 dark:text-zinc-200 tracking-tight truncate">
           {guideline}
         </span>
       </div>
@@ -119,7 +119,7 @@ export const GuidelineItem: React.FC<GuidelineItemProps> = ({
           onClick={() => setIsEditing(true)}
           aria-label={`Edit guideline ${index + 1}`}
           title="Edit guideline"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-800 hover:text-zinc-200 transition-colors"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
         >
           <Pencil className="h-3.5 w-3.5" />
         </button>
@@ -128,7 +128,7 @@ export const GuidelineItem: React.FC<GuidelineItemProps> = ({
           onClick={() => onRemove(index)}
           aria-label={`Remove guideline ${index + 1}`}
           title="Remove guideline"
-          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-800 hover:text-red-400 transition-colors"
+          className="flex h-7 w-7 items-center justify-center rounded-md text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-red-600 dark:hover:text-red-400 transition-colors"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>

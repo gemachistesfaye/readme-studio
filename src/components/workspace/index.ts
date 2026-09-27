@@ -1,4 +1,4 @@
-﻿export { GeneratorWorkspace } from './GeneratorWorkspace';
+export { GeneratorWorkspace } from './GeneratorWorkspace';
 export { EditorPanel } from './EditorPanel';
 export { EditorSection } from './EditorSection';
 export { PreviewPanel } from './PreviewPanel';
@@ -10,3 +10,5 @@ export { FeaturesForm } from './FeaturesForm';
 export { FeatureItem } from './FeatureItem';
 export { InstallationForm } from './InstallationForm';
 export { InstallationStepItem } from './InstallationStepItem';
+export { UsageForm } from './UsageForm';
+export { UsageExampleItem } from './UsageExampleItem';

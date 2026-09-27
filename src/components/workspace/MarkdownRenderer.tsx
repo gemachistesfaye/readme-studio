@@ -14,15 +14,56 @@ type Block =
   | { type: 'p'; text: string };
 
 function renderInline(text: string): React.ReactNode[] {
-  // Regex to match [label](url), **bold**, or `code`
-  const regex = /([[^]]+]([^)]+)|\*\*[^*]+\*\*|`[^`]+`)/g;
+  // Regex to match markdown images: ![alt](url) or linked images: [![alt](url)](linkUrl), standard links: [label](url), **bold**, or `code`
+  const regex = /(!?[(?:[[^]]+]([^)]+)|[^]]+)]([^)]+)|**[^*]+**|`[^`]+`)/g;
   const parts = text.split(regex);
 
   return parts.map((part, index) => {
     if (!part) return null;
 
-    // Link: [label](url)
-    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    // 1. Linked image: [![alt](imgUrl)](linkUrl)
+    const linkedImgMatch = part.match(/^[![([^]]*)](([^)]+))](([^)]+))$/);
+    if (linkedImgMatch) {
+      const [, alt, imgUrl, linkUrl] = linkedImgMatch;
+      return (
+        <a
+          key={index}
+          href={linkUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-block align-middle mr-1.5 mb-1.5 transition-opacity hover:opacity-85"
+        >
+          <img
+            src={imgUrl}
+            alt={alt}
+            className="inline-block h-5 rounded"
+            onError={(e) => {
+              (e.currentTarget as HTMLElement).style.display = 'none';
+            }}
+          />
+        </a>
+      );
+    }
+
+    // 2. Direct image (badge): ![alt](imgUrl)
+    const imgMatch = part.match(/^![([^]]*)](([^)]+))$/);
+    if (imgMatch) {
+      const [, alt, imgUrl] = imgMatch;
+      return (
+        <img
+          key={index}
+          src={imgUrl}
+          alt={alt}
+          className="inline-block h-5 mr-1.5 mb-1.5 rounded align-middle"
+          onError={(e) => {
+            (e.currentTarget as HTMLElement).style.display = 'none';
+          }}
+        />
+      );
+    }
+
+    // 3. Regular Link: [label](url)
+    const linkMatch = part.match(/^[([^]]+)](([^)]+))$/);
     if (linkMatch) {
       const [, label, url] = linkMatch;
       const isExternal = url.startsWith('http') || url.startsWith('mailto:');
@@ -39,8 +80,8 @@ function renderInline(text: string): React.ReactNode[] {
       );
     }
 
-    // Bold: **text**
-    const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
+    // 4. Bold: **text**
+    const boldMatch = part.match(/^**([^*]+)**$/);
     if (boldMatch) {
       return (
         <strong key={index} className="font-semibold text-zinc-100">
@@ -49,7 +90,7 @@ function renderInline(text: string): React.ReactNode[] {
       );
     }
 
-    // Inline code: `code`
+    // 5. Inline code: `code`
     const codeMatch = part.match(/^`([^`]+)`$/);
     if (codeMatch) {
       return (

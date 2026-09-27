@@ -1,6 +1,6 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Copy, Download, Eye, FileCode, Github, ExternalLink, User } from 'lucide-react';
-import { BasicInfoData, FeaturesData, InstallationData, TechCategory, TechStackData } from '@/types';
+import { BasicInfoData, FeaturesData, InstallationData, TechCategory, TechStackData, UsageData } from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
 
 interface PreviewPanelProps {
@@ -8,6 +8,7 @@ interface PreviewPanelProps {
   techStack: TechStackData;
   features: FeaturesData;
   installation: InstallationData;
+  usage: UsageData;
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({
@@ -15,6 +16,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   techStack,
   features,
   installation,
+  usage,
 }) => {
   const displayTitle = basicInfo.projectName.trim() || 'Project Name';
   const displayDescription =
@@ -68,6 +70,10 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
 
   const hasPrerequisites = !!installation.prerequisites.trim();
   const hasInstallationContent = hasPrerequisites || installationSteps.length > 0;
+
+  const hasUsageIntro = !!usage.introduction.trim();
+  const hasUsageExamples = usage.examples.length > 0;
+  const hasUsageContent = hasUsageIntro || hasUsageExamples;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm sticky top-20">
@@ -237,6 +243,55 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
             ) : (
               <p className="mt-2 text-sm text-zinc-500 italic">
                 Installation instructions will appear here.
+              </p>
+            )}
+          </div>
+
+          {/* Usage Section */}
+          <div className="border-t border-zinc-800/60 pt-5">
+            <h2 className="text-lg font-semibold text-zinc-200">Usage</h2>
+            {hasUsageContent ? (
+              <div className="mt-3 space-y-4">
+                {/* Introduction */}
+                {hasUsageIntro && (
+                  <p className="text-sm leading-relaxed text-zinc-400 whitespace-pre-wrap">
+                    {usage.introduction}
+                  </p>
+                )}
+
+                {/* Examples */}
+                {hasUsageExamples && (
+                  <div className="space-y-4">
+                    {usage.examples.map((example) => (
+                      <div key={example.id} className="space-y-1.5">
+                        <h3 className="text-sm font-semibold text-zinc-200">
+                          {example.title}
+                        </h3>
+                        {example.description && (
+                          <p className="text-sm text-zinc-400 leading-relaxed whitespace-pre-wrap">
+                            {example.description}
+                          </p>
+                        )}
+                        {example.code && (
+                          <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-3 font-mono text-xs text-zinc-300 overflow-x-auto">
+                            {example.language && (
+                              <div className="text-[10px] text-zinc-500 font-mono mb-1.5 select-none uppercase tracking-wider">
+                                {example.language}
+                              </div>
+                            )}
+                            <pre className="whitespace-pre overflow-x-auto">
+                              <code>{example.code}</code>
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-zinc-500 italic">
+                Usage instructions and examples will appear here.
               </p>
             )}
           </div>

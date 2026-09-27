@@ -6,7 +6,7 @@ export const README_TEMPLATES: ReadmeTemplate[] = [
     name: 'Blank',
     description: 'Start completely from scratch with a clean slate.',
     sections: ['Basic Info'],
-    apply: (_current: ReadmeData): ReadmeData => ({
+    apply: (): ReadmeData => ({
       basicInfo: {
         projectName: '',
         description: '',

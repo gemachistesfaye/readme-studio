@@ -8,6 +8,8 @@ interface FeaturesFormProps {
   onAddFeature: (title: string, description?: string) => { success: boolean; error?: string };
   onUpdateFeature: (id: string, title: string, description: string) => { success: boolean; error?: string };
   onRemoveFeature: (id: string) => void;
+  onMoveFeatureUp: (id: string) => void;
+  onMoveFeatureDown: (id: string) => void;
 }
 
 export const FeaturesForm: React.FC<FeaturesFormProps> = ({
@@ -15,6 +17,8 @@ export const FeaturesForm: React.FC<FeaturesFormProps> = ({
   onAddFeature,
   onUpdateFeature,
   onRemoveFeature,
+  onMoveFeatureUp,
+  onMoveFeatureDown,
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -115,12 +119,16 @@ export const FeaturesForm: React.FC<FeaturesFormProps> = ({
 
         {features.length > 0 ? (
           <div className="flex flex-col gap-2 pt-1">
-            {features.map((feature) => (
+            {features.map((feature, idx) => (
               <FeatureItem
                 key={feature.id}
                 feature={feature}
+                index={idx}
+                totalCount={features.length}
                 onUpdate={onUpdateFeature}
                 onRemove={onRemoveFeature}
+                onMoveUp={onMoveFeatureUp}
+                onMoveDown={onMoveFeatureDown}
               />
             ))}
           </div>

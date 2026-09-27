@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useReadmeData } from '@/hooks/useReadmeData';
+import { generateMarkdown } from '@/utils';
 import { EditorPanel } from './EditorPanel';
 import { PreviewPanel } from './PreviewPanel';
 
@@ -32,6 +33,9 @@ export const GeneratorWorkspace: React.FC = () => {
     errors,
     contactErrors,
   } = useReadmeData();
+
+  // Canonical Markdown is the single source of truth for preview, copy, and export
+  const markdown = useMemo(() => generateMarkdown(data), [data]);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -85,16 +89,7 @@ export const GeneratorWorkspace: React.FC = () => {
         />
 
         {/* Right Panel: Preview Area */}
-        <PreviewPanel
-          basicInfo={data.basicInfo}
-          techStack={data.techStack}
-          features={data.features}
-          installation={data.installation}
-          usage={data.usage}
-          contributing={data.contributing}
-          license={data.license}
-          contact={data.contact}
-        />
+        <PreviewPanel markdown={markdown} />
       </div>
     </div>
   );

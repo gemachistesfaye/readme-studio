@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import {
+  BadgeStyle,
+  BadgeType,
   BasicInfoData,
   ContactData,
   ContactErrors,
@@ -8,13 +10,16 @@ import {
   InstallationData,
   InstallationStep,
   LicenseData,
+  ReadmeBadge,
   ReadmeData,
   TechCategory,
+  TemplateId,
   UsageData,
   UsageExample,
   ValidationErrors,
 } from '@/types';
 import { validateBasicInfo, validateContact } from '@/utils/validation';
+import { README_TEMPLATES } from '@/constants/templates';
 
 const initialReadmeData: ReadmeData = {
   basicInfo: {
@@ -24,6 +29,9 @@ const initialReadmeData: ReadmeData = {
     demoUrl: '',
     authorName: '',
     authorGithub: '',
+  },
+  badges: {
+    badges: [],
   },
   techStack: {
     technologies: [],
@@ -64,6 +72,7 @@ const initialReadmeData: ReadmeData = {
 
 export function useReadmeData() {
   const [data, setData] = useState<ReadmeData>(initialReadmeData);
+  const [currentTemplateId, setCurrentTemplateId] = useState<TemplateId>('blank');
   const [touched, setTouched] = useState<Partial<Record<keyof BasicInfoData, boolean>>>({});
   const [touchedContact, setTouchedContact] = useState<Partial<Record<keyof ContactData, boolean>>>({});
 
@@ -90,6 +99,129 @@ export function useReadmeData() {
     return visible;
   }, [allContactErrors, touchedContact]);
 
+  // Check whether the workspace has meaningful content that would warrant confirmation
+  const hasUserContent = useMemo(() => {
+    const b = data.basicInfo;
+    if (b.projectName.trim() || b.description.trim() || b.repositoryUrl.trim()) return true;
+    if (data.badges.badges.length > 0) return true;
+    if (data.techStack.technologies.length > 0) return true;
+    if (data.features.features.length > 0) return true;
+    if (data.installation.setupInstructions.length > 0 || data.installation.cloneCommand.trim()) return true;
+    if (data.usage.examples.length > 0) return true;
+    return false;
+  }, [data]);
+
+  // 1. Template Operations
+  const applyTemplate = useCallback((templateId: TemplateId) => {
+    const template = README_TEMPLATES.find((t) => t.id === templateId);
+    if (!template) return;
+
+    setData((prev) => {
+      const updated = template.apply(prev);
+      return updated;
+    });
+    setCurrentTemplateId(templateId);
+  }, []);
+
+  // 2. Badge Operations
+  const addBadge = useCallback(
+    (
+      type: BadgeType,
+      label: string,
+      message?: string,
+      color?: string,
+      logo?: string,
+      link?: string,
+      style: BadgeStyle = 'flat'
+    ): { success: boolean; error?: string } => {
+      const trimmedLabel = label.trim();
+      if (!trimmedLabel) {
+        return { success: false, error: 'Badge label cannot be empty.' };
+      }
+
+      // Check for duplicate badge (same label and type)
+      const isDuplicate = data.badges.badges.some(
+        (b) => b.type === type && b.label.toLowerCase() === trimmedLabel.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        return { success: false, error: `A ${type} badge for "${trimmedLabel}" already exists.` };
+      }
+
+      const newBadge: ReadmeBadge = {
+        id: `badge-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        type,
+        label: trimmedLabel,
+        message: message?.trim() || undefined,
+        color: color?.trim() || undefined,
+        logo: logo?.trim() || undefined,
+        link: link?.trim() || undefined,
+        style,
+      };
+
+      setData((prev) => ({
+        ...prev,
+        badges: {
+          badges: [...prev.badges.badges, newBadge],
+        },
+      }));
+
+      return { success: true };
+    },
+    [data.badges.badges]
+  );
+
+  const updateBadge = useCallback(
+    (id: string, updates: Partial<Omit<ReadmeBadge, 'id'>>): { success: boolean; error?: string } => {
+      setData((prev) => ({
+        ...prev,
+        badges: {
+          badges: prev.badges.badges.map((b) => (b.id === id ? { ...b, ...updates } : b)),
+        },
+      }));
+      return { success: true };
+    },
+    []
+  );
+
+  const removeBadge = useCallback((id: string) => {
+    setData((prev) => ({
+      ...prev,
+      badges: {
+        badges: prev.badges.badges.filter((b) => b.id !== id),
+      },
+    }));
+  }, []);
+
+  const moveBadgeUp = useCallback((index: number) => {
+    if (index <= 0) return;
+    setData((prev) => {
+      const list = [...prev.badges.badges];
+      const temp = list[index - 1];
+      list[index - 1] = list[index];
+      list[index] = temp;
+      return {
+        ...prev,
+        badges: { badges: list },
+      };
+    });
+  }, []);
+
+  const moveBadgeDown = useCallback((index: number) => {
+    setData((prev) => {
+      const list = [...prev.badges.badges];
+      if (index >= list.length - 1) return prev;
+      const temp = list[index + 1];
+      list[index + 1] = list[index];
+      list[index] = temp;
+      return {
+        ...prev,
+        badges: { badges: list },
+      };
+    });
+  }, []);
+
+  // Basic Info Handlers
   const updateBasicInfo = useCallback((field: keyof BasicInfoData, value: string) => {
     setData((prev) => ({
       ...prev,
@@ -107,6 +239,7 @@ export function useReadmeData() {
     }));
   }, []);
 
+  // Tech Stack Handlers
   const addTechnology = useCallback(
     (name: string, category: TechCategory): { success: boolean; error?: string } => {
       const trimmed = name.trim();
@@ -141,14 +274,19 @@ export function useReadmeData() {
   );
 
   const removeTechnology = useCallback((id: string) => {
-    setData((prev) => ({
-      ...prev,
-      techStack: {
-        technologies: prev.techStack.technologies.filter((t) => t.id !== id),
-      },
-    }));
+    setData((prev) => {
+      const techToRemove = prev.techStack.technologies.find((t) => t.id === id);
+      const newTechList = prev.techStack.technologies.filter((t) => t.id !== id);
+
+      // Optionally keep or filter technology badges if needed
+      return {
+        ...prev,
+        techStack: { technologies: newTechList },
+      };
+    });
   }, []);
 
+  // Feature Handlers
   const addFeature = useCallback(
     (title: string, description?: string): { success: boolean; error?: string } => {
       const trimmedTitle = title.trim();
@@ -220,6 +358,7 @@ export function useReadmeData() {
     }));
   }, []);
 
+  // Installation Handlers
   const updateInstallationField = useCallback(
     (field: keyof Omit<InstallationData, 'setupInstructions'>, value: string) => {
       setData((prev) => ({
@@ -269,7 +408,6 @@ export function useReadmeData() {
       setData((prev) => ({
         ...prev,
         installation: {
-          ...prev.installation,
           setupInstructions: prev.installation.setupInstructions.map((s) =>
             s.id === id ? { ...s, instruction: trimmedInstruction, command: command.trim() } : s
           ),
@@ -285,12 +423,12 @@ export function useReadmeData() {
     setData((prev) => ({
       ...prev,
       installation: {
-        ...prev.installation,
         setupInstructions: prev.installation.setupInstructions.filter((s) => s.id !== id),
       },
     }));
   }, []);
 
+  // Usage Handlers
   const updateUsageIntroduction = useCallback((introduction: string) => {
     setData((prev) => ({
       ...prev,
@@ -507,13 +645,38 @@ export function useReadmeData() {
 
   // License Handlers
   const updateLicense = useCallback((field: keyof LicenseData, value: string) => {
-    setData((prev) => ({
-      ...prev,
-      license: {
+    setData((prev) => {
+      const updatedLicense = {
         ...prev.license,
         [field]: value,
-      },
-    }));
+      };
+
+      // Automatically keep license badge synchronized with License type
+      let updatedBadges = prev.badges.badges;
+      if (field === 'type') {
+        const newType = value;
+        if (newType === 'None') {
+          // Remove license badge if license is None
+          updatedBadges = updatedBadges.filter((b) => b.type !== 'license');
+        } else {
+          // Update existing license badge label & message if one exists
+          updatedBadges = updatedBadges.map((b) =>
+            b.type === 'license'
+              ? {
+                  ...b,
+                  message: newType === 'Custom' ? (prev.license.customName || 'Custom') : newType,
+                }
+              : b
+          );
+        }
+      }
+
+      return {
+        ...prev,
+        license: updatedLicense,
+        badges: { badges: updatedBadges },
+      };
+    });
   }, []);
 
   // Contact Handlers
@@ -536,6 +699,14 @@ export function useReadmeData() {
 
   return {
     data,
+    currentTemplateId,
+    hasUserContent,
+    applyTemplate,
+    addBadge,
+    updateBadge,
+    removeBadge,
+    moveBadgeUp,
+    moveBadgeDown,
     updateBasicInfo,
     touchField,
     addTechnology,

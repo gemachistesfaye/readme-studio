@@ -102,8 +102,6 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
           <ol className="space-y-2">
             {sectionOrder.map((sectionId, index) => {
               const meta = getSectionMeta(sectionId);
-              const isFirst = index === 0;
-              const isLast = index === total - 1;
 
               return (
                 <li

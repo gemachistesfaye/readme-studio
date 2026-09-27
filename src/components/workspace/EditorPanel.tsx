@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FileText,
-  AlignLeft,
   Boxes,
   Terminal,
   Play,
@@ -9,9 +8,13 @@ import {
   GitPullRequest,
   Scale,
   Mail,
+  ShieldCheck,
   SlidersHorizontal,
 } from 'lucide-react';
 import {
+  BadgesData,
+  BadgeStyle,
+  BadgeType,
   BasicInfoData,
   ContactData,
   ContactErrors,
@@ -19,6 +22,7 @@ import {
   FeaturesData,
   InstallationData,
   LicenseData,
+  ReadmeBadge,
   TechCategory,
   TechStackData,
   UsageData,
@@ -26,6 +30,7 @@ import {
 } from '@/types';
 import { EditorSection } from './EditorSection';
 import { BasicInfoForm } from './BasicInfoForm';
+import { BadgeBuilder } from './BadgeBuilder';
 import { TechStackForm } from './TechStackForm';
 import { FeaturesForm } from './FeaturesForm';
 import { InstallationForm } from './InstallationForm';
@@ -36,6 +41,7 @@ import { ContactForm } from './ContactForm';
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
+  badges: BadgesData;
   techStack: TechStackData;
   features: FeaturesData;
   installation: InstallationData;
@@ -47,6 +53,19 @@ interface EditorPanelProps {
   contactErrors: ContactErrors;
   onBasicInfoChange: (field: keyof BasicInfoData, value: string) => void;
   onBasicInfoBlur: (field: keyof BasicInfoData) => void;
+  onAddBadge: (
+    type: BadgeType,
+    label: string,
+    message?: string,
+    color?: string,
+    logo?: string,
+    link?: string,
+    style?: BadgeStyle
+  ) => { success: boolean; error?: string };
+  onUpdateBadge: (id: string, updates: Partial<Omit<ReadmeBadge, 'id'>>) => { success: boolean; error?: string };
+  onRemoveBadge: (id: string) => void;
+  onMoveBadgeUp: (index: number) => void;
+  onMoveBadgeDown: (index: number) => void;
   onAddTechnology: (name: string, category: TechCategory) => { success: boolean; error?: string };
   onRemoveTechnology: (id: string) => void;
   onAddFeature: (title: string, description?: string) => { success: boolean; error?: string };
@@ -83,6 +102,7 @@ interface EditorPanelProps {
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
   basicInfo,
+  badges,
   techStack,
   features,
   installation,
@@ -94,6 +114,11 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   contactErrors,
   onBasicInfoChange,
   onBasicInfoBlur,
+  onAddBadge,
+  onUpdateBadge,
+  onRemoveBadge,
+  onMoveBadgeUp,
+  onMoveBadgeDown,
   onAddTechnology,
   onRemoveTechnology,
   onAddFeature,
@@ -116,15 +141,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   onUpdateContactField,
   onContactBlur,
 }) => {
-  const futureSections = [
-    {
-      title: 'Description',
-      description: 'Extended project background and comprehensive overview',
-      icon: AlignLeft,
-      badge: 'Upcoming',
-    },
-  ];
-
+  const badgeCount = badges.badges.length;
   const techCount = techStack.technologies.length;
   const featureCount = features.features.length;
   const hasInstallConfig =
@@ -160,13 +177,13 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           </div>
         </div>
         <span className="rounded-md border border-zinc-800 bg-zinc-900/80 px-2 py-1 text-xs font-mono text-zinc-400">
-          9 Sections
+          8 Sections
         </span>
       </div>
 
       {/* Section List */}
       <div className="mt-4 flex flex-col gap-3">
-        {/* Basic Information - Functional Form */}
+        {/* Basic Information */}
         <EditorSection
           title="Basic Information"
           description="Project title, summary, repository, and author metadata"
@@ -182,7 +199,27 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* Tech Stack - Functional Form */}
+        {/* Badges Builder */}
+        <EditorSection
+          title="Badges"
+          description="Technology, license, and custom status badges"
+          icon={ShieldCheck}
+          badge={badgeCount > 0 ? `${badgeCount} badges` : 'Active'}
+          defaultOpen={false}
+        >
+          <BadgeBuilder
+            badges={badges}
+            techStack={techStack}
+            license={license}
+            onAddBadge={onAddBadge}
+            onUpdateBadge={onUpdateBadge}
+            onRemoveBadge={onRemoveBadge}
+            onMoveBadgeUp={onMoveBadgeUp}
+            onMoveBadgeDown={onMoveBadgeDown}
+          />
+        </EditorSection>
+
+        {/* Tech Stack */}
         <EditorSection
           title="Tech Stack"
           description="Languages, frameworks, runtimes, and core tools"
@@ -197,7 +234,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* Features - Functional Form */}
+        {/* Features */}
         <EditorSection
           title="Features"
           description="Key capabilities, highlights, and functional value"
@@ -213,7 +250,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* Installation - Functional Form */}
+        {/* Installation */}
         <EditorSection
           title="Installation"
           description="Prerequisites, dependency management, and setup steps"
@@ -231,7 +268,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* Usage - Functional Form */}
+        {/* Usage */}
         <EditorSection
           title="Usage"
           description="Quickstart code examples and operational guidance"
@@ -248,7 +285,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* Contributing - Functional Form */}
+        {/* Contributing */}
         <EditorSection
           title="Contributing"
           description="Contribution guidelines, issue reporting, and PR rules"
@@ -266,7 +303,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* License - Functional Form */}
+        {/* License */}
         <EditorSection
           title="License"
           description="Open source or proprietary license selection (MIT, Apache, etc.)"
@@ -280,7 +317,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           />
         </EditorSection>
 
-        {/* Contact - Functional Form */}
+        {/* Contact */}
         <EditorSection
           title="Contact"
           description="Author details, social handles, and support links"
@@ -295,18 +332,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onBlur={onContactBlur}
           />
         </EditorSection>
-
-        {/* Future Sections */}
-        {futureSections.map((section) => (
-          <EditorSection
-            key={section.title}
-            title={section.title}
-            description={section.description}
-            icon={section.icon}
-            badge={section.badge}
-            defaultOpen={false}
-          />
-        ))}
       </div>
     </div>
   );

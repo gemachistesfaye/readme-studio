@@ -1,6 +1,6 @@
 import React from 'react';
 import { FileCode2, Github, Terminal } from 'lucide-react';
-import { APP_CONFIG, REPO_URL } from '@/constants';
+import { APP_CONFIG } from '@/constants';
 
 interface HeaderProps {
   onOpenGitHubImport?: () => void;

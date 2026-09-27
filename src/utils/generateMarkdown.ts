@@ -7,12 +7,14 @@ import {
   InstallationData,
   LicenseData,
   ReadmeData,
+  ReadmeSectionId,
   TechStackData,
   UsageData,
 } from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
 import { LICENSE_OPTIONS } from '@/constants/licenses';
 import { generateBadgesRow } from './generateBadge';
+import { normalizeSectionOrder } from './sectionOrder';
 
 /**
  * Formats a code block with backtick-safe fences.
@@ -336,36 +338,44 @@ export function generateContactSection(contact: ContactData, basicInfo?: BasicIn
 }
 
 /**
+ * Markdown builders for every reorderable README section, keyed by section id.
+ *
+ * A single registry keeps section generation defined in exactly one place —
+ * changing the layout never duplicates generation logic.
+ */
+const SECTION_BUILDERS: Record<ReadmeSectionId, (data: ReadmeData) => string> = {
+  techStack: (data) => generateTechStackSection(data.techStack),
+  features: (data) => generateFeaturesSection(data.features),
+  installation: (data) => generateInstallationSection(data.installation),
+  usage: (data) => generateUsageSection(data.usage),
+  contributing: (data) => generateContributingSection(data.contributing),
+  license: (data) => generateLicenseSection(data.license),
+  contact: (data) => generateContactSection(data.contact, data.basicInfo),
+};
+
+/**
  * Canonical Markdown Generation Engine
  *
  * Pure, deterministic, strongly typed conversion of ReadmeData into valid README.md markdown.
+ *
+ * The project identity header (title, badges, description, repository/demo links)
+ * is always emitted first. Reorderable sections follow in the user-configured
+ * `data.layout.sectionOrder`, each appearing at most once. Empty sections are
+ * omitted regardless of their configured position.
  */
 export function generateMarkdown(data: ReadmeData): string {
   const sections: string[] = [];
 
+  // Fixed identity area: title, badge row, description, repository/demo links
   const basic = generateBasicInfoSection(data.basicInfo, data.badges);
   if (basic) sections.push(basic);
 
-  const tech = generateTechStackSection(data.techStack);
-  if (tech) sections.push(tech);
-
-  const feats = generateFeaturesSection(data.features);
-  if (feats) sections.push(feats);
-
-  const install = generateInstallationSection(data.installation);
-  if (install) sections.push(install);
-
-  const usage = generateUsageSection(data.usage);
-  if (usage) sections.push(usage);
-
-  const contrib = generateContributingSection(data.contributing);
-  if (contrib) sections.push(contrib);
-
-  const lic = generateLicenseSection(data.license);
-  if (lic) sections.push(lic);
-
-  const cont = generateContactSection(data.contact, data.basicInfo);
-  if (cont) sections.push(cont);
+  // Reorderable sections, rendered in the configured order
+  const order = normalizeSectionOrder(data.layout?.sectionOrder);
+  for (const sectionId of order) {
+    const markdown = SECTION_BUILDERS[sectionId](data);
+    if (markdown) sections.push(markdown);
+  }
 
   if (sections.length === 0) {
     return '';

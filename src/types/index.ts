@@ -127,6 +127,25 @@ export interface BadgesData {
   badges: ReadmeBadge[];
 }
 
+export type ReadmeSectionId =
+  | 'techStack'
+  | 'features'
+  | 'installation'
+  | 'usage'
+  | 'contributing'
+  | 'license'
+  | 'contact';
+
+export interface SectionMeta {
+  id: ReadmeSectionId;
+  label: string;
+  description: string;
+}
+
+export interface ReadmeLayoutData {
+  sectionOrder: ReadmeSectionId[];
+}
+
 export interface ReadmeData {
   basicInfo: BasicInfoData;
   badges: BadgesData;
@@ -137,6 +156,7 @@ export interface ReadmeData {
   contributing: ContributingData;
   license: LicenseData;
   contact: ContactData;
+  layout: ReadmeLayoutData;
 }
 
 export type TemplateId = 'standard' | 'web-app' | 'api-backend' | 'ai-ml' | 'minimal' | 'blank';

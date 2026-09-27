@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import {
   FileText,
   AlignLeft,
@@ -17,6 +17,7 @@ import {
   InstallationData,
   TechCategory,
   TechStackData,
+  UsageData,
   ValidationErrors,
 } from '@/types';
 import { EditorSection } from './EditorSection';
@@ -24,12 +25,14 @@ import { BasicInfoForm } from './BasicInfoForm';
 import { TechStackForm } from './TechStackForm';
 import { FeaturesForm } from './FeaturesForm';
 import { InstallationForm } from './InstallationForm';
+import { UsageForm } from './UsageForm';
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
   techStack: TechStackData;
   features: FeaturesData;
   installation: InstallationData;
+  usage: UsageData;
   errors: ValidationErrors;
   onBasicInfoChange: (field: keyof BasicInfoData, value: string) => void;
   onBasicInfoBlur: (field: keyof BasicInfoData) => void;
@@ -42,6 +45,21 @@ interface EditorPanelProps {
   onAddInstallationStep: (instruction: string, command?: string) => { success: boolean; error?: string };
   onUpdateInstallationStep: (id: string, instruction: string, command: string) => { success: boolean; error?: string };
   onRemoveInstallationStep: (id: string) => void;
+  onUpdateUsageIntroduction: (introduction: string) => void;
+  onAddUsageExample: (
+    title: string,
+    description?: string,
+    code?: string,
+    language?: string
+  ) => { success: boolean; error?: string };
+  onUpdateUsageExample: (
+    id: string,
+    title: string,
+    description: string,
+    code: string,
+    language: string
+  ) => { success: boolean; error?: string };
+  onRemoveUsageExample: (id: string) => void;
 }
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
@@ -49,6 +67,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   techStack,
   features,
   installation,
+  usage,
   errors,
   onBasicInfoChange,
   onBasicInfoBlur,
@@ -61,6 +80,10 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   onAddInstallationStep,
   onUpdateInstallationStep,
   onRemoveInstallationStep,
+  onUpdateUsageIntroduction,
+  onAddUsageExample,
+  onUpdateUsageExample,
+  onRemoveUsageExample,
 }) => {
   const futureSections = [
     {
@@ -68,11 +91,6 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
       description: 'Extended project background and comprehensive overview',
       icon: AlignLeft,
       badge: 'Upcoming',
-    },
-    {
-      title: 'Usage',
-      description: 'Quickstart code examples and operational guidance',
-      icon: Play,
     },
     {
       title: 'Contributing',
@@ -98,6 +116,8 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
     !!installation.cloneCommand ||
     !!installation.installCommand ||
     installation.setupInstructions.length > 0;
+  const usageCount = usage.examples.length;
+  const hasUsageConfig = !!usage.introduction.trim() || usageCount > 0;
 
   return (
     <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm">
@@ -181,6 +201,23 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onAddStep={onAddInstallationStep}
             onUpdateStep={onUpdateInstallationStep}
             onRemoveStep={onRemoveInstallationStep}
+          />
+        </EditorSection>
+
+        {/* Usage - Functional Form */}
+        <EditorSection
+          title="Usage"
+          description="Quickstart code examples and operational guidance"
+          icon={Play}
+          badge={hasUsageConfig ? (usageCount > 0 ? `${usageCount} added` : 'Configured') : 'Active'}
+          defaultOpen={false}
+        >
+          <UsageForm
+            data={usage}
+            onUpdateIntroduction={onUpdateUsageIntroduction}
+            onAddExample={onAddUsageExample}
+            onUpdateExample={onUpdateUsageExample}
+            onRemoveExample={onRemoveUsageExample}
           />
         </EditorSection>
 

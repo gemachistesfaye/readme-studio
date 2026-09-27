@@ -26,3 +26,10 @@ export {
 } from './validation';
 export { copyToClipboard } from './clipboard';
 export { downloadMarkdown } from './downloadMarkdown';
+export { parseGitHubRepositoryUrl } from './parseGitHubUrl';
+export {
+  createDefaultGitHubSelection,
+  getOverwritingFields,
+  mapGitHubImportToReadmeData,
+  type OverwriteConflict,
+} from './githubImport';

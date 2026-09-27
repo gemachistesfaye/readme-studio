@@ -10,6 +10,8 @@ interface InstallationFormProps {
   onAddStep: (instruction: string, command?: string) => { success: boolean; error?: string };
   onUpdateStep: (id: string, instruction: string, command: string) => { success: boolean; error?: string };
   onRemoveStep: (id: string) => void;
+  onMoveStepUp: (id: string) => void;
+  onMoveStepDown: (id: string) => void;
 }
 
 export const InstallationForm: React.FC<InstallationFormProps> = ({
@@ -19,6 +21,8 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
   onAddStep,
   onUpdateStep,
   onRemoveStep,
+  onMoveStepUp,
+  onMoveStepDown,
 }) => {
   const [instruction, setInstruction] = useState('');
   const [command, setCommand] = useState('');
@@ -199,8 +203,11 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
                 key={step.id}
                 step={step}
                 index={idx}
+                totalCount={data.setupInstructions.length}
                 onUpdate={onUpdateStep}
                 onRemove={onRemoveStep}
+                onMoveUp={onMoveStepUp}
+                onMoveDown={onMoveStepDown}
               />
             ))}
           </div>

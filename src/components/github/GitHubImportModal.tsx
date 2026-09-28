@@ -28,6 +28,7 @@ import {
   getOverwritingFields,
 } from '@/utils/githubImport';
 import { cn } from '@/utils';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface GitHubImportModalProps {
   isOpen: boolean;
@@ -42,6 +43,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
   currentData,
   onImport,
 }) => {
+  useBodyScrollLock(isOpen);
   const [repoUrl, setRepoUrl] = useState('');
   const [step, setStep] = useState<'input' | 'analyzing' | 'preview' | 'success'>('input');
   const [analysis, setAnalysis] = useState<GitHubImportAnalysis | null>(null);
@@ -190,17 +192,17 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 dark:bg-zinc-950/80 backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="github-import-title"
     >
       <div
-        className="relative w-full max-w-2xl rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 px-6 py-4 bg-white dark:bg-zinc-900/90">
+        <div className="flex items-start justify-between gap-3 border-b border-zinc-200 bg-white px-4 py-4 dark:border-zinc-800 dark:bg-zinc-900/90 sm:px-6">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700">
               <Github className="h-5 w-5" />
@@ -228,7 +230,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        <div className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6">
           {/* STEP 1: Input URL */}
           {(step === 'input' || step === 'analyzing') && (
             <div className="space-y-4">

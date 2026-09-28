@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { FilePlus2, X } from 'lucide-react';
+import React, { useEffect, useRef } from "react";
+import { FilePlus2, X } from "lucide-react";
 
 interface NewReadmeModalProps {
   isOpen: boolean;
@@ -21,10 +21,10 @@ export const NewReadmeModal: React.FC<NewReadmeModalProps> = ({
 
     closeButtonRef.current?.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -43,13 +43,16 @@ export const NewReadmeModal: React.FC<NewReadmeModalProps> = ({
               <FilePlus2 className="h-5 w-5" />
             </div>
             <div>
-              <h2 id="new-readme-title" className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              <h2
+                id="new-readme-title"
+                className="text-base font-semibold text-zinc-900 dark:text-zinc-100"
+              >
                 New README
               </h2>
               <p className="mt-1 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
                 {hasUserContent
-                  ? 'Your current draft will be replaced with a blank README.'
-                  : 'Start with a fresh blank README.'}
+                  ? "Your current draft will be replaced with a blank README."
+                  : "Start with a fresh blank README."}
               </p>
             </div>
           </div>
@@ -66,7 +69,8 @@ export const NewReadmeModal: React.FC<NewReadmeModalProps> = ({
 
         {hasUserContent && (
           <p className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-            This action clears the current README draft. Your separately saved theme preference will not be changed.
+            This action clears the current README draft. Your separately saved
+            theme preference will not be changed.
           </p>
         )}
 

@@ -1,5 +1,4 @@
 import { ReadmeData, ReadmeTemplate } from '@/types';
-import { DEFAULT_SECTION_ORDER } from './sections';
 
 export const README_TEMPLATES: ReadmeTemplate[] = [
   {
@@ -7,7 +6,7 @@ export const README_TEMPLATES: ReadmeTemplate[] = [
     name: 'Blank',
     description: 'Start completely from scratch with a clean slate.',
     sections: ['Basic Info'],
-    apply: (): ReadmeData => ({
+    apply: (currentData: ReadmeData): ReadmeData => ({
       basicInfo: {
         projectName: '',
         description: '',
@@ -61,7 +60,7 @@ export const README_TEMPLATES: ReadmeTemplate[] = [
         additionalLinkUrl: '',
       },
       layout: {
-        sectionOrder: [...DEFAULT_SECTION_ORDER],
+        sectionOrder: [...currentData.layout.sectionOrder],
       },
     }),
   },

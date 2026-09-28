@@ -343,13 +343,50 @@ export function generateContactSection(contact: ContactData, basicInfo?: BasicIn
  * A single registry keeps section generation defined in exactly one place —
  * changing the layout never duplicates generation logic.
  */
+function hasContentBeforeLicense(data: ReadmeData): boolean {
+  const basicInfo = data.basicInfo;
+  return Boolean(
+    basicInfo.projectName.trim() ||
+      basicInfo.description.trim() ||
+      basicInfo.repositoryUrl.trim() ||
+      basicInfo.demoUrl.trim() ||
+      basicInfo.authorName.trim() ||
+      basicInfo.authorGithub.trim() ||
+      data.badges.badges.length ||
+      data.techStack.technologies.length ||
+      data.features.features.length ||
+      data.installation.prerequisites.trim() ||
+      data.installation.cloneCommand.trim() ||
+      data.installation.installCommand.trim() ||
+      data.installation.setupInstructions.length ||
+      data.usage.introduction.trim() ||
+      data.usage.examples.length ||
+      data.contributing.introduction.trim() ||
+      data.contributing.guidelines.length ||
+      data.contributing.customInstructions.trim() ||
+      data.contact.email.trim() ||
+      data.contact.website.trim() ||
+      data.contact.linkedin.trim() ||
+      data.contact.twitter.trim() ||
+      data.contact.additionalLinkLabel.trim() ||
+      data.contact.additionalLinkUrl.trim()
+  );
+}
+
 const SECTION_BUILDERS: Record<ReadmeSectionId, (data: ReadmeData) => string> = {
   techStack: (data) => generateTechStackSection(data.techStack),
   features: (data) => generateFeaturesSection(data.features),
   installation: (data) => generateInstallationSection(data.installation),
   usage: (data) => generateUsageSection(data.usage),
   contributing: (data) => generateContributingSection(data.contributing),
-  license: (data) => generateLicenseSection(data.license),
+  license: (data) => {
+    const isDefaultBlankLicense =
+      data.license.type === 'MIT' &&
+      !data.license.customName.trim() &&
+      !data.license.customText.trim() &&
+      !hasContentBeforeLicense(data);
+    return isDefaultBlankLicense ? '' : generateLicenseSection(data.license);
+  },
   contact: (data) => generateContactSection(data.contact, data.basicInfo),
 };
 

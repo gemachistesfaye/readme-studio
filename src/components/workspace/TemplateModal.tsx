@@ -9,7 +9,7 @@ interface TemplateModalProps {
   currentTemplateId: TemplateId;
   hasUserContent: boolean;
   onClose: () => void;
-  onApplyTemplate: (templateId: TemplateId) => void;
+  onApplyTemplate: (templateId: TemplateId, replaceContent?: boolean) => void;
 }
 
 export const TemplateModal: React.FC<TemplateModalProps> = ({
@@ -40,9 +40,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
     }
   };
 
-  const handleConfirmApply = () => {
+  const handleConfirmApply = (replaceContent: boolean) => {
     if (pendingTemplateId) {
-      onApplyTemplate(pendingTemplateId);
+      onApplyTemplate(pendingTemplateId, replaceContent);
     }
     setShowConfirm(false);
     setPendingTemplateId(null);
@@ -100,7 +100,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
               Apply this template?
             </h3>
             <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Applying a new template will configure starter sections and guidance. Your project name, repository URL, and author credentials will be preserved.
+              Choose how to apply this template. Your project identity, badges, tech stack, section order, and theme will be preserved.
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -113,10 +113,17 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
               </button>
               <button
                 type="button"
-                onClick={handleConfirmApply}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 transition-colors"
+                onClick={() => handleConfirmApply(false)}
+                className="rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-xs font-semibold text-indigo-700 shadow-sm transition-colors hover:bg-indigo-100 dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-300 dark:hover:bg-indigo-500/20"
               >
-                Apply Template
+                Fill Empty Sections
+              </button>
+              <button
+                type="button"
+                onClick={() => handleConfirmApply(true)}
+                className="rounded-lg bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-orange-600"
+              >
+                Replace Customizable Content
               </button>
             </div>
           </div>

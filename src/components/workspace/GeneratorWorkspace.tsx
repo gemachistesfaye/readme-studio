@@ -110,7 +110,11 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           <p className="mt-1 text-sm text-zinc-400">
             Build a professional README.md for your project in minutes.
           </p>
-          <p className="mt-2 text-xs text-zinc-500" role="status" aria-live="polite">
+          <p
+            className="mt-2 text-xs text-zinc-500"
+            role="status"
+            aria-live="polite"
+          >
             Draft: {saveStatus}
           </p>
         </div>

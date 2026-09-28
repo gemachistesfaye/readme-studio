@@ -18,8 +18,8 @@ const THEME_LABELS: Record<ThemePreference, string> = {
 
 /**
  * Compact theme control for the header. Selecting an option updates the
- * in-memory theme store immediately; the "System" option stays in sync with
- * OS-level colour scheme changes while it is selected.
+ * persisted theme preference immediately; the "System" option stays in sync
+ * with OS-level colour scheme changes while it is selected.
  */
 export const ThemeSwitcher: React.FC = () => {
   const { themePreference, resolvedTheme, setThemePreference } = useTheme();
@@ -102,14 +102,14 @@ export const ThemeSwitcher: React.FC = () => {
               >
                 <Icon
                   className={`mt-0.5 h-4 w-4 shrink-0 ${
-                    isSelected ? 'text-indigo-600 dark:text-indigo-400' : 'text-zinc-400 dark:text-zinc-500'
+                    isSelected ? 'text-orange-600 dark:text-indigo-400' : 'text-zinc-400 dark:text-zinc-500'
                   }`}
                 />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     {option.label}
                     {isSelected && (
-                      <Check className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+                      <Check className="h-3.5 w-3.5 text-orange-600 dark:text-indigo-400" aria-hidden="true" />
                     )}
                   </span>
                   <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">{option.description}</span>

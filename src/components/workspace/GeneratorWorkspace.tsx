@@ -8,6 +8,7 @@ import { EditorPanel } from "./EditorPanel";
 import { PreviewPanel } from "./PreviewPanel";
 import { TemplateModal } from "./TemplateModal";
 import { SectionOrderModal } from "./SectionOrderModal";
+import { NewReadmeModal } from "./NewReadmeModal";
 
 interface GeneratorWorkspaceProps {
   isGitHubImportOpen?: boolean;
@@ -22,6 +23,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 }) => {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isSectionOrderOpen, setIsSectionOrderOpen] = useState(false);
+  const [isNewReadmeOpen, setIsNewReadmeOpen] = useState(false);
   const [internalGitHubImportOpen, setInternalGitHubImportOpen] =
     useState(false);
 
@@ -33,6 +35,8 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 
   const {
     data,
+    saveStatus,
+    resetReadme,
     updateBasicInfo,
     touchField,
     addBadge,
@@ -106,10 +110,22 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           <p className="mt-1 text-sm text-zinc-400">
             Build a professional README.md for your project in minutes.
           </p>
+          <p className="mt-2 text-xs text-zinc-500" role="status" aria-live="polite">
+            Draft: {saveStatus}
+          </p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setIsNewReadmeOpen(true)}
+            className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-50 px-3.5 py-2 text-sm font-medium text-orange-700 shadow-sm transition-colors hover:border-orange-300 hover:bg-orange-100 hover:text-orange-800 focus:outline-none focus:ring-2 focus:ring-orange-500/40 dark:border-orange-500/30 dark:bg-orange-500/10 dark:text-orange-300 dark:hover:border-orange-500/50 dark:hover:bg-orange-500/20 dark:hover:text-orange-200"
+          >
+            <span aria-hidden="true">+</span>
+            New README
+          </button>
+
           <button
             type="button"
             onClick={() => setIsSectionOrderOpen(true)}
@@ -236,6 +252,16 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
         onMoveSectionUp={moveSectionUp}
         onMoveSectionDown={moveSectionDown}
         onResetOrder={resetSectionOrder}
+      />
+
+      <NewReadmeModal
+        isOpen={isNewReadmeOpen}
+        hasUserContent={hasUserContent}
+        onClose={() => setIsNewReadmeOpen(false)}
+        onConfirm={() => {
+          resetReadme();
+          setIsNewReadmeOpen(false);
+        }}
       />
     </div>
   );

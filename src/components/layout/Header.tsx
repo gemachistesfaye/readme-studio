@@ -1,7 +1,7 @@
-import React from 'react';
-import { FileCode2, Github, Terminal } from 'lucide-react';
-import { APP_CONFIG } from '@/constants';
-import { ThemeSwitcher } from './ThemeSwitcher';
+import React from "react";
+import { FileCode2, Github, Terminal } from "lucide-react";
+import { APP_CONFIG } from "@/constants";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 interface HeaderProps {
   onOpenGitHubImport?: () => void;

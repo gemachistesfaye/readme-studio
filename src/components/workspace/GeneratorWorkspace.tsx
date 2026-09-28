@@ -150,7 +150,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-2.5 lg:items-end">
-          <div className="flex flex-wrap gap-2.5 lg:justify-end">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap lg:justify-end">
             <button
               type="button"
               onClick={() => setIsNewReadmeOpen(true)}
@@ -198,7 +198,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
             </button>
           </div>
 
-          <div className="flex flex-wrap gap-2.5 lg:justify-end">
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap lg:justify-end">
             {isGitHubConnected && (
               <button
                 type="button"

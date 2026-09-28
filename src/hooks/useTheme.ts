@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from 'react';
-import { ResolvedTheme, ThemePreference } from '@/types/theme';
+import { isThemePreference, ResolvedTheme, ThemePreference } from '@/types/theme';
 import {
   DARK_MODE_CLASS,
   DARK_SCHEME_MEDIA_QUERY,
   DEFAULT_THEME_PREFERENCE,
+  THEME_PREFERENCE_STORAGE_KEY,
 } from '@/constants/theme';
 
 export interface ThemeState {
@@ -46,10 +47,21 @@ function applyTheme(theme: ResolvedTheme): void {
 }
 
 /**
- * Phase 13 keeps the preference in memory only. Persistence (along with the
- * README draft and section order) is introduced in Phase 14.
+ * Theme preference is persisted independently from the README draft. Draft
+ * persistence never stores temporary UI state or resolved system theme.
  */
-let themePreference: ThemePreference = DEFAULT_THEME_PREFERENCE;
+function getStoredThemePreference(): ThemePreference {
+  if (typeof window === 'undefined') return DEFAULT_THEME_PREFERENCE;
+
+  try {
+    const stored = window.localStorage.getItem(THEME_PREFERENCE_STORAGE_KEY);
+    return isThemePreference(stored) ? stored : DEFAULT_THEME_PREFERENCE;
+  } catch {
+    return DEFAULT_THEME_PREFERENCE;
+  }
+}
+
+let themePreference: ThemePreference = getStoredThemePreference();
 let systemTheme: ResolvedTheme = getSystemTheme();
 let resolvedTheme: ResolvedTheme = resolveTheme(themePreference, systemTheme);
 
@@ -76,6 +88,13 @@ function publish(): void {
 function setThemePreference(preference: ThemePreference): void {
   if (preference === themePreference) return;
   themePreference = preference;
+  try {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(THEME_PREFERENCE_STORAGE_KEY, preference);
+    }
+  } catch {
+    // Theme application remains available when storage is unavailable.
+  }
   publish();
 }
 

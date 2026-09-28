@@ -1,13 +1,13 @@
-import React, { useMemo, useState } from 'react';
-import { Github, ListOrdered } from 'lucide-react';
-import { useReadmeData } from '@/hooks/useReadmeData';
-import { generateMarkdown } from '@/utils';
-import { README_TEMPLATES } from '@/constants';
-import { GitHubImportModal } from '@/components/github';
-import { EditorPanel } from './EditorPanel';
-import { PreviewPanel } from './PreviewPanel';
-import { TemplateModal } from './TemplateModal';
-import { SectionOrderModal } from './SectionOrderModal';
+import React, { useMemo, useState } from "react";
+import { Github, ListOrdered } from "lucide-react";
+import { useReadmeData } from "@/hooks/useReadmeData";
+import { generateMarkdown } from "@/utils";
+import { README_TEMPLATES } from "@/constants";
+import { GitHubImportModal } from "@/components/github";
+import { EditorPanel } from "./EditorPanel";
+import { PreviewPanel } from "./PreviewPanel";
+import { TemplateModal } from "./TemplateModal";
+import { SectionOrderModal } from "./SectionOrderModal";
 
 interface GeneratorWorkspaceProps {
   isGitHubImportOpen?: boolean;
@@ -22,7 +22,8 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 }) => {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isSectionOrderOpen, setIsSectionOrderOpen] = useState(false);
-  const [internalGitHubImportOpen, setInternalGitHubImportOpen] = useState(false);
+  const [internalGitHubImportOpen, setInternalGitHubImportOpen] =
+    useState(false);
 
   const isImportModalOpen = isGitHubImportOpen || internalGitHubImportOpen;
   const handleCloseImportModal = () => {
@@ -84,7 +85,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 
   const activeTemplate = useMemo(
     () => README_TEMPLATES.find((t) => t.id === currentTemplateId),
-    [currentTemplateId]
+    [currentTemplateId],
   );
 
   return (
@@ -113,7 +114,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
             type="button"
             onClick={() => setIsSectionOrderOpen(true)}
             aria-haspopup="dialog"
-              className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
           >
             <ListOrdered className="h-4 w-4 text-zinc-400" />
             Customize Sections

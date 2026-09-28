@@ -77,6 +77,81 @@ export interface GitHubImportSelection {
   license: boolean;
 }
 
+export interface GitHubAuthUser {
+  login: string;
+  avatarUrl: string;
+  name: string;
+}
+
+export interface GitHubAuthSession {
+  authenticated: boolean;
+  user: GitHubAuthUser | null;
+}
+
+export interface AuthenticatedGitHubRepository {
+  id: number;
+  name: string;
+  fullName: string;
+  owner: string;
+  avatarUrl: string;
+  private: boolean;
+  visibility: string;
+  defaultBranch: string;
+  permissions: {
+    pull?: boolean;
+    push?: boolean;
+    admin?: boolean;
+    maintain?: boolean;
+  };
+  htmlUrl: string;
+}
+
+export interface AuthenticatedRepositoryPage {
+  repositories: AuthenticatedGitHubRepository[];
+  page: number;
+  perPage: number;
+  hasNextPage: boolean;
+}
+
+export interface AuthenticatedRepositoryDetails {
+  name: string;
+  fullName: string;
+  description: string;
+  repositoryUrl: string;
+  homepage: string;
+  owner: {
+    username: string;
+    profileUrl: string;
+    avatarUrl: string;
+  };
+  primaryLanguage: string | null;
+  license: { spdxId: string; name: string } | null;
+  defaultBranch: string;
+}
+
+export interface AuthenticatedReadme {
+  content: string;
+  sha: string;
+  path: string;
+  htmlUrl: string;
+}
+
+export interface AuthenticatedContent {
+  exists: boolean;
+  content: string | null;
+  sha: string | null;
+  path: string;
+  htmlUrl?: string;
+}
+
+export interface GitHubSaveResult {
+  repository: string;
+  branch: string;
+  path: string;
+  htmlUrl: string;
+  updated: boolean;
+}
+
 export type GitHubImportErrorKind =
   | 'invalid_url'
   | 'not_found'

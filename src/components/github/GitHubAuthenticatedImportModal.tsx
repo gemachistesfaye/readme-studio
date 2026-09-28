@@ -16,6 +16,7 @@ import {
 } from "@/constants/githubLanguageMap";
 import { getOverwritingFields } from "@/utils/githubImport";
 import { cn } from "@/utils";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface GitHubAuthenticatedImportModalProps {
   isOpen: boolean;
@@ -53,6 +54,7 @@ function readIdentity(
 export const GitHubAuthenticatedImportModal: React.FC<
   GitHubAuthenticatedImportModalProps
 > = ({ isOpen, repository, currentData, onClose, onImport }) => {
+  useBodyScrollLock(isOpen);
   const [analysis, setAnalysis] = useState<GitHubImportAnalysis | null>(null);
   const [selection, setSelection] = useState<GitHubImportSelection | null>(
     null,
@@ -168,13 +170,13 @@ export const GitHubAuthenticatedImportModal: React.FC<
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="authenticated-import-title"
     >
-      <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-orange-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center justify-between border-b border-orange-100 px-5 py-4 dark:border-zinc-800">
+      <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-orange-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[90vh]">
+        <div className="flex items-start justify-between gap-3 border-b border-orange-100 px-4 py-4 dark:border-zinc-800 sm:px-5">
           <div className="flex items-center gap-3">
             <FileText className="h-5 w-5 text-orange-600 dark:text-orange-400" />
             <div>

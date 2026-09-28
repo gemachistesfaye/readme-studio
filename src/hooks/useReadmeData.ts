@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   BadgeStyle,
   BadgeType,
@@ -31,64 +31,36 @@ import {
 } from '@/utils/sectionOrder';
 import { DEFAULT_SECTION_ORDER } from '@/constants/sections';
 import { README_TEMPLATES } from '@/constants/templates';
+import {
+  createInitialReadmeData,
+  loadReadmeDraft,
+  saveReadmeDraft,
+} from '@/utils/readmeDraftStorage';
 
-const initialReadmeData: ReadmeData = {
-  basicInfo: {
-    projectName: '',
-    description: '',
-    repositoryUrl: '',
-    demoUrl: '',
-    authorName: '',
-    authorGithub: '',
-  },
-  badges: {
-    badges: [],
-  },
-  techStack: {
-    technologies: [],
-  },
-  features: {
-    features: [],
-  },
-  installation: {
-    prerequisites: '',
-    cloneCommand: '',
-    installCommand: '',
-    setupInstructions: [],
-  },
-  usage: {
-    introduction: '',
-    examples: [],
-  },
-  contributing: {
-    enabled: true,
-    introduction: '',
-    guidelines: [],
-    customInstructions: '',
-  },
-  license: {
-    type: 'MIT',
-    customName: '',
-    customText: '',
-  },
-  contact: {
-    email: '',
-    website: '',
-    linkedin: '',
-    twitter: '',
-    additionalLinkLabel: '',
-    additionalLinkUrl: '',
-  },
-  layout: {
-    sectionOrder: [...DEFAULT_SECTION_ORDER],
-  },
-};
+export type DraftSaveStatus = 'Saving…' | 'Saved' | 'Could not save';
 
 export function useReadmeData() {
-  const [data, setData] = useState<ReadmeData>(initialReadmeData);
+  const [data, setData] = useState<ReadmeData>(
+    () => loadReadmeDraft() ?? createInitialReadmeData()
+  );
+  const [saveStatus, setSaveStatus] = useState<DraftSaveStatus>('Saved');
   const [currentTemplateId, setCurrentTemplateId] = useState<TemplateId>('blank');
   const [touched, setTouched] = useState<Partial<Record<keyof BasicInfoData, boolean>>>({});
   const [touchedContact, setTouchedContact] = useState<Partial<Record<keyof ContactData, boolean>>>({});
+
+  useEffect(() => {
+    setSaveStatus('Saving…');
+    const saveTimer = window.setTimeout(() => {
+      try {
+        saveReadmeDraft(data);
+        setSaveStatus('Saved');
+      } catch {
+        setSaveStatus('Could not save');
+      }
+    }, 500);
+
+    return () => window.clearTimeout(saveTimer);
+  }, [data]);
 
   const allErrors = useMemo(() => validateBasicInfo(data.basicInfo), [data.basicInfo]);
   const allContactErrors = useMemo(() => validateContact(data.contact), [data.contact]);
@@ -116,14 +88,49 @@ export function useReadmeData() {
   // Check whether the workspace has meaningful content that would warrant confirmation
   const hasUserContent = useMemo(() => {
     const b = data.basicInfo;
-    if (b.projectName.trim() || b.description.trim() || b.repositoryUrl.trim()) return true;
+    if (
+      b.projectName.trim() ||
+      b.description.trim() ||
+      b.repositoryUrl.trim() ||
+      b.demoUrl.trim() ||
+      b.authorName.trim() ||
+      b.authorGithub.trim()
+    ) return true;
     if (data.badges.badges.length > 0) return true;
     if (data.techStack.technologies.length > 0) return true;
     if (data.features.features.length > 0) return true;
-    if (data.installation.setupInstructions.length > 0 || data.installation.cloneCommand.trim()) return true;
-    if (data.usage.examples.length > 0) return true;
+    if (
+      data.installation.prerequisites.trim() ||
+      data.installation.cloneCommand.trim() ||
+      data.installation.installCommand.trim() ||
+      data.installation.setupInstructions.length > 0
+    ) return true;
+    if (data.usage.introduction.trim() || data.usage.examples.length > 0) return true;
+    if (
+      data.contributing.introduction.trim() ||
+      data.contributing.guidelines.length > 0 ||
+      data.contributing.customInstructions.trim() ||
+      !data.contributing.enabled
+    ) return true;
+    if (data.license.type !== 'MIT' || data.license.customName.trim() || data.license.customText.trim()) return true;
+    if (
+      data.contact.email.trim() ||
+      data.contact.website.trim() ||
+      data.contact.linkedin.trim() ||
+      data.contact.twitter.trim() ||
+      data.contact.additionalLinkLabel.trim() ||
+      data.contact.additionalLinkUrl.trim()
+    ) return true;
+    if (!isDefaultSectionOrder(data.layout?.sectionOrder)) return true;
     return false;
   }, [data]);
+
+  const resetReadme = useCallback(() => {
+    setData(createInitialReadmeData());
+    setCurrentTemplateId('blank');
+    setTouched({});
+    setTouchedContact({});
+  }, []);
 
   // Normalized section order — always a complete, duplicate-free list
   const sectionOrder = useMemo(
@@ -828,6 +835,8 @@ export function useReadmeData() {
 
   return {
     data,
+    saveStatus,
+    resetReadme,
     currentTemplateId,
     hasUserContent,
     sectionOrder,

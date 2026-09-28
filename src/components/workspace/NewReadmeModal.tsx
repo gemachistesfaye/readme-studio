@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { FilePlus2, X } from "lucide-react";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface NewReadmeModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const NewReadmeModal: React.FC<NewReadmeModalProps> = ({
   onClose,
   onConfirm,
 }) => {
+  useBodyScrollLock(isOpen);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -31,12 +33,12 @@ export const NewReadmeModal: React.FC<NewReadmeModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/70"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/70 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="new-readme-title"
     >
-      <div className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl border border-zinc-200 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-orange-200 bg-orange-50 text-orange-600 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-400">

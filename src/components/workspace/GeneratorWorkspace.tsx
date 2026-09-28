@@ -131,7 +131,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
               Create your README
             </h2>
             {activeTemplate && (
-              <span className="inline-flex items-center rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400 border border-emerald-500/20">
+              <span className="inline-flex items-center rounded-md border border-orange-200 bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-400">
                 {activeTemplate.name} Template
               </span>
             )}
@@ -213,10 +213,10 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
             <button
               type="button"
               onClick={() => setIsTemplateModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
+              className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-orange-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
             >
               <svg
-                className="h-4 w-4 text-emerald-400"
+                className="h-4 w-4 text-orange-600 dark:text-emerald-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="2"

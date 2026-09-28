@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { LayoutTemplate, Sparkles, Check, X, ShieldAlert } from 'lucide-react';
-import { ReadmeTemplate, TemplateId } from '@/types';
-import { README_TEMPLATES } from '@/constants/templates';
-import { cn } from '@/utils';
+import React, { useState } from "react";
+import { LayoutTemplate, Sparkles, Check, X, ShieldAlert } from "lucide-react";
+import { ReadmeTemplate, TemplateId } from "@/types";
+import { README_TEMPLATES } from "@/constants/templates";
+import { cn } from "@/utils";
 
 interface TemplateModalProps {
   isOpen: boolean;
@@ -21,7 +21,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
 }) => {
   const [selectedId, setSelectedId] = useState<TemplateId>(currentTemplateId);
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
-  const [pendingTemplateId, setPendingTemplateId] = useState<TemplateId | null>(null);
+  const [pendingTemplateId, setPendingTemplateId] = useState<TemplateId | null>(
+    null,
+  );
 
   if (!isOpen) return null;
 
@@ -54,7 +56,8 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
     setPendingTemplateId(null);
   };
 
-  const selectedTemplate = README_TEMPLATES.find((t) => t.id === selectedId) || README_TEMPLATES[0];
+  const selectedTemplate =
+    README_TEMPLATES.find((t) => t.id === selectedId) || README_TEMPLATES[0];
 
   return (
     <div
@@ -71,7 +74,10 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
               <LayoutTemplate className="h-5 w-5" />
             </div>
             <div>
-              <h2 id="template-modal-title"               className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              <h2
+                id="template-modal-title"
+                className="text-base font-semibold text-zinc-900 dark:text-zinc-100"
+              >
                 README Templates
               </h2>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -96,11 +102,13 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20 mb-4">
               <ShieldAlert className="h-6 w-6" />
             </div>
-            <h3               className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
               Apply this template?
             </h3>
             <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Choose how to apply this template. Your project identity, badges, tech stack, section order, and theme will be preserved.
+              Choose how to apply this template. Replacing content will overwrite
+              all README fields, including project identity and existing lists.
+              Section order and theme will be preserved.
             </p>
 
             <div className="mt-6 flex items-center justify-center gap-3">
@@ -123,7 +131,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                 onClick={() => handleConfirmApply(true)}
                 className="rounded-lg bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-orange-600"
               >
-                Replace Customizable Content
+                Replace All README Content
               </button>
             </div>
           </div>
@@ -142,10 +150,10 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                     type="button"
                     onClick={() => handleSelect(tmpl)}
                     className={cn(
-                      'flex flex-col text-left p-3.5 rounded-xl border transition-all cursor-pointer relative',
+                      "flex flex-col text-left p-3.5 rounded-xl border transition-all cursor-pointer relative",
                       isSelected
-                        ? 'border-indigo-200 dark:border-indigo-500/60 bg-indigo-50 dark:bg-indigo-500/10 ring-1 ring-indigo-500/30'
-                        : 'border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-900/80'
+                        ? "border-indigo-200 dark:border-indigo-500/60 bg-indigo-50 dark:bg-indigo-500/10 ring-1 ring-indigo-500/30"
+                        : "border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/40 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-900/80",
                     )}
                   >
                     <div className="flex items-center justify-between">
@@ -157,7 +165,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                           </span>
                         )}
                       </span>
-                      {isSelected && <Check className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />}
+                      {isSelected && (
+                        <Check className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+                      )}
                     </div>
 
                     <p className="mt-1 text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400">
@@ -185,7 +195,10 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
                 <span>
-                  Selected: <strong className="text-zinc-900 dark:text-zinc-200">{selectedTemplate.name}</strong>
+                  Selected:{" "}
+                  <strong className="text-zinc-900 dark:text-zinc-200">
+                    {selectedTemplate.name}
+                  </strong>
                 </span>
               </div>
               <span className="text-[11px] text-zinc-400 dark:text-zinc-500">

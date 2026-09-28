@@ -1,9 +1,14 @@
 import React, { useMemo, useState } from "react";
-import { Github, ListOrdered } from "lucide-react";
+import { Github, ListOrdered, Upload } from "lucide-react";
 import { useReadmeData } from "@/hooks/useReadmeData";
+import { useGitHubAuth } from "@/hooks/useGitHubAuth";
 import { generateMarkdown } from "@/utils";
 import { README_TEMPLATES } from "@/constants";
 import { GitHubImportModal } from "@/components/github";
+import { GitHubRepositoryPickerModal } from "@/components/github/GitHubRepositoryPickerModal";
+import { GitHubSaveModal } from "@/components/github/GitHubSaveModal";
+import { GitHubAuthenticatedImportModal } from "@/components/github/GitHubAuthenticatedImportModal";
+import { AuthenticatedGitHubRepository } from "@/types";
 import { EditorPanel } from "./EditorPanel";
 import { PreviewPanel } from "./PreviewPanel";
 import { TemplateModal } from "./TemplateModal";
@@ -24,6 +29,11 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isSectionOrderOpen, setIsSectionOrderOpen] = useState(false);
   const [isNewReadmeOpen, setIsNewReadmeOpen] = useState(false);
+  const [isRepositoryPickerOpen, setIsRepositoryPickerOpen] = useState(false);
+  const [isGitHubSaveOpen, setIsGitHubSaveOpen] = useState(false);
+  const [isAuthenticatedImportOpen, setIsAuthenticatedImportOpen] = useState(false);
+  const [repositoryPickerMode, setRepositoryPickerMode] = useState<"save" | "import">("save");
+  const [selectedGitHubRepository, setSelectedGitHubRepository] = useState<AuthenticatedGitHubRepository | null>(null);
   const [internalGitHubImportOpen, setInternalGitHubImportOpen] =
     useState(false);
 
@@ -83,6 +93,24 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
     moveSectionDown,
     resetSectionOrder,
   } = useReadmeData();
+  const { status: githubStatus, connect: connectGitHub } = useGitHubAuth();
+
+  const handleOpenGitHubSave = () => {
+    if (githubStatus !== "authenticated") {
+      connectGitHub();
+      return;
+    }
+    setIsRepositoryPickerOpen(true);
+  };
+
+  const handleOpenAuthenticatedImport = () => {
+    if (githubStatus !== "authenticated") {
+      connectGitHub();
+      return;
+    }
+    setRepositoryPickerMode("import");
+    setIsRepositoryPickerOpen(true);
+  };
 
   // Canonical Markdown is the single source of truth for preview, copy, and export
   const markdown = useMemo(() => generateMarkdown(data), [data]);
@@ -128,6 +156,25 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           >
             <span aria-hidden="true">+</span>
             New README
+          </button>
+
+          <button
+            type="button"
+            onClick={handleOpenGitHubSave}
+            disabled={!markdown.trim()}
+            className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-500 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:border-orange-600 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500/40 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-500/50 dark:bg-orange-600 dark:hover:bg-orange-500"
+          >
+            <Upload className="h-4 w-4" />
+            Save to GitHub
+          </button>
+
+          <button
+            type="button"
+            onClick={handleOpenAuthenticatedImport}
+            className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-white px-3.5 py-2 text-sm font-medium text-orange-700 shadow-sm transition-colors hover:border-orange-300 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500/40 dark:border-orange-500/30 dark:bg-zinc-900 dark:text-orange-300 dark:hover:bg-orange-500/10"
+          >
+            <Github className="h-4 w-4" />
+            Import Repo README
           </button>
 
           <button
@@ -266,6 +313,35 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           resetReadme();
           setIsNewReadmeOpen(false);
         }}
+      />
+
+      <GitHubRepositoryPickerModal
+        isOpen={isRepositoryPickerOpen}
+        onClose={() => setIsRepositoryPickerOpen(false)}
+        onSelect={(repository) => {
+          setSelectedGitHubRepository(repository);
+          setIsRepositoryPickerOpen(false);
+          if (repositoryPickerMode === "import") {
+            setIsAuthenticatedImportOpen(true);
+          } else {
+            setIsGitHubSaveOpen(true);
+          }
+        }}
+      />
+
+      <GitHubSaveModal
+        isOpen={isGitHubSaveOpen}
+        repository={selectedGitHubRepository}
+        markdown={markdown}
+        onClose={() => setIsGitHubSaveOpen(false)}
+      />
+
+      <GitHubAuthenticatedImportModal
+        isOpen={isAuthenticatedImportOpen}
+        repository={selectedGitHubRepository}
+        currentData={data}
+        onClose={() => setIsAuthenticatedImportOpen(false)}
+        onImport={importGitHubData}
       />
     </div>
   );

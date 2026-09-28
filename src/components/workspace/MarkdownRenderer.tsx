@@ -1,28 +1,38 @@
-import React, { useMemo } from 'react';
+import React, { useMemo } from "react";
 
 interface MarkdownRendererProps {
   content: string;
 }
 
 type Block =
-  | { type: 'h1'; text: string }
-  | { type: 'h2'; text: string }
-  | { type: 'h3'; text: string }
-  | { type: 'code'; language: string; code: string }
-  | { type: 'ul'; items: string[] }
-  | { type: 'ol'; items: { number: string; text: string; code?: { language: string; code: string } }[] }
-  | { type: 'p'; text: string };
+  | { type: "h1"; text: string }
+  | { type: "h2"; text: string }
+  | { type: "h3"; text: string }
+  | { type: "code"; language: string; code: string }
+  | { type: "ul"; items: string[] }
+  | {
+      type: "ol";
+      items: {
+        number: string;
+        text: string;
+        code?: { language: string; code: string };
+      }[];
+    }
+  | { type: "p"; text: string };
 
 function renderInline(text: string): React.ReactNode[] {
   // Regex to match markdown images: ![alt](url) or linked images: [![alt](url)](linkUrl), standard links: [label](url), **bold**, or `code`
-  const regex = /(\[!\[[^\]]*\]\([^)]+\)\]\([^)]+\)|!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`)/g;
+  const regex =
+    /(\[!\[[^\]]*\]\([^)]+\)\]\([^)]+\)|!\[[^\]]*\]\([^)]+\)|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|`[^`]+`)/g;
   const parts = text.split(regex);
 
   return parts.map((part, index) => {
     if (!part) return null;
 
     // 1. Linked image: [![alt](imgUrl)](linkUrl)
-    const linkedImgMatch = part.match(/^\[!\[([^\]]*)\]\(([^)]+)\)\]\(([^)]+)\)$/);
+    const linkedImgMatch = part.match(
+      /^\[!\[([^\]]*)\]\(([^)]+)\)\]\(([^)]+)\)$/,
+    );
     if (linkedImgMatch) {
       const [, alt, imgUrl, linkUrl] = linkedImgMatch;
       return (
@@ -38,7 +48,7 @@ function renderInline(text: string): React.ReactNode[] {
             alt={alt}
             className="inline-block h-5 rounded"
             onError={(e) => {
-              (e.currentTarget as HTMLElement).style.display = 'none';
+              (e.currentTarget as HTMLElement).style.display = "none";
             }}
           />
         </a>
@@ -56,7 +66,7 @@ function renderInline(text: string): React.ReactNode[] {
           alt={alt}
           className="inline-block h-5 mr-1.5 mb-1.5 rounded align-middle"
           onError={(e) => {
-            (e.currentTarget as HTMLElement).style.display = 'none';
+            (e.currentTarget as HTMLElement).style.display = "none";
           }}
         />
       );
@@ -66,13 +76,17 @@ function renderInline(text: string): React.ReactNode[] {
     const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (linkMatch) {
       const [, label, url] = linkMatch;
-      const isExternal = url.startsWith('http') || url.startsWith('mailto:');
+      const isExternal = url.startsWith("http") || url.startsWith("mailto:");
       return (
         <a
           key={index}
           href={url}
-          target={isExternal && !url.startsWith('mailto:') ? '_blank' : undefined}
-          rel={isExternal && !url.startsWith('mailto:') ? 'noreferrer' : undefined}
+          target={
+            isExternal && !url.startsWith("mailto:") ? "_blank" : undefined
+          }
+          rel={
+            isExternal && !url.startsWith("mailto:") ? "noreferrer" : undefined
+          }
           className="text-indigo-400 hover:text-indigo-300 underline underline-offset-2 transition-colors"
         >
           {label}
@@ -84,7 +98,10 @@ function renderInline(text: string): React.ReactNode[] {
     const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
     if (boldMatch) {
       return (
-        <strong key={index} className="font-semibold text-zinc-900 dark:text-zinc-100">
+        <strong
+          key={index}
+          className="font-semibold text-zinc-900 dark:text-zinc-100"
+        >
           {boldMatch[1]}
         </strong>
       );
@@ -109,7 +126,7 @@ function renderInline(text: string): React.ReactNode[] {
 }
 
 function parseMarkdownBlocks(markdown: string): Block[] {
-  const lines = markdown.replace(/\r\n/g, '\n').split('\n');
+  const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const blocks: Block[] = [];
   let i = 0;
 
@@ -129,26 +146,26 @@ function parseMarkdownBlocks(markdown: string): Block[] {
       }
       i++; // skip closing fence
       blocks.push({
-        type: 'code',
+        type: "code",
         language,
-        code: codeLines.join('\n'),
+        code: codeLines.join("\n"),
       });
       continue;
     }
 
     // 2. Headings
-    if (line.startsWith('# ')) {
-      blocks.push({ type: 'h1', text: line.slice(2).trim() });
+    if (line.startsWith("# ")) {
+      blocks.push({ type: "h1", text: line.slice(2).trim() });
       i++;
       continue;
     }
-    if (line.startsWith('## ')) {
-      blocks.push({ type: 'h2', text: line.slice(3).trim() });
+    if (line.startsWith("## ")) {
+      blocks.push({ type: "h2", text: line.slice(3).trim() });
       i++;
       continue;
     }
-    if (line.startsWith('### ')) {
-      blocks.push({ type: 'h3', text: line.slice(4).trim() });
+    if (line.startsWith("### ")) {
+      blocks.push({ type: "h3", text: line.slice(4).trim() });
       i++;
       continue;
     }
@@ -157,17 +174,21 @@ function parseMarkdownBlocks(markdown: string): Block[] {
     if (/^[-*]\s+/.test(line)) {
       const items: string[] = [];
       while (i < lines.length && /^[-*]\s+/.test(lines[i])) {
-        items.push(lines[i].replace(/^[-*]\s+/, '').trim());
+        items.push(lines[i].replace(/^[-*]\s+/, "").trim());
         i++;
       }
-      blocks.push({ type: 'ul', items });
+      blocks.push({ type: "ul", items });
       continue;
     }
 
     // 4. Ordered list (1. 2. etc.)
     const olMatch = line.match(/^(\d+)\.\s+(.*)$/);
     if (olMatch) {
-      const items: { number: string; text: string; code?: { language: string; code: string } }[] = [];
+      const items: {
+        number: string;
+        text: string;
+        code?: { language: string; code: string };
+      }[] = [];
       while (i < lines.length) {
         const curMatch = lines[i].match(/^(\d+)\.\s+(.*)$/);
         if (curMatch) {
@@ -188,7 +209,7 @@ function parseMarkdownBlocks(markdown: string): Block[] {
                 i++;
               }
               i++; // skip closing fence
-              code = { language, code: codeLines.join('\n') };
+              code = { language, code: codeLines.join("\n") };
             }
           }
           items.push({ number, text, code });
@@ -196,7 +217,7 @@ function parseMarkdownBlocks(markdown: string): Block[] {
           break;
         }
       }
-      blocks.push({ type: 'ol', items });
+      blocks.push({ type: "ol", items });
       continue;
     }
 
@@ -211,8 +232,8 @@ function parseMarkdownBlocks(markdown: string): Block[] {
     while (
       i < lines.length &&
       lines[i].trim() &&
-      !lines[i].startsWith('#') &&
-      !lines[i].startsWith('```') &&
+      !lines[i].startsWith("#") &&
+      !lines[i].startsWith("```") &&
       !/^[-*]\s+/.test(lines[i]) &&
       !/^\d+\.\s+/.test(lines[i])
     ) {
@@ -221,21 +242,23 @@ function parseMarkdownBlocks(markdown: string): Block[] {
     }
 
     if (pLines.length > 0) {
-      blocks.push({ type: 'p', text: pLines.join('\n') });
+      blocks.push({ type: "p", text: pLines.join("\n") });
     }
   }
 
   return blocks;
 }
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
+  content,
+}) => {
   const blocks = useMemo(() => parseMarkdownBlocks(content), [content]);
 
   return (
     <article className="space-y-4 text-zinc-700 dark:text-zinc-300">
       {blocks.map((block, idx) => {
         switch (block.type) {
-          case 'h1':
+          case "h1":
             return (
               <h1
                 key={idx}
@@ -245,7 +268,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
               </h1>
             );
 
-          case 'h2':
+          case "h2":
             return (
               <h2
                 key={idx}
@@ -255,7 +278,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
               </h2>
             );
 
-          case 'h3':
+          case "h3":
             return (
               <h3
                 key={idx}
@@ -265,7 +288,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
               </h3>
             );
 
-          case 'code':
+          case "code":
             return (
               <div
                 key={idx}
@@ -282,9 +305,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
               </div>
             );
 
-          case 'ul':
+          case "ul":
             return (
-              <ul key={idx} className="my-3 list-inside list-disc space-y-1.5 text-sm text-zinc-700 dark:text-zinc-300">
+              <ul
+                key={idx}
+                className="my-3 list-inside list-disc space-y-1.5 text-sm text-zinc-700 dark:text-zinc-300"
+              >
                 {block.items.map((item, itemIdx) => (
                   <li key={itemIdx} className="leading-relaxed">
                     {renderInline(item)}
@@ -293,12 +319,17 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
               </ul>
             );
 
-          case 'ol':
+          case "ol":
             return (
-              <ol key={idx} className="my-3 list-inside list-decimal space-y-3 text-sm text-zinc-700 dark:text-zinc-300">
+              <ol
+                key={idx}
+                className="my-3 list-inside list-decimal space-y-3 text-sm text-zinc-700 dark:text-zinc-300"
+              >
                 {block.items.map((item, itemIdx) => (
                   <li key={itemIdx} className="leading-relaxed">
-                    <span className="font-medium text-zinc-800 dark:text-zinc-200">{renderInline(item.text)}</span>
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">
+                      {renderInline(item.text)}
+                    </span>
                     {item.code && (
                       <div className="ml-5 mt-1.5 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-100 p-2.5 font-mono text-xs text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
                         {item.code.language && (
@@ -316,7 +347,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
               </ol>
             );
 
-          case 'p':
+          case "p":
             return (
               <p
                 key={idx}

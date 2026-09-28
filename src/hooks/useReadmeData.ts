@@ -182,13 +182,28 @@ export function useReadmeData() {
   }, []);
 
   // 2. Template Operations
-  const applyTemplate = useCallback((templateId: TemplateId) => {
+  const applyTemplate = useCallback((templateId: TemplateId, replaceContent = false) => {
     const template = README_TEMPLATES.find((t) => t.id === templateId);
     if (!template) return;
 
     setData((prev) => {
-      const updated = template.apply(prev);
-      return updated;
+      if (!replaceContent) return template.apply(prev);
+
+      const templateData = template.apply({
+        ...createInitialReadmeData(),
+        basicInfo: prev.basicInfo,
+        badges: prev.badges,
+        techStack: prev.techStack,
+        layout: prev.layout,
+      });
+
+      return {
+        ...templateData,
+        basicInfo: prev.basicInfo,
+        badges: prev.badges,
+        techStack: prev.techStack,
+        layout: prev.layout,
+      };
     });
     setCurrentTemplateId(templateId);
   }, []);

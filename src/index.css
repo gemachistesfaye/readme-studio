@@ -7,6 +7,59 @@
  */
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer utilities {
+  :root:not(.dark) [class~="bg-zinc-50"] {
+    background-color: #fffaf5;
+  }
+
+  :root:not(.dark) [class~="bg-zinc-100"] {
+    background-color: #fff1e6;
+  }
+
+  :root:not(.dark) [class~="border-zinc-200"],
+  :root:not(.dark) [class~="border-zinc-200/80"],
+  :root:not(.dark) [class~="border-zinc-200/60"] {
+    border-color: #fed7aa;
+  }
+
+  :root:not(.dark) [class~="text-indigo-600"],
+  :root:not(.dark) [class~="text-indigo-500"],
+  :root:not(.dark) [class~="text-indigo-400"] {
+    color: #ea580c;
+  }
+
+  :root:not(.dark) [class*="bg-indigo-50"],
+  :root:not(.dark) [class*="bg-indigo-500/10"],
+  :root:not(.dark) [class*="bg-indigo-500/20"],
+  :root:not(.dark) [class*="bg-indigo-600/10"] {
+    background-color: #fff1e6;
+  }
+
+  :root:not(.dark) [class*="border-indigo-200"],
+  :root:not(.dark) [class*="border-indigo-500/20"],
+  :root:not(.dark) [class*="border-indigo-500/30"] {
+    border-color: #fdba74;
+  }
+
+  :root:not(.dark) [class~="bg-indigo-600"] {
+    background-color: #f97316;
+  }
+
+  :root:not(.dark) [class~="hover:bg-indigo-500"]:hover {
+    background-color: #ea580c;
+  }
+
+  :root:not(.dark) [class~="hover:bg-indigo-100"]:hover,
+  :root:not(.dark) [class~="hover:bg-indigo-50"]:hover {
+    background-color: #ffedd5;
+  }
+
+  :root:not(.dark) [class*="focus:ring-indigo-500"]:focus,
+  :root:not(.dark) [class*="focus-visible:ring-indigo-500"]:focus-visible {
+    --tw-ring-color: rgb(249 115 22 / 0.45);
+  }
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

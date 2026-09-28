@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   FileText,
   Boxes,
@@ -10,7 +10,7 @@ import {
   Mail,
   ShieldCheck,
   SlidersHorizontal,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   BadgesData,
   BadgeStyle,
@@ -27,17 +27,17 @@ import {
   TechStackData,
   UsageData,
   ValidationErrors,
-} from '@/types';
-import { EditorSection } from './EditorSection';
-import { BasicInfoForm } from './BasicInfoForm';
-import { BadgeBuilder } from './BadgeBuilder';
-import { TechStackForm } from './TechStackForm';
-import { FeaturesForm } from './FeaturesForm';
-import { InstallationForm } from './InstallationForm';
-import { UsageForm } from './UsageForm';
-import { ContributingForm } from './ContributingForm';
-import { LicenseForm } from './LicenseForm';
-import { ContactForm } from './ContactForm';
+} from "@/types";
+import { EditorSection } from "./EditorSection";
+import { BasicInfoForm } from "./BasicInfoForm";
+import { BadgeBuilder } from "./BadgeBuilder";
+import { TechStackForm } from "./TechStackForm";
+import { FeaturesForm } from "./FeaturesForm";
+import { InstallationForm } from "./InstallationForm";
+import { UsageForm } from "./UsageForm";
+import { ContributingForm } from "./ContributingForm";
+import { LicenseForm } from "./LicenseForm";
+import { ContactForm } from "./ContactForm";
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
@@ -60,22 +60,45 @@ interface EditorPanelProps {
     color?: string,
     logo?: string,
     link?: string,
-    style?: BadgeStyle
+    style?: BadgeStyle,
   ) => { success: boolean; error?: string };
-  onUpdateBadge: (id: string, updates: Partial<Omit<ReadmeBadge, 'id'>>) => { success: boolean; error?: string };
+  onUpdateBadge: (
+    id: string,
+    updates: Partial<Omit<ReadmeBadge, "id">>,
+  ) => { success: boolean; error?: string };
   onRemoveBadge: (id: string) => void;
   onMoveBadgeUp: (index: number) => void;
   onMoveBadgeDown: (index: number) => void;
-  onAddTechnology: (name: string, category: TechCategory) => { success: boolean; error?: string };
+  onAddTechnology: (
+    name: string,
+    category: TechCategory,
+  ) => { success: boolean; error?: string };
   onRemoveTechnology: (id: string) => void;
-  onAddFeature: (title: string, description?: string) => { success: boolean; error?: string };
-  onUpdateFeature: (id: string, title: string, description: string) => { success: boolean; error?: string };
+  onAddFeature: (
+    title: string,
+    description?: string,
+  ) => { success: boolean; error?: string };
+  onUpdateFeature: (
+    id: string,
+    title: string,
+    description: string,
+  ) => { success: boolean; error?: string };
   onRemoveFeature: (id: string) => void;
   onMoveFeatureUp: (id: string) => void;
   onMoveFeatureDown: (id: string) => void;
-  onUpdateInstallationField: (field: keyof Omit<InstallationData, 'setupInstructions'>, value: string) => void;
-  onAddInstallationStep: (instruction: string, command?: string) => { success: boolean; error?: string };
-  onUpdateInstallationStep: (id: string, instruction: string, command: string) => { success: boolean; error?: string };
+  onUpdateInstallationField: (
+    field: keyof Omit<InstallationData, "setupInstructions">,
+    value: string,
+  ) => void;
+  onAddInstallationStep: (
+    instruction: string,
+    command?: string,
+  ) => { success: boolean; error?: string };
+  onUpdateInstallationStep: (
+    id: string,
+    instruction: string,
+    command: string,
+  ) => { success: boolean; error?: string };
   onRemoveInstallationStep: (id: string) => void;
   onMoveInstallationStepUp: (id: string) => void;
   onMoveInstallationStepDown: (id: string) => void;
@@ -84,22 +107,28 @@ interface EditorPanelProps {
     title: string,
     description?: string,
     code?: string,
-    language?: string
+    language?: string,
   ) => { success: boolean; error?: string };
   onUpdateUsageExample: (
     id: string,
     title: string,
     description: string,
     code: string,
-    language: string
+    language: string,
   ) => { success: boolean; error?: string };
   onRemoveUsageExample: (id: string) => void;
   onMoveUsageExampleUp: (id: string) => void;
   onMoveUsageExampleDown: (id: string) => void;
   onToggleContributingEnabled: (enabled: boolean) => void;
-  onUpdateContributingField: (field: keyof Omit<ContributingData, 'enabled' | 'guidelines'>, value: string) => void;
+  onUpdateContributingField: (
+    field: keyof Omit<ContributingData, "enabled" | "guidelines">,
+    value: string,
+  ) => void;
   onAddGuideline: (text: string) => { success: boolean; error?: string };
-  onUpdateGuideline: (index: number, text: string) => { success: boolean; error?: string };
+  onUpdateGuideline: (
+    index: number,
+    text: string,
+  ) => { success: boolean; error?: string };
   onRemoveGuideline: (index: number) => void;
   onUpdateLicense: (field: keyof LicenseData, value: string) => void;
   onUpdateContactField: (field: keyof ContactData, value: string) => void;
@@ -164,10 +193,10 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   const usageCount = usage.examples.length;
   const hasUsageConfig = !!usage.introduction.trim() || usageCount > 0;
   const contributingBadge = !contributing.enabled
-    ? 'Disabled'
+    ? "Disabled"
     : contributing.guidelines.length > 0
-    ? `${contributing.guidelines.length} steps`
-    : 'Active';
+      ? `${contributing.guidelines.length} steps`
+      : "Active";
   const hasContactConfig =
     !!contact.email ||
     !!contact.website ||
@@ -184,8 +213,12 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             <SlidersHorizontal className="h-4 w-4" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Project Details</h2>
-            <p className="text-xs text-zinc-500 dark:text-zinc-500">Configure content blocks for your README</p>
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              Project Details
+            </h2>
+            <p className="text-xs text-zinc-500 dark:text-zinc-500">
+              Configure content blocks for your README
+            </p>
           </div>
         </div>
         <span className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 font-mono text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-400">
@@ -216,7 +249,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           title="Badges"
           description="Technology, license, and custom status badges"
           icon={ShieldCheck}
-          badge={badgeCount > 0 ? `${badgeCount} badges` : 'Active'}
+          badge={badgeCount > 0 ? `${badgeCount} badges` : "Active"}
           defaultOpen={false}
         >
           <BadgeBuilder
@@ -236,7 +269,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           title="Tech Stack"
           description="Languages, frameworks, runtimes, and core tools"
           icon={Boxes}
-          badge={techCount > 0 ? `${techCount} added` : 'Active'}
+          badge={techCount > 0 ? `${techCount} added` : "Active"}
           defaultOpen={false}
         >
           <TechStackForm
@@ -251,7 +284,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           title="Features"
           description="Key capabilities, highlights, and functional value"
           icon={Sparkles}
-          badge={featureCount > 0 ? `${featureCount} added` : 'Active'}
+          badge={featureCount > 0 ? `${featureCount} added` : "Active"}
           defaultOpen={false}
         >
           <FeaturesForm
@@ -269,7 +302,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           title="Installation"
           description="Prerequisites, dependency management, and setup steps"
           icon={Terminal}
-          badge={hasInstallConfig ? 'Configured' : 'Active'}
+          badge={hasInstallConfig ? "Configured" : "Active"}
           defaultOpen={false}
         >
           <InstallationForm
@@ -289,7 +322,13 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           title="Usage"
           description="Quickstart code examples and operational guidance"
           icon={Play}
-          badge={hasUsageConfig ? (usageCount > 0 ? `${usageCount} added` : 'Configured') : 'Active'}
+          badge={
+            hasUsageConfig
+              ? usageCount > 0
+                ? `${usageCount} added`
+                : "Configured"
+              : "Active"
+          }
           defaultOpen={false}
         >
           <UsageForm
@@ -329,10 +368,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           badge={license.type}
           defaultOpen={false}
         >
-          <LicenseForm
-            data={license}
-            onUpdateLicense={onUpdateLicense}
-          />
+          <LicenseForm data={license} onUpdateLicense={onUpdateLicense} />
         </EditorSection>
 
         {/* Contact */}
@@ -340,7 +376,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           title="Contact"
           description="Author details, social handles, and support links"
           icon={Mail}
-          badge={hasContactConfig ? 'Configured' : 'Active'}
+          badge={hasContactConfig ? "Configured" : "Active"}
           defaultOpen={false}
         >
           <ContactForm

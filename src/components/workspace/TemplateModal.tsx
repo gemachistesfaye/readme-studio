@@ -3,6 +3,7 @@ import { LayoutTemplate, Sparkles, Check, X, ShieldAlert } from "lucide-react";
 import { ReadmeTemplate, TemplateId } from "@/types";
 import { README_TEMPLATES } from "@/constants/templates";
 import { cn } from "@/utils";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface TemplateModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
   onClose,
   onApplyTemplate,
 }) => {
+  useBodyScrollLock(isOpen);
   const [selectedId, setSelectedId] = useState<TemplateId>(currentTemplateId);
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [pendingTemplateId, setPendingTemplateId] = useState<TemplateId | null>(
@@ -64,9 +66,9 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="template-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-black/70 sm:p-6"
     >
-      <div className="relative w-full max-w-2xl rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-2xl overflow-hidden">
+      <div className="relative max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[90vh] sm:p-6">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-2.5">
@@ -106,12 +108,12 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
               Apply this template?
             </h3>
             <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Choose how to apply this template. Replacing content will overwrite
-              all README fields, including project identity and existing lists.
-              Section order and theme will be preserved.
+              Choose how to apply this template. Replacing content will
+              overwrite all README fields, including project identity and
+              existing lists. Section order and theme will be preserved.
             </p>
 
-            <div className="mt-6 flex items-center justify-center gap-3">
+            <div className="mt-6 flex flex-col-reverse items-stretch justify-center gap-2.5 sm:flex-row sm:items-center sm:gap-3">
               <button
                 type="button"
                 onClick={handleCancelConfirm}

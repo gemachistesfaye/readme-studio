@@ -1,19 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Check, Monitor, Moon, Sun } from 'lucide-react';
-import { THEME_OPTIONS } from '@/constants/theme';
-import { useTheme } from '@/hooks/useTheme';
-import { ThemePreference } from '@/types/theme';
+import React, { useEffect, useRef, useState } from "react";
+import { Check, Monitor, Moon, Sun } from "lucide-react";
+import { THEME_OPTIONS } from "@/constants/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { ThemePreference } from "@/types/theme";
 
-const THEME_ICONS: Record<ThemePreference, React.ComponentType<{ className?: string }>> = {
+const THEME_ICONS: Record<
+  ThemePreference,
+  React.ComponentType<{ className?: string }>
+> = {
   light: Sun,
   dark: Moon,
   system: Monitor,
 };
 
 const THEME_LABELS: Record<ThemePreference, string> = {
-  light: 'Light',
-  dark: 'Dark',
-  system: 'System',
+  light: "Light",
+  dark: "Dark",
+  system: "System",
 };
 
 /**
@@ -37,29 +40,38 @@ export const ThemeSwitcher: React.FC = () => {
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setIsOpen(false);
         buttonRef.current?.focus();
       }
     };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
-    containerRef.current?.querySelector<HTMLButtonElement>('[role="menuitemradio"]')?.focus();
+    containerRef.current
+      ?.querySelector<HTMLButtonElement>('[role="menuitemradio"]')
+      ?.focus();
   }, [isOpen]);
 
-  const ActiveIcon = themePreference === 'system' ? Monitor : resolvedTheme === 'dark' ? Moon : Sun;
+  const ActiveIcon =
+    themePreference === "system"
+      ? Monitor
+      : resolvedTheme === "dark"
+        ? Moon
+        : Sun;
   const activeLabel =
-    themePreference === 'system' ? `System (${THEME_LABELS[resolvedTheme]})` : THEME_LABELS[themePreference];
+    themePreference === "system"
+      ? `System (${THEME_LABELS[resolvedTheme]})`
+      : THEME_LABELS[themePreference];
 
   return (
     <div ref={containerRef} className="relative">
@@ -74,7 +86,9 @@ export const ThemeSwitcher: React.FC = () => {
         className="flex h-9 items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
       >
         <ActiveIcon className="h-4 w-4" />
-        <span className="hidden text-xs font-medium sm:inline">{activeLabel}</span>
+        <span className="hidden text-xs font-medium sm:inline">
+          {activeLabel}
+        </span>
       </button>
 
       {isOpen && (
@@ -102,17 +116,24 @@ export const ThemeSwitcher: React.FC = () => {
               >
                 <Icon
                   className={`mt-0.5 h-4 w-4 shrink-0 ${
-                    isSelected ? 'text-orange-600 dark:text-indigo-400' : 'text-zinc-400 dark:text-zinc-500'
+                    isSelected
+                      ? "text-orange-600 dark:text-indigo-400"
+                      : "text-zinc-400 dark:text-zinc-500"
                   }`}
                 />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     {option.label}
                     {isSelected && (
-                      <Check className="h-3.5 w-3.5 text-orange-600 dark:text-indigo-400" aria-hidden="true" />
+                      <Check
+                        className="h-3.5 w-3.5 text-orange-600 dark:text-indigo-400"
+                        aria-hidden="true"
+                      />
                     )}
                   </span>
-                  <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">{option.description}</span>
+                  <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">
+                    {option.description}
+                  </span>
                 </span>
               </button>
             );

@@ -176,19 +176,19 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
     !!contact.additionalLinkUrl;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5 shadow-sm">
+    <div className="flex flex-col rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950/60">
       {/* Panel Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
+      <div className="flex items-center justify-between border-b border-zinc-200/80 pb-4 dark:border-zinc-800/80">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
             <SlidersHorizontal className="h-4 w-4" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-zinc-100">Project Details</h2>
-            <p className="text-xs text-zinc-500">Configure content blocks for your README</p>
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Project Details</h2>
+            <p className="text-xs text-zinc-500 dark:text-zinc-500">Configure content blocks for your README</p>
           </div>
         </div>
-        <span className="rounded-md border border-zinc-800 bg-zinc-900/80 px-2 py-1 text-xs font-mono text-zinc-400">
+        <span className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 font-mono text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-400">
           8 Sections
         </span>
       </div>

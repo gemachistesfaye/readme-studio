@@ -17,6 +17,8 @@ export const DARK_MODE_CLASS = 'dark';
  */
 export const DEFAULT_THEME_PREFERENCE: ThemePreference = 'system';
 
+export const THEME_PREFERENCE_STORAGE_KEY = 'readme-studio:theme';
+
 export const THEME_OPTIONS: readonly ThemeOption[] = [
   {
     id: 'light',

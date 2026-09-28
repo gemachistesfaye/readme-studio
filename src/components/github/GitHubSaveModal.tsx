@@ -7,6 +7,7 @@ import {
   readAuthenticatedContent,
   saveAuthenticatedReadme,
 } from "@/services/githubAuth";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface GitHubSaveModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export const GitHubSaveModal: React.FC<GitHubSaveModalProps> = ({
   markdown,
   onClose,
 }) => {
+  useBodyScrollLock(isOpen);
   const [branches, setBranches] = useState<string[]>([]);
   const [branch, setBranch] = useState("");
   const [path, setPath] = useState("README.md");
@@ -119,12 +121,12 @@ export const GitHubSaveModal: React.FC<GitHubSaveModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="github-save-title"
     >
-      <div className="w-full max-w-lg rounded-xl border border-orange-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-xl border border-orange-200 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2

@@ -84,7 +84,7 @@ function renderInline(text: string): React.ReactNode[] {
     const boldMatch = part.match(/^\*\*([^*]+)\*\*$/);
     if (boldMatch) {
       return (
-        <strong key={index} className="font-semibold text-zinc-100">
+        <strong key={index} className="font-semibold text-zinc-900 dark:text-zinc-100">
           {boldMatch[1]}
         </strong>
       );
@@ -96,7 +96,7 @@ function renderInline(text: string): React.ReactNode[] {
       return (
         <code
           key={index}
-          className="rounded bg-zinc-800/80 px-1.5 py-0.5 font-mono text-xs text-indigo-300"
+          className="rounded bg-zinc-200 px-1.5 py-0.5 font-mono text-xs text-indigo-700 dark:bg-zinc-800/80 dark:text-indigo-300"
         >
           {codeMatch[1]}
         </code>
@@ -232,14 +232,14 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
   const blocks = useMemo(() => parseMarkdownBlocks(content), [content]);
 
   return (
-    <article className="space-y-4 text-zinc-300">
+    <article className="space-y-4 text-zinc-700 dark:text-zinc-300">
       {blocks.map((block, idx) => {
         switch (block.type) {
           case 'h1':
             return (
               <h1
                 key={idx}
-                className="text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl border-b border-zinc-800 pb-3 mb-4"
+                className="mb-4 border-b border-zinc-200 pb-3 text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl dark:border-zinc-800 dark:text-zinc-100"
               >
                 {renderInline(block.text)}
               </h1>
@@ -249,7 +249,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
             return (
               <h2
                 key={idx}
-                className="text-lg font-semibold text-zinc-100 sm:text-xl border-b border-zinc-800/80 pb-2 mt-6 mb-3"
+                className="mb-3 mt-6 border-b border-zinc-200/80 pb-2 text-lg font-semibold text-zinc-900 sm:text-xl dark:border-zinc-800/80 dark:text-zinc-100"
               >
                 {renderInline(block.text)}
               </h2>
@@ -259,7 +259,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
             return (
               <h3
                 key={idx}
-                className="text-sm font-semibold text-zinc-200 sm:text-base mt-4 mb-2"
+                className="mb-2 mt-4 text-sm font-semibold text-zinc-800 sm:text-base dark:text-zinc-200"
               >
                 {renderInline(block.text)}
               </h3>
@@ -269,7 +269,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
             return (
               <div
                 key={idx}
-                className="my-3 rounded-lg border border-zinc-800 bg-zinc-950 p-3.5 font-mono text-xs text-zinc-200 overflow-x-auto"
+                className="my-3 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-100 p-3.5 font-mono text-xs text-zinc-800 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200"
               >
                 {block.language && (
                   <div className="text-[10px] text-zinc-500 font-mono mb-1.5 select-none uppercase tracking-wider">
@@ -284,7 +284,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
 
           case 'ul':
             return (
-              <ul key={idx} className="my-3 space-y-1.5 list-disc list-inside text-sm text-zinc-300">
+              <ul key={idx} className="my-3 list-inside list-disc space-y-1.5 text-sm text-zinc-700 dark:text-zinc-300">
                 {block.items.map((item, itemIdx) => (
                   <li key={itemIdx} className="leading-relaxed">
                     {renderInline(item)}
@@ -295,12 +295,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
 
           case 'ol':
             return (
-              <ol key={idx} className="my-3 space-y-3 list-decimal list-inside text-sm text-zinc-300">
+              <ol key={idx} className="my-3 list-inside list-decimal space-y-3 text-sm text-zinc-700 dark:text-zinc-300">
                 {block.items.map((item, itemIdx) => (
                   <li key={itemIdx} className="leading-relaxed">
-                    <span className="font-medium text-zinc-200">{renderInline(item.text)}</span>
+                    <span className="font-medium text-zinc-800 dark:text-zinc-200">{renderInline(item.text)}</span>
                     {item.code && (
-                      <div className="mt-1.5 ml-5 rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 font-mono text-xs text-zinc-300 overflow-x-auto">
+                      <div className="ml-5 mt-1.5 overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-100 p-2.5 font-mono text-xs text-zinc-700 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300">
                         {item.code.language && (
                           <div className="text-[10px] text-zinc-500 font-mono mb-1 select-none uppercase tracking-wider">
                             {item.code.language}
@@ -320,7 +320,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) =
             return (
               <p
                 key={idx}
-                className="text-sm leading-relaxed text-zinc-300 whitespace-pre-wrap my-2.5"
+                className="my-2.5 whitespace-pre-wrap text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"
               >
                 {renderInline(block.text)}
               </p>

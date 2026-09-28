@@ -93,7 +93,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold tracking-tight text-zinc-100 sm:text-2xl">
+            <h2 className="text-xl font-bold tracking-tight text-zinc-900 sm:text-2xl dark:text-zinc-100">
               Create your README
             </h2>
             {activeTemplate && (
@@ -113,7 +113,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
             type="button"
             onClick={() => setIsSectionOrderOpen(true)}
             aria-haspopup="dialog"
-            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/80 px-3.5 py-2 text-sm font-medium text-zinc-200 shadow-sm transition-colors hover:border-zinc-600 hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+              className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
           >
             <ListOrdered className="h-4 w-4 text-zinc-400" />
             Customize Sections
@@ -125,7 +125,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
               if (onOpenGitHubImport) onOpenGitHubImport();
               else setInternalGitHubImportOpen(true);
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/80 px-3.5 py-2 text-sm font-medium text-zinc-200 shadow-sm transition-colors hover:border-zinc-600 hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
           >
             <Github className="h-4 w-4 text-zinc-400" />
             Import from GitHub
@@ -134,7 +134,7 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           <button
             type="button"
             onClick={() => setIsTemplateModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/80 px-3.5 py-2 text-sm font-medium text-zinc-200 shadow-sm transition-colors hover:border-zinc-600 hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
           >
             <svg
               className="h-4 w-4 text-emerald-400"

@@ -12,6 +12,7 @@ import {
   GitHubAuthError,
   listAuthenticatedRepositories,
 } from "@/services/githubAuth";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface GitHubRepositoryPickerModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface GitHubRepositoryPickerModalProps {
 export const GitHubRepositoryPickerModal: React.FC<
   GitHubRepositoryPickerModalProps
 > = ({ isOpen, onClose, onSelect }) => {
+  useBodyScrollLock(isOpen);
   const [repositories, setRepositories] = useState<
     AuthenticatedGitHubRepository[]
   >([]);
@@ -82,12 +84,12 @@ export const GitHubRepositoryPickerModal: React.FC<
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/80 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="github-repository-picker-title"
     >
-      <div className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-orange-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-orange-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[90vh]">
         <div className="flex items-center justify-between border-b border-orange-100 px-5 py-4 dark:border-zinc-800">
           <div>
             <h2

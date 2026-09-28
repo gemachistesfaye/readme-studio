@@ -191,17 +191,11 @@ export function useReadmeData() {
 
       const templateData = template.apply({
         ...createInitialReadmeData(),
-        basicInfo: prev.basicInfo,
-        badges: prev.badges,
-        techStack: prev.techStack,
         layout: prev.layout,
       });
 
       return {
         ...templateData,
-        basicInfo: prev.basicInfo,
-        badges: prev.badges,
-        techStack: prev.techStack,
         layout: prev.layout,
       };
     });

@@ -3,6 +3,7 @@ import { ListOrdered, ArrowUp, ArrowDown, RotateCcw, X, Info } from 'lucide-reac
 import { ReadmeSectionId } from '@/types';
 import { getSectionMeta } from '@/constants/sections';
 import { canMoveDown, canMoveUp, cn } from '@/utils';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface SectionOrderModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
   onMoveSectionDown,
   onResetOrder,
 }) => {
+  useBodyScrollLock(isOpen);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleClose = useCallback(() => {
@@ -52,12 +54,12 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-zinc-950/70 p-4 backdrop-blur-sm sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm dark:bg-zinc-950/70 sm:p-6"
       role="dialog"
       aria-modal="true"
       aria-labelledby="section-order-modal-title"
     >
-      <div className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900 sm:max-h-[90vh]">
         {/* Modal Header */}
         <div className="flex items-start justify-between gap-3 border-b border-zinc-200 bg-white px-5 py-4 dark:border-zinc-800 dark:bg-zinc-900">
           <div className="flex items-center gap-3">

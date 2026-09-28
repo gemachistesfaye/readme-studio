@@ -64,6 +64,27 @@ Start the local development server with hot module reloading:
 npm run dev
 ```
 
+### GitHub Integration
+
+Phase 15 includes an optional server-side GitHub OAuth integration. The browser never receives the OAuth client secret or GitHub access token. The API keeps the token in server memory and uses an HttpOnly session cookie.
+
+Copy `.env.example` to `.env` and register a GitHub OAuth App with this callback URL during local development:
+
+```text
+http://127.0.0.1:8787/api/auth/github/callback
+```
+
+Set the placeholder values for `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`, then run the frontend and API in separate terminals:
+
+```bash
+npm run dev
+npm run github-api
+```
+
+The OAuth flow requests `read:user repo` because this phase supports reading authorized private repositories and creating or updating `README.md`. GitHub's authorization-code flow validates `state` and PKCE, and the Contents API requires the current file SHA before an update. Configure HTTPS in deployment so the session cookie is Secure, set `APP_ORIGIN` and `GITHUB_CALLBACK_URL` to the deployed origins, and keep `.env` out of version control.
+
+Without OAuth configuration, public URL import continues to work and authenticated actions show an actionable connection/configuration error.
+
 ### Production Build & Quality Checks
 
 ```bash

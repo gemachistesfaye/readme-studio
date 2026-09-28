@@ -183,21 +183,21 @@ async function handleOAuthStart(request, response) {
 
 async function handleOAuthCallback(url, request, response) {
   const error = url.searchParams.get('error');
-  if (error) {
-    redirect(response, `${appOrigin}/?github_error=${encodeURIComponent(error)}`);
-    return;
-  }
-
   const state = url.searchParams.get('state');
   const code = url.searchParams.get('code');
   const storedState = parseCookies(request).github_oauth_state;
   const pending = state ? pendingOAuth.get(state) : null;
-  if (!state || !code || !storedState || storedState !== state || !pending || pending.expiresAt <= Date.now()) {
+  if (!state || !storedState || storedState !== state || !pending || pending.expiresAt <= Date.now() || (!error && !code)) {
     if (state) pendingOAuth.delete(state);
     redirect(response, `${appOrigin}/?github_error=invalid_oauth_state`);
     return;
   }
   pendingOAuth.delete(state);
+
+  if (error) {
+    redirect(response, `${appOrigin}/?github_error=${encodeURIComponent(error)}`);
+    return;
+  }
 
   try {
     const tokenResponse = await fetch(`${githubWeb}/login/oauth/access_token`, {

@@ -4,6 +4,7 @@ import {
   ContactData,
   ContributingData,
   FeaturesData,
+  GithubStatsData,
   InstallationData,
   LicenseData,
   ReadmeData,
@@ -13,6 +14,7 @@ import {
 } from '@/types';
 import { TECH_CATEGORIES } from '@/constants/techStack';
 import { LICENSE_OPTIONS } from '@/constants/licenses';
+import { getSectionMeta } from '@/constants/sections';
 import { generateBadgesRow } from './generateBadge';
 import { normalizeSectionOrder } from './sectionOrder';
 
@@ -373,6 +375,32 @@ function hasContentBeforeLicense(data: ReadmeData): boolean {
   );
 }
 
+export function generateGithubStatsSection(stats?: GithubStatsData): string {
+  if (!stats || !stats.enabled || !stats.username.trim()) return '';
+  const username = stats.username.trim();
+  const theme = stats.theme || 'github_dark';
+  const parts: string[] = [];
+
+  if (stats.showStats) {
+    parts.push(
+      `![${username}'s GitHub Stats](https://github-readme-stats.vercel.app/api?username=${encodeURIComponent(username)}&show_icons=true&theme=${theme})`
+    );
+  }
+  if (stats.showTopLangs) {
+    parts.push(
+      `![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=${encodeURIComponent(username)}&layout=compact&theme=${theme})`
+    );
+  }
+  if (stats.showStreak) {
+    parts.push(
+      `![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=${encodeURIComponent(username)}&theme=${theme})`
+    );
+  }
+
+  if (parts.length === 0) return '';
+  return `## GitHub Stats\n\n<p align="center">\n  ${parts.join('\n  ')}\n</p>`;
+}
+
 const SECTION_BUILDERS: Record<ReadmeSectionId, (data: ReadmeData) => string> = {
   techStack: (data) => generateTechStackSection(data.techStack),
   features: (data) => generateFeaturesSection(data.features),
@@ -388,6 +416,7 @@ const SECTION_BUILDERS: Record<ReadmeSectionId, (data: ReadmeData) => string> = 
     return isDefaultBlankLicense ? '' : generateLicenseSection(data.license);
   },
   contact: (data) => generateContactSection(data.contact, data.basicInfo),
+  githubStats: (data) => generateGithubStatsSection(data.githubStats),
 };
 
 /**
@@ -409,9 +438,27 @@ export function generateMarkdown(data: ReadmeData): string {
 
   // Reorderable sections, rendered in the configured order
   const order = normalizeSectionOrder(data.layout?.sectionOrder);
+  const renderedSections: { id: ReadmeSectionId; content: string }[] = [];
+
   for (const sectionId of order) {
     const markdown = SECTION_BUILDERS[sectionId](data);
-    if (markdown) sections.push(markdown);
+    if (markdown) {
+      renderedSections.push({ id: sectionId, content: markdown });
+    }
+  }
+
+  // Optional Table of Contents
+  if (data.layout?.includeToc && renderedSections.length > 0) {
+    const tocItems = renderedSections.map((s) => {
+      const meta = getSectionMeta(s.id);
+      const slug = meta.label.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+      return `- [${meta.label}](#${slug})`;
+    });
+    sections.push(`## 📋 Table of Contents\n\n${tocItems.join('\n')}`);
+  }
+
+  for (const s of renderedSections) {
+    sections.push(s.content);
   }
 
   if (sections.length === 0) {

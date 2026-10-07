@@ -60,6 +60,11 @@ const SECTION_META: Record<ReadmeSectionId, SectionMeta> = {
     label: 'Contact',
     description: 'Author details, social handles, and support links',
   },
+  githubStats: {
+    id: 'githubStats',
+    label: 'GitHub Stats & Cards',
+    description: 'Live GitHub contribution stats, top languages, and streak widgets',
+  },
 };
 
 /**

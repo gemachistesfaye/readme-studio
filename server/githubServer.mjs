@@ -239,8 +239,7 @@ async function handleOAuthCallback(url, request, response) {
   const pending = state ? pendingOAuth.get(state) : null;
   if (
     !state ||
-    !storedState ||
-    storedState !== state ||
+    (storedState && storedState !== state) ||
     !pending ||
     pending.expiresAt <= Date.now() ||
     (!error && !code)

@@ -61,6 +61,15 @@ export const README_TEMPLATES: ReadmeTemplate[] = [
       },
       layout: {
         sectionOrder: [...currentData.layout.sectionOrder],
+        includeToc: currentData.layout.includeToc ?? false,
+      },
+      githubStats: {
+        enabled: false,
+        username: '',
+        showStats: true,
+        showTopLangs: true,
+        showStreak: true,
+        theme: 'github_dark',
       },
     }),
   },

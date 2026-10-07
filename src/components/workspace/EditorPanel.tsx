@@ -10,6 +10,9 @@ import {
   Mail,
   ShieldCheck,
   SlidersHorizontal,
+  BarChart2,
+  PackageOpen,
+  ClipboardCheck,
 } from "lucide-react";
 import {
   BadgesData,
@@ -20,9 +23,11 @@ import {
   ContactErrors,
   ContributingData,
   FeaturesData,
+  GithubStatsData,
   InstallationData,
   LicenseData,
   ReadmeBadge,
+  ReadmeData,
   TechCategory,
   TechStackData,
   UsageData,
@@ -38,6 +43,9 @@ import { UsageForm } from "./UsageForm";
 import { ContributingForm } from "./ContributingForm";
 import { LicenseForm } from "./LicenseForm";
 import { ContactForm } from "./ContactForm";
+import { GitHubStatsForm } from "./GitHubStatsForm";
+import { ReadmeAuditPanel } from "./ReadmeAuditPanel";
+import { ExportImportPanel } from "./ExportImportPanel";
 
 interface EditorPanelProps {
   basicInfo: BasicInfoData;
@@ -133,6 +141,10 @@ interface EditorPanelProps {
   onUpdateLicense: (field: keyof LicenseData, value: string) => void;
   onUpdateContactField: (field: keyof ContactData, value: string) => void;
   onContactBlur: (field: keyof ContactData) => void;
+  githubStats: GithubStatsData;
+  onUpdateGithubStats: (updates: Partial<GithubStatsData>) => void;
+  readmeData: ReadmeData;
+  onImportBackup: (data: ReadmeData) => void;
 }
 
 export const EditorPanel: React.FC<EditorPanelProps> = ({
@@ -181,6 +193,10 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
   onUpdateLicense,
   onUpdateContactField,
   onContactBlur,
+  githubStats,
+  onUpdateGithubStats,
+  readmeData,
+  onImportBackup,
 }) => {
   const badgeCount = badges.badges.length;
   const techCount = techStack.technologies.length;
@@ -222,7 +238,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
           </div>
         </div>
         <span className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 font-mono text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/80 dark:text-zinc-400">
-          8 Sections
+          11 Sections
         </span>
       </div>
 
@@ -385,6 +401,39 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({
             onUpdateField={onUpdateContactField}
             onBlur={onContactBlur}
           />
+        </EditorSection>
+
+        {/* GitHub Stats & Cards */}
+        <EditorSection
+          title="GitHub Stats & Cards"
+          description="Live stats, top languages, and streak widgets from github-readme-stats"
+          icon={BarChart2}
+          badge={githubStats.enabled ? (githubStats.username.trim() ? "Enabled" : "Username needed") : "Disabled"}
+          defaultOpen={false}
+        >
+          <GitHubStatsForm data={githubStats} onChange={onUpdateGithubStats} />
+        </EditorSection>
+
+        {/* README Quality Audit */}
+        <EditorSection
+          title="README Quality Score"
+          description="Live 0–100% completeness audit with per-field improvement hints"
+          icon={ClipboardCheck}
+          badge="Live"
+          defaultOpen={false}
+        >
+          <ReadmeAuditPanel data={readmeData} />
+        </EditorSection>
+
+        {/* Export / Import Backup */}
+        <EditorSection
+          title="Export / Import Backup"
+          description="Download a .json backup of your project or restore from a previous backup"
+          icon={PackageOpen}
+          badge="Backup"
+          defaultOpen={false}
+        >
+          <ExportImportPanel data={readmeData} onImport={onImportBackup} />
         </EditorSection>
       </div>
     </div>

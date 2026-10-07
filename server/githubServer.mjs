@@ -674,6 +674,18 @@ async function handleApi(request, response, url) {
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", appOrigin);
+
+    // Root status & health check endpoint for Render / monitoring
+    if (url.pathname === "/" || url.pathname === "/health") {
+      sendJson(response, 200, {
+        name: "README Studio GitHub API Server",
+        status: "healthy",
+        uptimeSeconds: Math.floor(process.uptime()),
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
     if (url.pathname.startsWith("/api/")) {
       await handleApi(request, response, url);
       return;

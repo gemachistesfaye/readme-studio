@@ -7,6 +7,7 @@ import {
   ContactErrors,
   ContributingData,
   Feature,
+  GithubStatsData,
   InstallationData,
   InstallationStep,
   LicenseData,
@@ -34,6 +35,7 @@ import { README_TEMPLATES } from '@/constants/templates';
 import {
   createInitialReadmeData,
   loadReadmeDraft,
+  normalizeReadmeData,
   saveReadmeDraft,
 } from '@/utils/readmeDraftStorage';
 
@@ -842,10 +844,48 @@ export function useReadmeData() {
     }));
   }, []);
 
+  // GitHub Stats Handlers
+  const updateGithubStats = useCallback((updates: Partial<GithubStatsData>) => {
+    setData((prev) => ({
+      ...prev,
+      githubStats: {
+        ...(prev.githubStats ?? {
+          enabled: false,
+          username: '',
+          showStats: true,
+          showTopLangs: true,
+          showStreak: true,
+          theme: 'github_dark',
+        }),
+        ...updates,
+      },
+    }));
+  }, []);
+
+  // TOC Toggle Handler
+  const toggleToc = useCallback((enabled: boolean) => {
+    setData((prev) => ({
+      ...prev,
+      layout: {
+        ...prev.layout,
+        includeToc: enabled,
+      },
+    }));
+  }, []);
+
+  // Full ReadmeData Replace Handler (for Backup Import)
+  const replaceReadmeData = useCallback((newData: ReadmeData) => {
+    setData(normalizeReadmeData(newData));
+    setCurrentTemplateId('blank');
+    setTouched({});
+    setTouchedContact({});
+  }, []);
+
   return {
     data,
     saveStatus,
     resetReadme,
+    replaceReadmeData,
     currentTemplateId,
     hasUserContent,
     sectionOrder,
@@ -890,6 +930,8 @@ export function useReadmeData() {
     updateLicense,
     updateContactField,
     touchContactField,
+    updateGithubStats,
+    toggleToc,
     errors: visibleErrors,
     contactErrors: visibleContactErrors,
     isValid: Object.keys(allErrors).length === 0 && Object.keys(allContactErrors).length === 0,

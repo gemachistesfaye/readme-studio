@@ -158,7 +158,12 @@ async function githubRequest(path, options = {}, token) {
 }
 
 function sessionFromRequest(request) {
-  const sessionId = parseCookies(request).readme_session;
+  const cookieSession = parseCookies(request).readme_session;
+  const authHeader = request.headers.authorization;
+  const bearerToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7).trim()
+    : null;
+  const sessionId = bearerToken || cookieSession;
   if (!sessionId) return null;
   const session = sessions.get(sessionId);
   if (!session || session.expiresAt <= Date.now()) {
@@ -294,7 +299,7 @@ async function handleOAuthCallback(url, request, response) {
       },
       expiresAt: Date.now() + 8 * 60 * 60_000,
     });
-    redirect(response, `${appOrigin}/?github=connected`, {
+    redirect(response, `${appOrigin}/?github=connected&token=${encodeURIComponent(sessionId)}`, {
       "set-cookie": [
         cookie("readme_session", sessionId, { maxAge: 8 * 60 * 60 }),
         cookie("github_oauth_state", "", { maxAge: 0 }),

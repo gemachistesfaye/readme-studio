@@ -41,24 +41,38 @@ function parseCookies(request) {
 }
 
 function cookie(name, value, options = {}) {
+  const isHttps = isProduction || appOrigin.startsWith("https://");
+  const sameSite = isHttps ? "None" : "Lax";
   const parts = [
     `${name}=${encodeURIComponent(value)}`,
     "Path=/",
     "HttpOnly",
-    "SameSite=Lax",
+    `SameSite=${sameSite}`,
   ];
   if (options.maxAge !== undefined) parts.push(`Max-Age=${options.maxAge}`);
-  if (isProduction) parts.push("Secure");
+  if (isHttps) parts.push("Secure");
   return parts.join("; ");
 }
 
-function sendJson(response, status, body, extraHeaders = {}) {
-  response.writeHead(status, { ...jsonHeaders, ...extraHeaders });
+function getCorsHeaders(request) {
+  const origin = request?.headers?.origin || appOrigin;
+  return {
+    "access-control-allow-origin": origin,
+    "access-control-allow-credentials": "true",
+    "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "access-control-allow-headers":
+      "Content-Type, Authorization, Accept, X-GitHub-Api-Version",
+  };
+}
+
+function sendJson(response, status, body, extraHeaders = {}, request = null) {
+  const cors = request ? getCorsHeaders(request) : {};
+  response.writeHead(status, { ...jsonHeaders, ...cors, ...extraHeaders });
   response.end(JSON.stringify(body));
 }
 
-function sendError(response, status, message, code = "request_failed") {
-  sendJson(response, status, { error: { code, message } });
+function sendError(response, status, message, code = "request_failed", request = null) {
+  sendJson(response, status, { error: { code, message } }, {}, request);
 }
 
 function redirect(response, location, extraHeaders = {}) {
@@ -675,14 +689,27 @@ const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url || "/", appOrigin);
 
+    // Preflight CORS handler
+    if (request.method === "OPTIONS") {
+      response.writeHead(204, getCorsHeaders(request));
+      response.end();
+      return;
+    }
+
     // Root status & health check endpoint for Render / monitoring
     if (url.pathname === "/" || url.pathname === "/health") {
-      sendJson(response, 200, {
-        name: "README Studio GitHub API Server",
-        status: "healthy",
-        uptimeSeconds: Math.floor(process.uptime()),
-        timestamp: new Date().toISOString(),
-      });
+      sendJson(
+        response,
+        200,
+        {
+          name: "README Studio GitHub API Server",
+          status: "healthy",
+          uptimeSeconds: Math.floor(process.uptime()),
+          timestamp: new Date().toISOString(),
+        },
+        {},
+        request,
+      );
       return;
     }
 
@@ -690,12 +717,18 @@ const server = createServer(async (request, response) => {
       await handleApi(request, response, url);
       return;
     }
-    sendJson(response, 404, {
-      error: { code: "not_found", message: "Route not found." },
-    });
+    sendJson(
+      response,
+      404,
+      {
+        error: { code: "not_found", message: "Route not found." },
+      },
+      {},
+      request,
+    );
   } catch {
     if (!response.headersSent)
-      sendError(response, 500, "Unexpected server error.", "server_error");
+      sendError(response, 500, "Unexpected server error.", "server_error", request);
     else response.end();
   }
 });

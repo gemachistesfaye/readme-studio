@@ -2,7 +2,10 @@ import { ReadmeSectionId } from '@/types';
 import { DEFAULT_SECTION_ORDER } from '@/constants/sections';
 import { MoveDirection, moveItem } from './listOrder';
 
-const KNOWN_SECTION_IDS: ReadonlySet<string> = new Set<string>(DEFAULT_SECTION_ORDER);
+const KNOWN_SECTION_IDS: ReadonlySet<string> = new Set<string>([
+  ...DEFAULT_SECTION_ORDER,
+  'githubStats',
+]);
 
 /**
  * Type guard for a known reorderable README section id.

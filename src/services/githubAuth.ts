@@ -7,6 +7,15 @@ import {
   GitHubSaveResult,
 } from '@/types';
 
+const API_BASE = (import.meta.env.VITE_GITHUB_API_BASE_URL || '').replace(/\/$/, '');
+
+function getApiUrl(path: string): string {
+  if (API_BASE) {
+    return `${API_BASE}${path}`;
+  }
+  return path;
+}
+
 interface ApiErrorBody {
   error?: {
     code?: string;
@@ -27,9 +36,10 @@ export class GitHubAuthError extends Error {
 }
 
 async function requestJson<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, {
+  const fullUrl = getApiUrl(url);
+  const response = await fetch(fullUrl, {
     ...options,
-    credentials: 'same-origin',
+    credentials: 'include',
     headers: {
       Accept: 'application/json',
       ...(options?.headers || {}),
@@ -56,7 +66,7 @@ async function requestJson<T>(url: string, options?: RequestInit): Promise<T> {
 }
 
 export function startGitHubAuthentication(): void {
-  window.location.assign('/api/auth/github/start');
+  window.location.assign(getApiUrl('/api/auth/github/start'));
 }
 
 export function getGitHubAuthSession(): Promise<GitHubAuthSession> {

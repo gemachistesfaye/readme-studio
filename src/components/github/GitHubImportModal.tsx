@@ -337,44 +337,44 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
           {step === "preview" && analysis && selection && (
             <div className="space-y-5">
               {/* Repository Banner Card */}
-              <div className="rounded-lg border border-zinc-800 bg-zinc-950/60 p-4 space-y-2">
+              <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 space-y-2 dark:border-zinc-800 dark:bg-zinc-950/60">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-center gap-3">
                     {analysis.owner.avatarUrl ? (
                       <img
                         src={analysis.owner.avatarUrl}
                         alt={analysis.owner.username}
-                        className="h-10 w-10 rounded-full border border-zinc-700 bg-zinc-800"
+                        className="h-10 w-10 rounded-full border border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 border border-zinc-700">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-zinc-600 border border-zinc-300 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700">
                         <Github className="h-5 w-5" />
                       </div>
                     )}
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-bold text-zinc-100">
+                        <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                           {analysis.repoRef.owner}/{analysis.repoRef.repo}
                         </h3>
                         <a
                           href={analysis.repositoryUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                          className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
                           title="Open on GitHub"
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
                         </a>
                       </div>
-                      <div className="flex items-center gap-2 mt-0.5 text-xs text-zinc-400">
+                      <div className="flex items-center gap-2 mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
                         <span>
                           Branch:{" "}
-                          <code className="text-zinc-300 font-mono text-[11px]">
+                          <code className="text-zinc-800 dark:text-zinc-300 font-mono text-[11px] bg-zinc-200 dark:bg-zinc-800 px-1 py-0.5 rounded">
                             {analysis.defaultBranch}
                           </code>
                         </span>
                         {analysis.hasExistingReadme && (
-                          <span className="inline-flex items-center gap-1 rounded bg-indigo-500/10 px-1.5 py-0.2 text-[10px] font-medium text-indigo-400 border border-indigo-500/20">
+                          <span className="inline-flex items-center gap-1 rounded bg-indigo-50 dark:bg-indigo-500/10 px-1.5 py-0.2 text-[10px] font-medium text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/20">
                             <BookOpen className="h-2.5 w-2.5" /> README detected
                           </span>
                         )}
@@ -383,7 +383,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                   </div>
                 </div>
                 {analysis.description && (
-                  <p className="text-xs text-zinc-400 leading-relaxed pt-1">
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed pt-1">
                     {analysis.description}
                   </p>
                 )}
@@ -391,16 +391,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
 
               {/* Overwrite Warning Banner if conflicts detected */}
               {conflicts.length > 0 && (
-                <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3.5 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-semibold text-amber-400">
+                <div className="rounded-lg border border-amber-300 bg-amber-50 p-3.5 space-y-2 dark:border-amber-500/30 dark:bg-amber-500/10">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-amber-800 dark:text-amber-400">
                     <AlertTriangle className="h-4 w-4 shrink-0" />
                     Existing Content Replacement Notice
                   </div>
-                  <p className="text-[11px] text-amber-300/80 leading-relaxed">
+                  <p className="text-[11px] text-amber-800/90 dark:text-amber-300/80 leading-relaxed">
                     Importing selected fields will replace current non-empty
                     values in your README:
                   </p>
-                  <ul className="text-[11px] text-amber-200 space-y-1 pl-4 list-disc">
+                  <ul className="text-[11px] text-amber-900 dark:text-amber-200 space-y-1 pl-4 list-disc">
                     {conflicts.map((c) => (
                       <li key={c.field}>
                         <span className="font-semibold">{c.field}:</span>{" "}
@@ -414,57 +414,57 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
 
               {/* 1. Project Information Checkboxes */}
               <div className="space-y-2.5">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                   Project Information
                 </h4>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors">
+                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
                     <input
                       type="checkbox"
                       checked={selection.projectName}
                       onChange={() => toggleSelectionField("projectName")}
-                      className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                      className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">
+                      <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                         Project Name
                       </span>
-                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">
+                      <span className="text-zinc-600 dark:text-zinc-400 text-[11px] truncate block max-w-[200px]">
                         {analysis.name}
                       </span>
                     </div>
                   </label>
 
-                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors">
+                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
                     <input
                       type="checkbox"
                       checked={selection.repositoryUrl}
                       onChange={() => toggleSelectionField("repositoryUrl")}
-                      className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                      className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">
+                      <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                         Repository URL
                       </span>
-                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">
+                      <span className="text-zinc-600 dark:text-zinc-400 text-[11px] truncate block max-w-[200px]">
                         {analysis.repositoryUrl}
                       </span>
                     </div>
                   </label>
 
                   {analysis.description && (
-                    <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors sm:col-span-2">
+                    <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors sm:col-span-2">
                       <input
                         type="checkbox"
                         checked={selection.description}
                         onChange={() => toggleSelectionField("description")}
-                        className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                        className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                       />
                       <div className="text-xs">
-                        <span className="font-medium text-zinc-200 block">
+                        <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                           Project Description
                         </span>
-                        <span className="text-zinc-400 text-[11px] line-clamp-2">
+                        <span className="text-zinc-600 dark:text-zinc-400 text-[11px] line-clamp-2">
                           {analysis.description}
                         </span>
                       </div>
@@ -472,18 +472,18 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                   )}
 
                   {analysis.homepage && (
-                    <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors sm:col-span-2">
+                    <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors sm:col-span-2">
                       <input
                         type="checkbox"
                         checked={selection.homepage}
                         onChange={() => toggleSelectionField("homepage")}
-                        className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                        className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                       />
                       <div className="text-xs">
-                        <span className="font-medium text-zinc-200 block">
+                        <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                           Live Demo / Homepage URL
                         </span>
-                        <span className="text-zinc-400 text-[11px] truncate block max-w-[350px]">
+                        <span className="text-zinc-600 dark:text-zinc-400 text-[11px] truncate block max-w-[350px]">
                           {analysis.homepage}
                         </span>
                       </div>
@@ -494,40 +494,40 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
 
               {/* 2. Author Checkboxes */}
               <div className="space-y-2.5">
-                <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                   <User className="h-3.5 w-3.5 text-zinc-500" />
                   Author Information
                 </div>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors">
+                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
                     <input
                       type="checkbox"
                       checked={selection.authorName}
                       onChange={() => toggleSelectionField("authorName")}
-                      className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                      className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">
+                      <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                         Author Name
                       </span>
-                      <span className="text-zinc-400 text-[11px]">
+                      <span className="text-zinc-600 dark:text-zinc-400 text-[11px]">
                         {analysis.owner.username}
                       </span>
                     </div>
                   </label>
 
-                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors">
+                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
                     <input
                       type="checkbox"
                       checked={selection.authorGithub}
                       onChange={() => toggleSelectionField("authorGithub")}
-                      className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                      className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">
+                      <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                         Author GitHub
                       </span>
-                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">
+                      <span className="text-zinc-600 dark:text-zinc-400 text-[11px] truncate block max-w-[200px]">
                         {analysis.owner.profileUrl}
                       </span>
                     </div>
@@ -538,7 +538,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
               {/* 3. Detected Technologies */}
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                     <Code2 className="h-3.5 w-3.5 text-zinc-500" />
                     Detected Technologies (
                     {analysis.detectedTechnologies.length})
@@ -547,7 +547,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     <button
                       type="button"
                       onClick={toggleAllTechnologies}
-                      className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                      className="text-[11px] font-medium text-indigo-600 dark:text-indigo-400 hover:underline transition-colors"
                     >
                       {selection.technologies.length ===
                       analysis.detectedTechnologies.length
@@ -575,8 +575,8 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                           className={cn(
                             "flex items-center justify-between rounded-lg border px-2.5 py-2 text-left transition-all",
                             isChecked
-                              ? "border-indigo-500/50 bg-indigo-500/10 text-zinc-100"
-                              : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:border-zinc-700",
+                              ? "border-indigo-500/50 bg-indigo-50 text-indigo-950 dark:bg-indigo-500/10 dark:text-zinc-100"
+                              : "border-zinc-200 bg-zinc-50/80 text-zinc-700 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950/40 dark:text-zinc-400 dark:hover:border-zinc-700",
                           )}
                         >
                           <div className="truncate pr-1.5">
@@ -588,16 +588,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                             </span>
                           </div>
                           {isChecked ? (
-                            <CheckSquare className="h-4 w-4 shrink-0 text-indigo-400" />
+                            <CheckSquare className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
                           ) : (
-                            <Square className="h-4 w-4 shrink-0 text-zinc-600" />
+                            <Square className="h-4 w-4 shrink-0 text-zinc-400 dark:text-zinc-600" />
                           )}
                         </button>
                       );
                     })}
                   </div>
                 )}
-                <p className="text-[11px] text-zinc-500">
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
                   Imported technologies merge into your Tech Stack without
                   duplicates.
                 </p>
@@ -606,22 +606,22 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
               {/* 4. License */}
               {analysis.license && (
                 <div className="space-y-2.5">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400">
                     <Scale className="h-3.5 w-3.5 text-zinc-500" />
                     Detected License
                   </div>
-                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-800 bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-700 transition-colors">
+                  <label className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-950/40 p-2.5 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
                     <input
                       type="checkbox"
                       checked={selection.license}
                       onChange={() => toggleSelectionField("license")}
-                      className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
+                      className="mt-0.5 h-4 w-4 rounded border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-indigo-600 focus:ring-indigo-500"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">
+                      <span className="font-medium text-zinc-900 dark:text-zinc-200 block">
                         {analysis.license.name} ({analysis.license.spdxId})
                       </span>
-                      <span className="text-zinc-400 text-[11px]">
+                      <span className="text-zinc-600 dark:text-zinc-400 text-[11px]">
                         Mapped to README Studio {analysis.license.mappedType}{" "}
                         License
                       </span>
@@ -635,13 +635,13 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
           {/* STEP 3: Success Screen */}
           {step === "success" && (
             <div className="py-8 text-center space-y-3">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 ring-1 ring-emerald-500/30">
                 <Check className="h-6 w-6" />
               </div>
-              <h3 className="text-base font-semibold text-zinc-100">
+              <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 Repository Imported Successfully!
               </h3>
-              <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 max-w-sm mx-auto">
                 Selected fields have been merged into your workspace. The
                 preview and editor are up to date.
               </p>
@@ -650,13 +650,13 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex items-center justify-between border-t border-zinc-800 px-6 py-3.5 bg-zinc-900/90">
+        <div className="flex items-center justify-between border-t border-zinc-200 bg-zinc-50 px-6 py-3.5 dark:border-zinc-800 dark:bg-zinc-900/90">
           {step === "input" || step === "analyzing" ? (
             <>
               <button
                 type="button"
                 onClick={handleClose}
-                className="rounded-lg border border-zinc-700 px-4 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+                className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-transparent dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
               >
                 Cancel
               </button>
@@ -687,7 +687,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                   setStep("input");
                   setError(null);
                 }}
-                className="rounded-lg border border-zinc-700 px-3.5 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+                className="rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-transparent dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
               >
                 Back / Analyze Another
               </button>
@@ -695,7 +695,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="rounded-lg border border-zinc-700 px-3.5 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
+                  className="rounded-lg border border-zinc-300 bg-white px-3.5 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-transparent dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
                 >
                   Cancel
                 </button>

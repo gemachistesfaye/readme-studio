@@ -15,7 +15,7 @@ export const DARK_MODE_CLASS = 'dark';
  * Preference used on first load. Phase 13 keeps theme selection in memory,
  * so every reload starts from the operating system preference.
  */
-export const DEFAULT_THEME_PREFERENCE: ThemePreference = 'system';
+export const DEFAULT_THEME_PREFERENCE: ThemePreference = 'light';
 
 export const THEME_PREFERENCE_STORAGE_KEY = 'readme-studio:theme';
 

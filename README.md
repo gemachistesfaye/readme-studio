@@ -1,9 +1,9 @@
 # ⚡ README Studio
 
-> A modern, developer-focused web application for building clean, professional GitHub `README.md` files through an interactive interface.
+> A modern, developer-focused web application for building, customizing, and publishing clean, professional GitHub `README.md` files through an interactive real-time workspace.
 
 ![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-6.1-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
@@ -12,28 +12,31 @@
 
 ## 🌟 Overview
 
-**README Studio** helps developers compose, format and export production-ready GitHub README documents effortlessly. Designed with modern UI patterns, dark-mode visual aesthetics and strict TypeScript architecture.
+**README Studio** provides developers with a full-featured workspace to compose, format, customize, and publish production-ready GitHub README documents effortlessly. Designed with modern UI patterns, dark/light visual themes, interactive reordering, and direct GitHub OAuth integration.
 
 ---
 
-## 🚀 Phase 1 Foundation Features
+## ✨ Features
 
-- ⚛️ **React 19 & TypeScript 5.7**: Fast, modern frontend architecture with strict typing.
-- ⚡ **Vite 6**: Ultra-fast hot module reloading (HMR) and production bundling.
-- 🎨 **Tailwind CSS v4**: Minimalist developer-focused visual design and responsive layouts.
-- 🧱 **Clean Architecture**: Scalable modular folder structure (`components`, `pages`, `hooks`, `utils`, `types`, `constants`).
-- 🔍 **Strict Code Quality**: Zero ESLint warnings and zero TypeScript build errors.
+- ⚛️ **Interactive Workspace & Live Preview**: Split-screen editor with real-time rendered GitHub-Flavored Markdown & raw source view.
+- 🎨 **Light / Dark / System Themes**: Fully responsive UI supporting warm light mode, dark mode, and system preference detection.
+- ↕️ **Section Reordering & Item Controls**: Reorder major README sections (Tech Stack, Features, Installation, Usage, etc.) and individual list items with accessible controls.
+- 💾 **Draft Auto-Persistence**: Automatic local storage persistence with draft recovery and reset actions.
+- 📋 **Pre-built README Templates**: Apply specialized templates with flexible merge or full-replacement modes.
+- 🏷️ **Badge Builder**: Custom Shields.io badge creation, tech stack tags, and auto-mapped license badges.
+- 🐙 **GitHub Integration**:
+  - **Public Repository Import**: Auto-detect repository metadata, tech stack, and license from any public GitHub URL without logging in.
+  - **Secure GitHub OAuth**: Authenticate via a lightweight, secure Node.js backend server (`/api/auth`).
+  - **Repository Picker**: Browse, search, filter, and select public or private repositories.
+  - **Save & Update on GitHub**: Directly commit generated `README.md` to GitHub with conflict/overwrite confirmation.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React 19
-- **Language**: TypeScript 5.7
-- **Build Tool**: Vite 6
-- **Styling**: Tailwind CSS v4
-- **Icons**: Lucide React
-- **Linter**: ESLint 9
+- **Frontend**: React 19, TypeScript 5.8, Vite 6, Tailwind CSS v4, Lucide Icons
+- **Backend API**: Node.js, Express, Cookie-Session (OAuth & GitHub API Proxy)
+- **Deployment**: Compatible with Render, Vercel, Netlify, Node.js hosts
 
 ---
 
@@ -58,32 +61,38 @@ npm install
 
 ### Development Server
 
-Start the local development server with hot module reloading:
+Start the local development frontend server:
 
 ```bash
 npm run dev
 ```
 
-### GitHub Integration
+### GitHub OAuth Server (Optional for Authenticated Save)
 
-Phase 15 includes an optional server-side GitHub OAuth integration. The browser never receives the OAuth client secret or GitHub access token. The API keeps the token in server memory and uses an HttpOnly session cookie.
+To enable GitHub account login and direct saving to repositories:
 
-Copy `.env.example` to `.env` and register a GitHub OAuth App with this callback URL during local development:
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Create a [GitHub OAuth Application](https://github.com/settings/developers) with callback URL:
+   `http://127.0.0.1:8787/api/auth/github/callback`
+3. Fill in your `.env` variables:
+   ```env
+   GITHUB_CLIENT_ID=your_client_id
+   GITHUB_CLIENT_SECRET=your_client_secret
+   SESSION_SECRET=your_random_session_secret
+   ```
+4. Start the GitHub API proxy server alongside Vite:
+   ```bash
+   # Terminal 1: Vite Frontend
+   npm run dev
 
-```text
-http://127.0.0.1:8787/api/auth/github/callback
-```
+   # Terminal 2: GitHub API Proxy
+   npm run github-api
+   ```
 
-Set the placeholder values for `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`, then run the frontend and API in separate terminals:
-
-```bash
-npm run dev
-npm run github-api
-```
-
-The OAuth flow requests `read:user repo` because this phase supports reading authorized private repositories and creating or updating `README.md`. GitHub's authorization-code flow validates `state` and PKCE, and the Contents API requires the current file SHA before an update. Configure HTTPS in deployment so the session cookie is Secure, set `APP_ORIGIN` and `GITHUB_CALLBACK_URL` to the deployed origins, and keep `.env` out of version control.
-
-Without OAuth configuration, public URL import continues to work and authenticated actions show an actionable connection/configuration error.
+*Note: Public URL import, templates, section reordering, draft saving, and Markdown copy/download work 100% offline without GitHub OAuth configuration.*
 
 ### Production Build & Quality Checks
 
@@ -92,10 +101,13 @@ Without OAuth configuration, public URL import continues to work and authenticat
 npm run lint
 
 # Run TypeScript type check
-npx tsc --noEmit
+node node_modules/typescript/bin/tsc --noEmit
 
 # Build production bundle
 npm run build
+
+# Run automated tests
+npm test
 ```
 
 ---
@@ -103,18 +115,28 @@ npm run build
 ## 📂 Project Structure
 
 ```text
-src/
-├── components/       # Layout and reusable UI components
-│   ├── layout/       # Header, Footer, Layout wrapper
-│   └── workspace/    # Workspace placeholder panels
-├── pages/            # View pages (Home)
-├── hooks/            # Custom React hooks (useWorkspace)
-├── utils/            # Helper functions (cn tailwind merge)
-├── types/            # TypeScript interfaces & types
-├── constants/        # Application constants & configuration
-├── App.tsx           # Main application root
-├── index.css         # Tailwind base styles
-└── main.tsx          # React entry point
+readme-studio/
+├── server/               # Node.js GitHub OAuth & API Proxy server
+│   ├── githubServer.mjs
+│   └── githubServer.test.mjs
+├── src/
+│   ├── components/       # UI Components
+│   │   ├── common/       # Form fields, inputs
+│   │   ├── github/       # Repository picker, import/save modals
+│   │   ├── layout/       # Header, Footer, Layout, Theme switcher
+│   │   └── workspace/    # Editor sections, preview, section order modal
+│   ├── constants/        # Templates, badges, tech stack, section meta
+│   ├── hooks/            # Custom hooks (useReadmeData, useTheme, useGitHubAuth)
+│   ├── pages/            # View pages (Home)
+│   ├── services/         # GitHub API client services
+│   ├── types/            # TypeScript interfaces & types
+│   ├── utils/            # Markdown generator, draft storage, section order helpers
+│   ├── App.tsx
+│   ├── index.css
+│   └── main.tsx
+├── .env.example
+├── package.json
+└── vite.config.ts
 ```
 
 ---

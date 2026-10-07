@@ -97,14 +97,11 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
     moveSectionDown,
     resetSectionOrder,
   } = useReadmeData();
-  const { status: githubStatus, connect: connectGitHub } = useGitHubAuth();
+  const { status: githubStatus } = useGitHubAuth();
   const isGitHubConnected = githubStatus === "authenticated";
 
   const handleOpenGitHubSave = () => {
-    if (!isGitHubConnected) {
-      connectGitHub();
-      return;
-    }
+    if (!isGitHubConnected) return;
     setIsRepositoryPickerOpen(true);
   };
 
@@ -162,21 +159,6 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
 
             <button
               type="button"
-              onClick={handleOpenGitHubSave}
-              disabled={isGitHubConnected && !markdown.trim()}
-              title={
-                isGitHubConnected
-                  ? "Save the generated README to GitHub"
-                  : "Connect GitHub to enable saving"
-              }
-              className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-500 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:border-orange-600 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500/40 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-500/50 dark:bg-orange-600 dark:hover:bg-orange-500"
-            >
-              <Upload className="h-4 w-4" />
-              {isGitHubConnected ? "Save to GitHub" : "Connect to Save"}
-            </button>
-
-            <button
-              type="button"
               onClick={() => setIsSectionOrderOpen(true)}
               aria-haspopup="dialog"
               className="inline-flex items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3.5 py-2 text-sm font-medium text-zinc-700 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 dark:border-zinc-700 dark:bg-zinc-800/80 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-white"
@@ -199,6 +181,19 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           </div>
 
           <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap lg:justify-end">
+            {isGitHubConnected && (
+              <button
+                type="button"
+                onClick={handleOpenGitHubSave}
+                disabled={!markdown.trim()}
+                title="Save the generated README to GitHub"
+                className="inline-flex items-center gap-2 rounded-lg border border-orange-200 bg-orange-500 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:border-orange-600 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500/40 disabled:cursor-not-allowed disabled:opacity-50 dark:border-orange-500/50 dark:bg-orange-600 dark:hover:bg-orange-500"
+              >
+                <Upload className="h-4 w-4" />
+                Save to GitHub
+              </button>
+            )}
+
             {isGitHubConnected && (
               <button
                 type="button"

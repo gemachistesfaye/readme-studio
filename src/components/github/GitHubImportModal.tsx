@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   Github,
   Search,
@@ -15,26 +15,29 @@ import {
   CheckSquare,
   Square,
   Sparkles,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   ReadmeData,
   GitHubImportAnalysis,
   GitHubImportSelection,
   GitHubImportError,
-} from '@/types';
-import { analyzePublicRepository } from '@/services/githubApi';
+} from "@/types";
+import { analyzePublicRepository } from "@/services/githubApi";
 import {
   createDefaultGitHubSelection,
   getOverwritingFields,
-} from '@/utils/githubImport';
-import { cn } from '@/utils';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+} from "@/utils/githubImport";
+import { cn } from "@/utils";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface GitHubImportModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentData: ReadmeData;
-  onImport: (analysis: GitHubImportAnalysis, selection: GitHubImportSelection) => void;
+  onImport: (
+    analysis: GitHubImportAnalysis,
+    selection: GitHubImportSelection,
+  ) => void;
 }
 
 export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
@@ -44,10 +47,14 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
   onImport,
 }) => {
   useBodyScrollLock(isOpen);
-  const [repoUrl, setRepoUrl] = useState('');
-  const [step, setStep] = useState<'input' | 'analyzing' | 'preview' | 'success'>('input');
+  const [repoUrl, setRepoUrl] = useState("");
+  const [step, setStep] = useState<
+    "input" | "analyzing" | "preview" | "success"
+  >("input");
   const [analysis, setAnalysis] = useState<GitHubImportAnalysis | null>(null);
-  const [selection, setSelection] = useState<GitHubImportSelection | null>(null);
+  const [selection, setSelection] = useState<GitHubImportSelection | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [showOverwriteConfirm, setShowOverwriteConfirm] = useState(false);
 
@@ -56,7 +63,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
 
   // Focus input when modal opens in input step
   useEffect(() => {
-    if (isOpen && step === 'input') {
+    if (isOpen && step === "input") {
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [isOpen, step]);
@@ -68,7 +75,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
       abortControllerRef.current = null;
     }
     setError(null);
-    setStep('input');
+    setStep("input");
     setAnalysis(null);
     setSelection(null);
     setShowOverwriteConfirm(false);
@@ -78,18 +85,18 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
   // Handle escape key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         handleClose();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, handleClose]);
 
   const handleAnalyze = async (urlToAnalyze = repoUrl) => {
     const trimmed = urlToAnalyze.trim();
     if (!trimmed) {
-      setError('Please enter a GitHub repository URL.');
+      setError("Please enter a GitHub repository URL.");
       return;
     }
 
@@ -101,27 +108,31 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
     abortControllerRef.current = controller;
 
     setError(null);
-    setStep('analyzing');
+    setStep("analyzing");
 
     try {
       const result = await analyzePublicRepository(trimmed, controller.signal);
       setAnalysis(result);
       setSelection(createDefaultGitHubSelection(result));
-      setStep('preview');
+      setStep("preview");
       setShowOverwriteConfirm(false);
     } catch (err: unknown) {
       if (controller.signal.aborted) return;
 
       const ghErr = err as GitHubImportError;
-      setError(ghErr.message || 'Failed to analyze repository. Please try again.');
-      setStep('input');
+      setError(
+        ghErr.message || "Failed to analyze repository. Please try again.",
+      );
+      setStep("input");
     } finally {
       abortControllerRef.current = null;
     }
   };
 
   // Toggle individual boolean fields in selection
-  const toggleSelectionField = (field: keyof Omit<GitHubImportSelection, 'technologies'>) => {
+  const toggleSelectionField = (
+    field: keyof Omit<GitHubImportSelection, "technologies">,
+  ) => {
     if (!selection) return;
     setSelection({
       ...selection,
@@ -144,7 +155,9 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
   // Select / Deselect all technologies
   const toggleAllTechnologies = () => {
     if (!selection || !analysis) return;
-    if (selection.technologies.length === analysis.detectedTechnologies.length) {
+    if (
+      selection.technologies.length === analysis.detectedTechnologies.length
+    ) {
       setSelection({ ...selection, technologies: [] });
     } else {
       setSelection({
@@ -170,7 +183,10 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
   };
 
   // Check conflicts before importing
-  const conflicts = analysis && selection ? getOverwritingFields(currentData, analysis, selection) : [];
+  const conflicts =
+    analysis && selection
+      ? getOverwritingFields(currentData, analysis, selection)
+      : [];
 
   const handleConfirmImport = () => {
     if (!analysis || !selection) return;
@@ -181,7 +197,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
     }
 
     onImport(analysis, selection);
-    setStep('success');
+    setStep("success");
 
     setTimeout(() => {
       handleClose();
@@ -208,14 +224,18 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
               <Github className="h-5 w-5" />
             </div>
             <div>
-              <h2 id="github-import-title" className="text-base font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <h2
+                id="github-import-title"
+                className="text-base font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2"
+              >
                 Import from GitHub
                 <span className="rounded bg-emerald-50 dark:bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20">
                   Public Repositories
                 </span>
               </h2>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Extract metadata, technologies, and license information without signing in.
+                Extract metadata, technologies, and license information without
+                signing in.
               </p>
             </div>
           </div>
@@ -232,10 +252,13 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
         {/* Modal Body */}
         <div className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6">
           {/* STEP 1: Input URL */}
-          {(step === 'input' || step === 'analyzing') && (
+          {(step === "input" || step === "analyzing") && (
             <div className="space-y-4">
               <div>
-                <label htmlFor="repo-url-input" className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2">
+                <label
+                  htmlFor="repo-url-input"
+                  className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider mb-2"
+                >
                   Repository URL or Slug
                 </label>
                 <div className="relative">
@@ -252,34 +275,37 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                       if (error) setError(null);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && step !== 'analyzing') {
+                      if (e.key === "Enter" && step !== "analyzing") {
                         handleAnalyze();
                       }
                     }}
-                    disabled={step === 'analyzing'}
+                    disabled={step === "analyzing"}
                     placeholder="https://github.com/owner/repository or owner/repo"
                     className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950/80 py-2.5 pl-9 pr-4 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
                   />
                 </div>
                 <p className="mt-1.5 text-xs text-zinc-400 dark:text-zinc-500">
-                  No GitHub account or sign-in required. Only public repositories can be imported.
+                  No GitHub account or sign-in required. Only public
+                  repositories can be imported.
                 </p>
               </div>
 
               {/* Quick Preset Suggestions */}
               <div>
-                <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">Try an example:</span>
+                <span className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                  Try an example:
+                </span>
                 <div className="mt-1.5 flex flex-wrap gap-2">
                   {[
-                    'facebook/react',
-                    'vercel/next.js',
-                    'tailwindlabs/tailwindcss',
-                    'fastapi/fastapi',
+                    "facebook/react",
+                    "vercel/next.js",
+                    "tailwindlabs/tailwindcss",
+                    "fastapi/fastapi",
                   ].map((preset) => (
                     <button
                       key={preset}
                       type="button"
-                      disabled={step === 'analyzing'}
+                      disabled={step === "analyzing"}
                       onClick={() => {
                         setRepoUrl(`https://github.com/${preset}`);
                         handleAnalyze(`https://github.com/${preset}`);
@@ -297,7 +323,9 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                 <div className="flex items-start gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-400">
                   <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-semibold block mb-0.5">Import Error</span>
+                    <span className="font-semibold block mb-0.5">
+                      Import Error
+                    </span>
                     {error}
                   </div>
                 </div>
@@ -306,7 +334,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
           )}
 
           {/* STEP 2: Preview & Selection */}
-          {step === 'preview' && analysis && selection && (
+          {step === "preview" && analysis && selection && (
             <div className="space-y-5">
               {/* Repository Banner Card */}
               <div className="rounded-lg border border-zinc-800 bg-zinc-950/60 p-4 space-y-2">
@@ -339,7 +367,12 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                         </a>
                       </div>
                       <div className="flex items-center gap-2 mt-0.5 text-xs text-zinc-400">
-                        <span>Branch: <code className="text-zinc-300 font-mono text-[11px]">{analysis.defaultBranch}</code></span>
+                        <span>
+                          Branch:{" "}
+                          <code className="text-zinc-300 font-mono text-[11px]">
+                            {analysis.defaultBranch}
+                          </code>
+                        </span>
                         {analysis.hasExistingReadme && (
                           <span className="inline-flex items-center gap-1 rounded bg-indigo-500/10 px-1.5 py-0.2 text-[10px] font-medium text-indigo-400 border border-indigo-500/20">
                             <BookOpen className="h-2.5 w-2.5" /> README detected
@@ -364,12 +397,15 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     Existing Content Replacement Notice
                   </div>
                   <p className="text-[11px] text-amber-300/80 leading-relaxed">
-                    Importing selected fields will replace current non-empty values in your README:
+                    Importing selected fields will replace current non-empty
+                    values in your README:
                   </p>
                   <ul className="text-[11px] text-amber-200 space-y-1 pl-4 list-disc">
                     {conflicts.map((c) => (
                       <li key={c.field}>
-                        <span className="font-semibold">{c.field}:</span> Replaces &quot;{c.currentValue}&quot; with &quot;{c.incomingValue}&quot;
+                        <span className="font-semibold">{c.field}:</span>{" "}
+                        Replaces &quot;{c.currentValue}&quot; with &quot;
+                        {c.incomingValue}&quot;
                       </li>
                     ))}
                   </ul>
@@ -386,12 +422,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     <input
                       type="checkbox"
                       checked={selection.projectName}
-                      onChange={() => toggleSelectionField('projectName')}
+                      onChange={() => toggleSelectionField("projectName")}
                       className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">Project Name</span>
-                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">{analysis.name}</span>
+                      <span className="font-medium text-zinc-200 block">
+                        Project Name
+                      </span>
+                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">
+                        {analysis.name}
+                      </span>
                     </div>
                   </label>
 
@@ -399,12 +439,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     <input
                       type="checkbox"
                       checked={selection.repositoryUrl}
-                      onChange={() => toggleSelectionField('repositoryUrl')}
+                      onChange={() => toggleSelectionField("repositoryUrl")}
                       className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">Repository URL</span>
-                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">{analysis.repositoryUrl}</span>
+                      <span className="font-medium text-zinc-200 block">
+                        Repository URL
+                      </span>
+                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">
+                        {analysis.repositoryUrl}
+                      </span>
                     </div>
                   </label>
 
@@ -413,12 +457,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                       <input
                         type="checkbox"
                         checked={selection.description}
-                        onChange={() => toggleSelectionField('description')}
+                        onChange={() => toggleSelectionField("description")}
                         className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                       />
                       <div className="text-xs">
-                        <span className="font-medium text-zinc-200 block">Project Description</span>
-                        <span className="text-zinc-400 text-[11px] line-clamp-2">{analysis.description}</span>
+                        <span className="font-medium text-zinc-200 block">
+                          Project Description
+                        </span>
+                        <span className="text-zinc-400 text-[11px] line-clamp-2">
+                          {analysis.description}
+                        </span>
                       </div>
                     </label>
                   )}
@@ -428,12 +476,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                       <input
                         type="checkbox"
                         checked={selection.homepage}
-                        onChange={() => toggleSelectionField('homepage')}
+                        onChange={() => toggleSelectionField("homepage")}
                         className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                       />
                       <div className="text-xs">
-                        <span className="font-medium text-zinc-200 block">Live Demo / Homepage URL</span>
-                        <span className="text-zinc-400 text-[11px] truncate block max-w-[350px]">{analysis.homepage}</span>
+                        <span className="font-medium text-zinc-200 block">
+                          Live Demo / Homepage URL
+                        </span>
+                        <span className="text-zinc-400 text-[11px] truncate block max-w-[350px]">
+                          {analysis.homepage}
+                        </span>
                       </div>
                     </label>
                   )}
@@ -451,12 +503,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     <input
                       type="checkbox"
                       checked={selection.authorName}
-                      onChange={() => toggleSelectionField('authorName')}
+                      onChange={() => toggleSelectionField("authorName")}
                       className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">Author Name</span>
-                      <span className="text-zinc-400 text-[11px]">{analysis.owner.username}</span>
+                      <span className="font-medium text-zinc-200 block">
+                        Author Name
+                      </span>
+                      <span className="text-zinc-400 text-[11px]">
+                        {analysis.owner.username}
+                      </span>
                     </div>
                   </label>
 
@@ -464,12 +520,16 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     <input
                       type="checkbox"
                       checked={selection.authorGithub}
-                      onChange={() => toggleSelectionField('authorGithub')}
+                      onChange={() => toggleSelectionField("authorGithub")}
                       className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                     />
                     <div className="text-xs">
-                      <span className="font-medium text-zinc-200 block">Author GitHub</span>
-                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">{analysis.owner.profileUrl}</span>
+                      <span className="font-medium text-zinc-200 block">
+                        Author GitHub
+                      </span>
+                      <span className="text-zinc-400 text-[11px] truncate block max-w-[200px]">
+                        {analysis.owner.profileUrl}
+                      </span>
                     </div>
                   </label>
                 </div>
@@ -480,7 +540,8 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-zinc-400">
                     <Code2 className="h-3.5 w-3.5 text-zinc-500" />
-                    Detected Technologies ({analysis.detectedTechnologies.length})
+                    Detected Technologies (
+                    {analysis.detectedTechnologies.length})
                   </div>
                   {analysis.detectedTechnologies.length > 0 && (
                     <button
@@ -488,9 +549,10 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                       onClick={toggleAllTechnologies}
                       className="text-[11px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
                     >
-                      {selection.technologies.length === analysis.detectedTechnologies.length
-                        ? 'Deselect All'
-                        : 'Select All'}
+                      {selection.technologies.length ===
+                      analysis.detectedTechnologies.length
+                        ? "Deselect All"
+                        : "Select All"}
                     </button>
                   )}
                 </div>
@@ -502,22 +564,28 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                 ) : (
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 max-h-40 overflow-y-auto pr-1">
                     {analysis.detectedTechnologies.map((tech) => {
-                      const isChecked = selection.technologies.includes(tech.name);
+                      const isChecked = selection.technologies.includes(
+                        tech.name,
+                      );
                       return (
                         <button
                           key={tech.name}
                           type="button"
                           onClick={() => toggleTechnology(tech.name)}
                           className={cn(
-                            'flex items-center justify-between rounded-lg border px-2.5 py-2 text-left transition-all',
+                            "flex items-center justify-between rounded-lg border px-2.5 py-2 text-left transition-all",
                             isChecked
-                              ? 'border-indigo-500/50 bg-indigo-500/10 text-zinc-100'
-                              : 'border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:border-zinc-700'
+                              ? "border-indigo-500/50 bg-indigo-500/10 text-zinc-100"
+                              : "border-zinc-800 bg-zinc-950/40 text-zinc-400 hover:border-zinc-700",
                           )}
                         >
                           <div className="truncate pr-1.5">
-                            <span className="text-xs font-medium block truncate">{tech.name}</span>
-                            <span className="text-[10px] text-zinc-500 block">{tech.category}</span>
+                            <span className="text-xs font-medium block truncate">
+                              {tech.name}
+                            </span>
+                            <span className="text-[10px] text-zinc-500 block">
+                              {tech.category}
+                            </span>
                           </div>
                           {isChecked ? (
                             <CheckSquare className="h-4 w-4 shrink-0 text-indigo-400" />
@@ -530,7 +598,8 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                   </div>
                 )}
                 <p className="text-[11px] text-zinc-500">
-                  Imported technologies merge into your Tech Stack without duplicates.
+                  Imported technologies merge into your Tech Stack without
+                  duplicates.
                 </p>
               </div>
 
@@ -545,7 +614,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                     <input
                       type="checkbox"
                       checked={selection.license}
-                      onChange={() => toggleSelectionField('license')}
+                      onChange={() => toggleSelectionField("license")}
                       className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-800 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-zinc-900"
                     />
                     <div className="text-xs">
@@ -553,7 +622,8 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                         {analysis.license.name} ({analysis.license.spdxId})
                       </span>
                       <span className="text-zinc-400 text-[11px]">
-                        Mapped to README Studio {analysis.license.mappedType} License
+                        Mapped to README Studio {analysis.license.mappedType}{" "}
+                        License
                       </span>
                     </div>
                   </label>
@@ -563,7 +633,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
           )}
 
           {/* STEP 3: Success Screen */}
-          {step === 'success' && (
+          {step === "success" && (
             <div className="py-8 text-center space-y-3">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
                 <Check className="h-6 w-6" />
@@ -572,7 +642,8 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                 Repository Imported Successfully!
               </h3>
               <p className="text-xs text-zinc-400 max-w-sm mx-auto">
-                Selected fields have been merged into your workspace. The preview and editor are up to date.
+                Selected fields have been merged into your workspace. The
+                preview and editor are up to date.
               </p>
             </div>
           )}
@@ -580,7 +651,7 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
 
         {/* Modal Footer */}
         <div className="flex items-center justify-between border-t border-zinc-800 px-6 py-3.5 bg-zinc-900/90">
-          {step === 'input' || step === 'analyzing' ? (
+          {step === "input" || step === "analyzing" ? (
             <>
               <button
                 type="button"
@@ -591,11 +662,11 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
               </button>
               <button
                 type="button"
-                disabled={step === 'analyzing' || !repoUrl.trim()}
+                disabled={step === "analyzing" || !repoUrl.trim()}
                 onClick={() => handleAnalyze()}
                 className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {step === 'analyzing' ? (
+                {step === "analyzing" ? (
                   <>
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
                     Analyzing Repository...
@@ -608,12 +679,12 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                 )}
               </button>
             </>
-          ) : step === 'preview' ? (
+          ) : step === "preview" ? (
             <>
               <button
                 type="button"
                 onClick={() => {
-                  setStep('input');
+                  setStep("input");
                   setError(null);
                 }}
                 className="rounded-lg border border-zinc-700 px-3.5 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800 transition-colors"
@@ -633,10 +704,10 @@ export const GitHubImportModal: React.FC<GitHubImportModalProps> = ({
                   disabled={getSelectedCount() === 0}
                   onClick={handleConfirmImport}
                   className={cn(
-                    'inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors',
+                    "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors",
                     conflicts.length > 0 && showOverwriteConfirm
-                      ? 'bg-amber-600 hover:bg-amber-500'
-                      : 'bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed'
+                      ? "bg-amber-600 hover:bg-amber-500"
+                      : "bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed",
                   )}
                 >
                   {conflicts.length > 0 && showOverwriteConfirm ? (

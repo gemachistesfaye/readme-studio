@@ -16,20 +16,28 @@ interface SectionOrderModalProps {
   isOpen: boolean;
   sectionOrder: ReadmeSectionId[];
   isDefaultOrder: boolean;
+  includeToc: boolean;
+  githubStatsEnabled: boolean;
   onClose: () => void;
   onMoveSectionUp: (sectionId: ReadmeSectionId) => void;
   onMoveSectionDown: (sectionId: ReadmeSectionId) => void;
   onResetOrder: () => void;
+  onToggleToc: (enabled: boolean) => void;
+  onToggleGithubStats: (enabled: boolean) => void;
 }
 
 export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
   isOpen,
   sectionOrder,
   isDefaultOrder,
+  includeToc,
+  githubStatsEnabled,
   onClose,
   onMoveSectionUp,
   onMoveSectionDown,
   onResetOrder,
+  onToggleToc,
+  onToggleGithubStats,
 }) => {
   useBodyScrollLock(isOpen);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -106,6 +114,61 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
               top. Empty sections are skipped when the README is generated, and
               reordering never deletes any content.
             </p>
+          </div>
+
+          {/* Optional features */}
+          <div className="space-y-2 rounded-lg border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950/40">
+            <p className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Optional Features</p>
+
+            {/* TOC toggle */}
+            <label className="flex items-center justify-between gap-3 cursor-pointer">
+              <div>
+                <p className="text-xs font-medium text-zinc-700 dark:text-zinc-300">📋 Table of Contents</p>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Auto-generated TOC with anchor links, placed after the header</p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={includeToc}
+                onClick={() => onToggleToc(!includeToc)}
+                className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/40 ${
+                  includeToc
+                    ? 'bg-indigo-600 border-indigo-600'
+                    : 'bg-zinc-200 border-zinc-300 dark:bg-zinc-700 dark:border-zinc-600'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                    includeToc ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </label>
+
+            {/* GitHub Stats toggle */}
+            <label className="flex items-center justify-between gap-3 cursor-pointer">
+              <div>
+                <p className="text-xs font-medium text-zinc-700 dark:text-zinc-300">📊 GitHub Stats &amp; Cards</p>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Stats, top languages, and streak widgets (configure in Editor)</p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={githubStatsEnabled}
+                onClick={() => onToggleGithubStats(!githubStatsEnabled)}
+                className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/40 ${
+                  githubStatsEnabled
+                    ? 'bg-indigo-600 border-indigo-600'
+                    : 'bg-zinc-200 border-zinc-300 dark:bg-zinc-700 dark:border-zinc-600'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                    githubStatsEnabled ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </label>
           </div>
 
           <ol className="space-y-2">

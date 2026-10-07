@@ -96,6 +96,9 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
     moveSectionUp,
     moveSectionDown,
     resetSectionOrder,
+    updateGithubStats,
+    toggleToc,
+    replaceReadmeData,
   } = useReadmeData();
   const { status: githubStatus } = useGitHubAuth();
   const isGitHubConnected = githubStatus === "authenticated";
@@ -278,6 +281,17 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
           onUpdateLicense={updateLicense}
           onUpdateContactField={updateContactField}
           onContactBlur={touchContactField}
+          githubStats={data.githubStats ?? {
+            enabled: false,
+            username: '',
+            showStats: true,
+            showTopLangs: true,
+            showStreak: true,
+            theme: 'github_dark',
+          }}
+          onUpdateGithubStats={updateGithubStats}
+          readmeData={data}
+          onImportBackup={replaceReadmeData}
         />
 
         {/* Right Panel: Preview Area */}
@@ -306,10 +320,14 @@ export const GeneratorWorkspace: React.FC<GeneratorWorkspaceProps> = ({
         isOpen={isSectionOrderOpen}
         sectionOrder={sectionOrder}
         isDefaultOrder={isSectionOrderDefault}
+        includeToc={Boolean(data.layout?.includeToc)}
+        githubStatsEnabled={Boolean(data.githubStats?.enabled)}
         onClose={() => setIsSectionOrderOpen(false)}
         onMoveSectionUp={moveSectionUp}
         onMoveSectionDown={moveSectionDown}
         onResetOrder={resetSectionOrder}
+        onToggleToc={toggleToc}
+        onToggleGithubStats={(enabled) => updateGithubStats({ enabled })}
       />
 
       <NewReadmeModal

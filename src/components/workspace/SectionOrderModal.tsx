@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { ListOrdered, ArrowUp, ArrowDown, RotateCcw, X, Info } from 'lucide-react';
-import { ReadmeSectionId } from '@/types';
-import { getSectionMeta } from '@/constants/sections';
-import { canMoveDown, canMoveUp, cn } from '@/utils';
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import React, { useCallback, useEffect, useRef } from "react";
+import {
+  ListOrdered,
+  ArrowUp,
+  ArrowDown,
+  RotateCcw,
+  X,
+  Info,
+} from "lucide-react";
+import { ReadmeSectionId } from "@/types";
+import { getSectionMeta } from "@/constants/sections";
+import { canMoveDown, canMoveUp, cn } from "@/utils";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface SectionOrderModalProps {
   isOpen: boolean;
@@ -38,13 +45,13 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
     const focusTimer = setTimeout(() => closeButtonRef.current?.focus(), 50);
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
+      if (e.key === "Escape") handleClose();
     };
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       clearTimeout(focusTimer);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, handleClose]);
 
@@ -95,9 +102,9 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
           <div className="flex items-start gap-2.5 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-400">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
             <p className="leading-relaxed">
-              Your project title, badges, and description always stay at the top. Empty
-              sections are skipped when the README is generated, and reordering never deletes
-              any content.
+              Your project title, badges, and description always stay at the
+              top. Empty sections are skipped when the README is generated, and
+              reordering never deletes any content.
             </p>
           </div>
 
@@ -160,8 +167,8 @@ export const SectionOrderModal: React.FC<SectionOrderModalProps> = ({
             disabled={isDefaultOrder}
             aria-label="Reset section order to default"
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50',
-              'dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
+              "inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-50",
+              "dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700",
             )}
           >
             <RotateCcw className="h-3.5 w-3.5" />

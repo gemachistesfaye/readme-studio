@@ -155,7 +155,18 @@ export function createInitialReadmeData(): ReadmeData {
       additionalLinkLabel: '',
       additionalLinkUrl: '',
     },
-    layout: { sectionOrder: [...DEFAULT_SECTION_ORDER] },
+    layout: {
+      sectionOrder: [...DEFAULT_SECTION_ORDER],
+      includeToc: false,
+    },
+    githubStats: {
+      enabled: false,
+      username: '',
+      showStats: true,
+      showTopLangs: true,
+      showStreak: true,
+      theme: 'github_dark',
+    },
   };
 }
 
@@ -179,6 +190,7 @@ export function normalizeReadmeData(input: unknown): ReadmeData {
   const license = isRecord(input.license) ? input.license : {};
   const contact = isRecord(input.contact) ? input.contact : {};
   const layout = isRecord(input.layout) ? input.layout : {};
+  const githubStats = isRecord(input.githubStats) ? input.githubStats : {};
 
   return {
     basicInfo: {
@@ -241,6 +253,15 @@ export function normalizeReadmeData(input: unknown): ReadmeData {
     },
     layout: {
       sectionOrder: normalizeSectionOrder(layout.sectionOrder),
+      includeToc: typeof layout.includeToc === 'boolean' ? layout.includeToc : false,
+    },
+    githubStats: {
+      enabled: typeof githubStats.enabled === 'boolean' ? githubStats.enabled : false,
+      username: stringValue(githubStats.username),
+      showStats: typeof githubStats.showStats === 'boolean' ? githubStats.showStats : true,
+      showTopLangs: typeof githubStats.showTopLangs === 'boolean' ? githubStats.showTopLangs : true,
+      showStreak: typeof githubStats.showStreak === 'boolean' ? githubStats.showStreak : true,
+      theme: stringValue(githubStats.theme, 'github_dark'),
     },
   };
 }

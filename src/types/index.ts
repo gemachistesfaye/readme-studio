@@ -127,6 +127,15 @@ export interface BadgesData {
   badges: ReadmeBadge[];
 }
 
+export interface GithubStatsData {
+  enabled: boolean;
+  username: string;
+  showStats: boolean;
+  showTopLangs: boolean;
+  showStreak: boolean;
+  theme: string;
+}
+
 export type ReadmeSectionId =
   | 'techStack'
   | 'features'
@@ -134,7 +143,8 @@ export type ReadmeSectionId =
   | 'usage'
   | 'contributing'
   | 'license'
-  | 'contact';
+  | 'contact'
+  | 'githubStats';
 
 export interface SectionMeta {
   id: ReadmeSectionId;
@@ -144,6 +154,7 @@ export interface SectionMeta {
 
 export interface ReadmeLayoutData {
   sectionOrder: ReadmeSectionId[];
+  includeToc?: boolean;
 }
 
 export interface ReadmeData {
@@ -157,6 +168,7 @@ export interface ReadmeData {
   license: LicenseData;
   contact: ContactData;
   layout: ReadmeLayoutData;
+  githubStats?: GithubStatsData;
 }
 
 export type TemplateId = 'standard' | 'web-app' | 'api-backend' | 'ai-ml' | 'minimal' | 'blank';

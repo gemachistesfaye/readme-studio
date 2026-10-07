@@ -3,6 +3,7 @@ import { randomBytes, createHash } from "node:crypto";
 import { URL } from "node:url";
 
 const port = Number(process.env.PORT || 8787);
+const host = process.env.HOST || "0.0.0.0";
 const appOrigin = process.env.APP_ORIGIN || "http://127.0.0.1:5173";
 const clientId = process.env.GITHUB_CLIENT_ID || "";
 const clientSecret = process.env.GITHUB_CLIENT_SECRET || "";
@@ -697,6 +698,6 @@ setInterval(() => {
     if (value.resetAt <= now) rateLimits.delete(key);
 }, 60_000).unref();
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`README Studio GitHub API listening on http://127.0.0.1:${port}`);
+server.listen(port, host, () => {
+  console.log(`README Studio GitHub API listening on http://${host}:${port}`);
 });

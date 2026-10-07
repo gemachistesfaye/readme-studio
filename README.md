@@ -141,8 +141,17 @@ readme-studio/
 └── vite.config.ts
 ```
 
+## 🗺️ Roadmap & Upcoming Features
+
+- [ ] 🤖 **AI README Polish (Gemini API)**: 1-click intelligent summary generation, feature extraction, and wording improvements.
+- [ ] 🌐 **Multi-Language README Generator**: One-click generation of localized `README.zh.md`, `README.es.md`, and `README.ja.md` with top language switchers.
+- [ ] 📐 **Interactive Mermaid Diagram Builder**: Visual drag-and-drop flowchart and architecture diagram generator embedded as Markdown blocks.
+- [ ] ⚡ **GitHub Actions CI/CD Badges**: Auto-generate workflow status badges and boilerplate `.github/workflows/ci.yml`.
+- [ ] 🎬 **Demo Media & GIF Embed Builder**: Responsive light/dark mode screenshot frames, video links, and GIF walkthroughs.
+
 ---
 
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+

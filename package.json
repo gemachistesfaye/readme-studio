@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "github-api": "node server/githubServer.mjs",
-    "build": "tsc --noEmit && vite build",
+    "build": "npx tsc --noEmit && vite build",
     "lint": "eslint .",
     "test": "node --test server/*.test.mjs",
     "preview": "vite preview"

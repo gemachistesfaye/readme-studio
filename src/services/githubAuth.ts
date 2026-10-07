@@ -35,13 +35,47 @@ export class GitHubAuthError extends Error {
   }
 }
 
+const SESSION_STORAGE_KEY = 'readme_studio_session_token';
+
+export function getStoredSessionToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return window.localStorage.getItem(SESSION_STORAGE_KEY);
+}
+
+export function setStoredSessionToken(token: string | null): void {
+  if (typeof window === 'undefined') return;
+  if (token) {
+    window.localStorage.setItem(SESSION_STORAGE_KEY, token);
+  } else {
+    window.localStorage.removeItem(SESSION_STORAGE_KEY);
+  }
+}
+
+// Check URL for session token returned from OAuth
+if (typeof window !== 'undefined') {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const tokenFromUrl = params.get('token');
+    if (tokenFromUrl) {
+      setStoredSessionToken(tokenFromUrl);
+      params.delete('token');
+      const newQuery = params.toString() ? `?${params.toString()}` : '';
+      window.history.replaceState({}, '', `${window.location.pathname}${newQuery}`);
+    }
+  } catch {
+    // Ignore URL parse errors
+  }
+}
+
 async function requestJson<T>(url: string, options?: RequestInit): Promise<T> {
   const fullUrl = getApiUrl(url);
+  const token = getStoredSessionToken();
   const response = await fetch(fullUrl, {
     ...options,
     credentials: 'include',
     headers: {
       Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options?.headers || {}),
     },
   });
@@ -73,8 +107,10 @@ export function getGitHubAuthSession(): Promise<GitHubAuthSession> {
   return requestJson<GitHubAuthSession>('/api/auth/session');
 }
 
-export function disconnectGitHub(): Promise<GitHubAuthSession> {
-  return requestJson<GitHubAuthSession>('/api/auth/disconnect', { method: 'POST' });
+export async function disconnectGitHub(): Promise<GitHubAuthSession> {
+  const result = await requestJson<GitHubAuthSession>('/api/auth/disconnect', { method: 'POST' });
+  setStoredSessionToken(null);
+  return result;
 }
 
 export function listAuthenticatedRepositories(

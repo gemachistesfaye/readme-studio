@@ -1,140 +1,142 @@
 # ⚡ README Studio
 
-> A modern, developer-focused web application for building, customizing, and publishing clean, professional GitHub `README.md` files through an interactive real-time workspace.
+> An interactive, developer-centric studio for crafting, analyzing, customizing, and publishing professional GitHub `README.md` files in real-time.
 
-![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-6.1-646CFF?logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green.svg)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://readme-studio-2026.vercel.app)
+[![API Server](https://img.shields.io/badge/API%20Server-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://readme-studio-uztc.onrender.com)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 ---
 
 ## 🌟 Overview
 
-**README Studio** provides developers with a full-featured workspace to compose, format, customize, and publish production-ready GitHub README documents effortlessly. Designed with modern UI patterns, dark/light visual themes, interactive reordering, and direct GitHub OAuth integration.
+**README Studio** provides developers with a full-fledged environment to create polished README documentation effortlessly. Featuring live GitHub-flavored Markdown previews, 6 pre-built project templates, live GitHub stats & streak widgets, automatic Table of Contents generation, a 0–100% README Quality Audit score, `.json` project state backups, and direct GitHub OAuth integration to commit straight to repositories.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- ⚛️ **Interactive Workspace & Live Preview**: Split-screen editor with real-time rendered GitHub-Flavored Markdown & raw source view.
-- 🎨 **Light / Dark / System Themes**: Fully responsive UI supporting warm light mode, dark mode, and system preference detection.
-- ↕️ **Section Reordering & Item Controls**: Reorder major README sections (Tech Stack, Features, Installation, Usage, etc.) and individual list items with accessible controls.
-- 💾 **Draft Auto-Persistence**: Automatic local storage persistence with draft recovery and reset actions.
-- 📋 **Pre-built README Templates**: Apply specialized templates with flexible merge or full-replacement modes.
-- 🏷️ **Badge Builder**: Custom Shields.io badge creation, tech stack tags, and auto-mapped license badges.
-- 🐙 **GitHub Integration**:
-  - **Public Repository Import**: Auto-detect repository metadata, tech stack, and license from any public GitHub URL without logging in.
-  - **Secure GitHub OAuth**: Authenticate via a lightweight, secure Node.js backend server (`/api/auth`).
-  - **Repository Picker**: Browse, search, filter, and select public or private repositories.
-  - **Save & Update on GitHub**: Directly commit generated `README.md` to GitHub with conflict/overwrite confirmation.
+- ⚛️ **Split-Screen Editor & Live Preview**: Real-time side-by-side editing with GitHub-Flavored Markdown rendering and raw Markdown source toggles.
+- 📊 **Live GitHub Stats & Cards**: Embed live GitHub contribution stats, top languages breakdown, and streak counters (`github-readme-stats` and `streak-stats`) with 11 themes (`radical`, `tokyonight`, `github_dark`, `dracula`, etc.) and live preview cards.
+- 📋 **Automated Table of Contents (TOC)**: Toggle automatic generation of Markdown anchor links for all active sections.
+- 🎯 **README Quality Audit Score**: Real-time 0–100% completeness rating with actionable per-field tips to achieve the highest quality documentation.
+- 💾 **Project Backup Export & Import**: Download your entire README state as a `.json` backup and restore anytime with safe preview confirmation.
+- ↕️ **Customizable Section Ordering**: Freely reorder all 8 major sections (Tech Stack, Features, Installation, Usage, Contributing, License, Contact, GitHub Stats) with accessible up/down controls and order reset.
+- 🏷️ **Dynamic Badge Builder**: Shields.io custom status badges, technology badges, and auto-synchronized license badges.
+- 🎨 **Light / Dark / System Themes**: Warm, high-contrast light mode (default) and dark mode with fluid transitions.
+- 🐙 **GitHub OAuth & Repository Integration**:
+  - **Public Repository Ingestion**: Analyze any public GitHub repo URL to auto-detect metadata, languages, dependencies, and license without logging in.
+  - **Authenticated Repository Picker**: Browse and search public and private repositories.
+  - **Save & Update on GitHub**: Directly commit your generated `README.md` to GitHub branches with SHA conflict protection.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript 5.8, Vite 6, Tailwind CSS v4, Lucide Icons
-- **Backend API**: Node.js, Express, Cookie-Session (OAuth & GitHub API Proxy)
-- **Deployment**: Compatible with Render, Vercel, Netlify, Node.js hosts
+- **Frontend**: React 19, TypeScript 5.8, Vite 6, Tailwind CSS v4, Lucide React
+- **Backend API**: Node.js, Native HTTP Server, PKCE GitHub OAuth, REST APIs
+- **Hosting**:
+  - **Frontend**: [Vercel](https://readme-studio-2026.vercel.app)
+  - **Backend API**: [Render](https://readme-studio-uztc.onrender.com)
 
 ---
 
-## 💻 Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
-Ensure you have **Node.js** (v18+) installed on your machine.
+Ensure you have **Node.js** (v18+) and **npm** installed.
 
 ### Installation
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/gemachistesfaye/readme-studio.git
 
-# Navigate into the project folder
+# 2. Navigate into directory
 cd readme-studio
 
-# Install dependencies
+# 3. Install dependencies
 npm install
 ```
 
-### Development Server
-
-Start the local development frontend server:
+### Running Locally
 
 ```bash
+# Start Vite development server
 npm run dev
 ```
 
-### GitHub OAuth Server (Optional for Authenticated Save)
+Visit `http://localhost:5173` in your browser.
 
-To enable GitHub account login and direct saving to repositories:
+---
 
-1. Copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-2. Create a [GitHub OAuth Application](https://github.com/settings/developers) with callback URL:
-   `http://127.0.0.1:8787/api/auth/github/callback`
-3. Fill in your `.env` variables:
+## 🔐 GitHub OAuth Setup (Optional)
+
+To enable GitHub login, authenticated repo browsing, and direct saving:
+
+1. Create a **[GitHub OAuth Application](https://github.com/settings/applications/new)**:
+   - **Homepage URL**: `http://127.0.0.1:5173` (or your Vercel URL in production)
+   - **Authorization callback URL**: `http://127.0.0.1:8787/api/auth/github/callback` (or your Render URL in production)
+2. Copy `.env.example` to `.env` and fill in your credentials:
    ```env
+   VITE_GITHUB_API_BASE_URL=http://127.0.0.1:8787
+   APP_ORIGIN=http://127.0.0.1:5173
    GITHUB_CLIENT_ID=your_client_id
    GITHUB_CLIENT_SECRET=your_client_secret
-   SESSION_SECRET=your_random_session_secret
+   GITHUB_CALLBACK_URL=http://127.0.0.1:8787/api/auth/github/callback
+   PORT=8787
+   HOST=0.0.0.0
    ```
-4. Start the GitHub API proxy server alongside Vite:
+3. Run both servers:
    ```bash
-   # Terminal 1: Vite Frontend
+   # Terminal 1: Frontend
    npm run dev
 
    # Terminal 2: GitHub API Proxy
    npm run github-api
    ```
 
-*Note: Public URL import, templates, section reordering, draft saving, and Markdown copy/download work 100% offline without GitHub OAuth configuration.*
+---
 
-### Production Build & Quality Checks
+## 🧪 Quality & Test Scripts
 
 ```bash
-# Run ESLint linter
-npm run lint
-
-# Run TypeScript type check
+# Type-check TypeScript without emitting
 node node_modules/typescript/bin/tsc --noEmit
+
+# Run ESLint
+npm run lint
 
 # Build production bundle
 npm run build
 
-# Run automated tests
+# Run automated backend API tests
 npm test
 ```
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Architecture
 
 ```text
 readme-studio/
-├── server/               # Node.js GitHub OAuth & API Proxy server
-│   ├── githubServer.mjs
-│   └── githubServer.test.mjs
+├── server/
+│   ├── githubServer.mjs       # Zero-dependency secure GitHub OAuth & proxy API
+│   └── githubServer.test.mjs  # Node.js native test suite
 ├── src/
-│   ├── components/       # UI Components
-│   │   ├── common/       # Form fields, inputs
-│   │   ├── github/       # Repository picker, import/save modals
-│   │   ├── layout/       # Header, Footer, Layout, Theme switcher
-│   │   └── workspace/    # Editor sections, preview, section order modal
-│   ├── constants/        # Templates, badges, tech stack, section meta
-│   ├── hooks/            # Custom hooks (useReadmeData, useTheme, useGitHubAuth)
-│   ├── pages/            # View pages (Home)
-│   ├── services/         # GitHub API client services
-│   ├── types/            # TypeScript interfaces & types
-│   ├── utils/            # Markdown generator, draft storage, section order helpers
-│   ├── App.tsx
-│   ├── index.css
-│   └── main.tsx
-├── .env.example
+│   ├── components/
+│   │   ├── common/            # Shared UI elements
+│   │   ├── github/            # OAuth modals, repo pickers, save modals
+│   │   ├── layout/            # Navigation header, footer, theme toggle
+│   │   └── workspace/         # Section forms, GitHub stats, audit & backup panels
+│   ├── constants/             # Section metadata, templates, tech categories
+│   ├── hooks/                 # Custom React hooks (useReadmeData, useGitHubAuth, useTheme)
+│   ├── pages/                 # Root views
+│   ├── services/              # Client API integrations
+│   ├── types/                 # TypeScript interfaces & types
+│   └── utils/                 # Markdown engine, draft storage, validation
+├── vercel.json                # SPA rewrite routing for Vercel
 ├── package.json
 └── vite.config.ts
 ```
@@ -143,4 +145,4 @@ readme-studio/
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is open source and available under the [MIT License](LICENSE).

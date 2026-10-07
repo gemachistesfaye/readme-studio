@@ -21,3 +21,7 @@ export { TemplateModal } from './TemplateModal';
 export { SectionOrderModal } from './SectionOrderModal';
 export { BadgeBuilder } from './BadgeBuilder';
 export { BadgeItem } from './BadgeItem';
+export { GitHubStatsForm } from './GitHubStatsForm';
+export { ReadmeAuditPanel } from './ReadmeAuditPanel';
+export { ExportImportPanel } from './ExportImportPanel';
+
